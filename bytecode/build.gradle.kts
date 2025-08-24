@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "2.1.20"
+    kotlin("jvm")
 }
 
 group = "com.pedrodev"
@@ -11,10 +11,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation(project("lexer"))
-    implementation(project("parser"))
-    implementation(project("vm"))
-    implementation(project("bytecode"))
+    implementation(project(":parser"))
 }
 
 tasks.test {
