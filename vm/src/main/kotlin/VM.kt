@@ -13,20 +13,29 @@ class VM(var instructions: List<String>) {
                 "PUSH" -> {
                     stack.push(code[1].toDouble())
                 }
+
                 "MUL" -> {
-                    stack.push(stack.pop() * stack.pop())
+                    val right = stack.pop()
+                    val left = stack.pop()
+                    stack.push(left * right)
                 }
 
                 "DIV" -> {
-                    stack.push(stack.pop() / stack.pop())
+                    val right = stack.pop()
+                    val left = stack.pop()
+                    stack.push(left / right)
                 }
 
                 "ADD" -> {
-                    stack.push(stack.pop() + stack.pop())
+                    val right = stack.pop()
+                    val left = stack.pop()
+                    stack.push(left + right)
                 }
 
                 "SUB" -> {
-                    stack.push(stack.pop() - stack.pop())
+                    val right = stack.pop()
+                    val left = stack.pop()
+                    stack.push(left - right)
                 }
 
                 "PRINT" -> {
@@ -35,9 +44,8 @@ class VM(var instructions: List<String>) {
                             0
                         }
                     )
-
-
                 }
+
                 else -> {
                     throw RuntimeException("Instrução ${code[0]} não implementada.")
                 }
