@@ -185,7 +185,7 @@ class Scanner(source: String) {
                         val begin = pos
                         while (isDigit(peek())) pos++
 
-                        if (sourceCode[pos] == '.' && isDigit(next())) {
+                        if (pos < sourceCode.length && sourceCode[pos] == '.' && isDigit(next())) {
                             pos++
                             while (isDigit(peek())) pos++
                         }
