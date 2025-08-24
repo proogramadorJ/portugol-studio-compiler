@@ -17,4 +17,10 @@ fun main() {
     val printer = ASTPrinter()
     printer.print(expression)
 
+    val codeGenerator = ByteCodeGenerator()
+    val byteCode = codeGenerator.generate(expression)
+
+    for (line in byteCode) {
+        println(line)
+    }
 }
