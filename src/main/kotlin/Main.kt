@@ -14,13 +14,24 @@ fun main() {
     val parser = Parser(tokens)
     val expression = parser.parse()
 
+    println("\nast")
     val printer = ASTPrinter()
     printer.print(expression)
 
     val codeGenerator = ByteCodeGenerator()
     val byteCode = codeGenerator.generate(expression)
 
-    for (line in byteCode) {
-        println(line)
+    println("\nbytecode")
+    for (instruction in byteCode) {
+        println(instruction)
     }
+
+    val instructions = mutableListOf<String>()
+    instructions.addAll(byteCode)
+    instructions.add("PRINT")
+
+    println("\nexecução")
+    val vm = VM(instructions)
+    vm.run()
+
 }
