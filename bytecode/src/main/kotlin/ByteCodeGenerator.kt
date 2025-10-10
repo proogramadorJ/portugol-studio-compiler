@@ -14,6 +14,7 @@ class ByteCodeGenerator : ExprVisitor<List<String>> {
             TokenType.TK_DIVISAO -> "DIV"
             TokenType.TK_SOMA -> "ADD"
             TokenType.TK_SUBTRACAO -> "SUB"
+            TokenType.TK_MODULO -> "MOD"
             else -> throw IllegalArgumentException("Operador desconhecido: ${expr.operator.lexeme}")
         }
 

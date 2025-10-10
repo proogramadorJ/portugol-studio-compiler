@@ -30,7 +30,7 @@ class Parser(private val tokens: List<Token>) {
 
     private fun factor(): Expr {
         var expr = primary()
-        while (match(TokenType.TK_MULTPLICACAO, TokenType.TK_DIVISAO)) {
+        while (match(TokenType.TK_MULTPLICACAO, TokenType.TK_DIVISAO, TokenType.TK_MODULO)) {
             val operation = tokens[current - 1]
             val right = primary()
             expr = Expr.Binary(expr, operation, right)

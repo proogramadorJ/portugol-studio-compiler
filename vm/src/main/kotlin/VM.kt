@@ -38,6 +38,12 @@ class VM(var instructions: List<String>) {
                     stack.push(left - right)
                 }
 
+                "MOD" ->{
+                    val right = stack.pop()
+                    val left = stack.pop()
+                    stack.push(left % right)
+                }
+
                 "PRINT" -> {
                     println(
                         if (stack.isNotEmpty()) stack.peek() else {
