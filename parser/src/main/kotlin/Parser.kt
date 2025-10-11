@@ -29,14 +29,23 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun factor(): Expr {
-        var expr = primary()
+        var expr = unary()
         while (match(TokenType.TK_MULTPLICACAO, TokenType.TK_DIVISAO, TokenType.TK_MODULO)) {
             val operation = tokens[current - 1]
-            val right = primary()
+            val right = unary()
             expr = Expr.Binary(expr, operation, right)
         }
 
         return expr
+    }
+
+    private fun unary(): Expr {
+        if (match(TokenType.TK_BIT_NOT)) { // TODO confirmar, mas acho que esse dialeto portugol não tem operadores unarios tipo -4, !verdadeiro
+            val operator = previous()
+            val right = unary()
+            return Expr.Unary(operator, right)
+        }
+        return primary()
     }
 
     private fun or(): Expr {

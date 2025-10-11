@@ -5,7 +5,7 @@ import java.io.File
 fun main() {
 
     val codeFile =
-        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_e_ou.portugol")
+        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_unary.portugol")
     val codeText = codeFile.readText(Charsets.UTF_8)
 
     val scanner = Scanner(codeText)

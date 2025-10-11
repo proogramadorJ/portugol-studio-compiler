@@ -16,10 +16,17 @@ sealed interface Expr {
         }
     }
 
-    data class Logical(val left : Expr, val operator: Token, val right: Expr) : Expr{
+    data class Logical(val left: Expr, val operator: Token, val right: Expr) : Expr {
         override fun <R> accept(visitor: ExprVisitor<R>): R {
             return visitor.visitLogical(this)
         }
+    }
+
+    data class Unary(val operator: Token, val right: Expr) : Expr {
+        override fun <R> accept(visitor: ExprVisitor<R>): R {
+            return visitor.visitUnary(this)
+        }
+
     }
 
 }

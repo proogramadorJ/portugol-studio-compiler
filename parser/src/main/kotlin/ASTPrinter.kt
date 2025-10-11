@@ -20,6 +20,11 @@ class ASTPrinter : ExprVisitor<String> {
         return "(${left} $operation ${right})"
     }
 
+    override fun visitUnary(expr: Expr.Unary): String {
+        val right = expr.right.accept(this)
+        return "(${expr.operator.lexeme}${right})"
+    }
+
     fun print(expr: Expr) {
         println(expr.accept(this))
     }
