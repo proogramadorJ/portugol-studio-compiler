@@ -5,7 +5,7 @@ import java.io.File
 fun main() {
 
     val codeFile =
-        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_modulo.portugol")
+        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_e_ou.portugol")
     val codeText = codeFile.readText(Charsets.UTF_8)
 
     val scanner = Scanner(codeText)
@@ -18,20 +18,21 @@ fun main() {
     val printer = ASTPrinter()
     printer.print(expression)
 
+    /**
     val codeGenerator = ByteCodeGenerator()
     val byteCode = codeGenerator.generate(expression)
 
     println("\nbytecode")
     for (instruction in byteCode) {
-        println(instruction)
+    println(instruction)
     }
 
     val instructions = mutableListOf<String>()
     instructions.addAll(byteCode)
     instructions.add("PRINT")
 
-    println("\nexecução")
+    println("\nevaluation")
     val vm = VM(instructions)
     vm.run()
-
+     **/
 }

@@ -17,6 +17,8 @@ enum class TokenType {
 
     TK_NUMERO_LITERAL,
     TK_STRING_LITERAL,
+    TK_VERDADEIRO, // literal verdadeiro
+    TK_FALSO, // literal falso
 
     TK_INTEIRO, // inteiro
     TK_REAL, // real

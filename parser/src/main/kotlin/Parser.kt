@@ -14,7 +14,7 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun expression(): Expr {
-        return term()
+        return or()
     }
 
     private fun term(): Expr {
@@ -39,6 +39,56 @@ class Parser(private val tokens: List<Token>) {
         return expr
     }
 
+    private fun or(): Expr {
+        var expr = and()
+
+        while (match(TokenType.TK_OU)) {
+            val operator = previous()
+            val right = and()
+            expr = Expr.Logical(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun and(): Expr {
+        var expr = equality()
+
+        while (match(TokenType.TK_E)) {
+            val operator = previous()
+            val right = equality()
+            expr = Expr.Logical(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun equality(): Expr {
+        var expr = comparison()
+
+        while (match(TokenType.TK_DIFERENTE, TokenType.TK_IGUAL_IGUAL)) {
+            val operator = previous()
+            val right = comparison()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun comparison(): Expr {
+        var expr = term()
+
+        while (match(
+                TokenType.TK_MAIOR,
+                TokenType.TK_MAIOR_OU_IGUAL,
+                TokenType.TK_MENOR,
+                TokenType.TK_MENOR_OU_IGUAL
+            )
+        ) {
+            val operator = previous()
+            val right = term()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
     private fun primary(): Expr {
         if (match(TokenType.TK_ABRE_PARENTESE)) {
             val expr = expression()
@@ -48,13 +98,10 @@ class Parser(private val tokens: List<Token>) {
             return expr
         }
 
-        if (isAtEnd() || tokens[current].type != TokenType.TK_NUMERO_LITERAL) {
-            throw RuntimeException("Esperado um número, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
-        }
-
-        val token = tokens[current]
-        advance()
-        return Expr.Literal(token.lexeme.toDouble())
+        if (match(TokenType.TK_VERDADEIRO)) return Expr.Literal(true)
+        if (match(TokenType.TK_FALSO)) return Expr.Literal(false)
+        if (match(TokenType.TK_NUMERO_LITERAL, TokenType.TK_STRING_LITERAL)) return Expr.Literal(previous().lexeme)
+        throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }
 
     private fun match(vararg types: TokenType): Boolean {
@@ -73,6 +120,10 @@ class Parser(private val tokens: List<Token>) {
 
     private fun advance(): Token {
         current++
+        return tokens[current - 1]
+    }
+
+    private fun previous(): Token {
         return tokens[current - 1]
     }
 }

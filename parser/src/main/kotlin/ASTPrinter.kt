@@ -13,6 +13,13 @@ class ASTPrinter : ExprVisitor<String> {
         return "(${left} $operation ${right})"
     }
 
+    override fun visitLogical(expr: Expr.Logical): String {
+        val left = expr.left.accept(this)
+        val right = expr.right.accept(this)
+        val operation = expr.operator.lexeme
+        return "(${left} $operation ${right})"
+    }
+
     fun print(expr: Expr) {
         println(expr.accept(this))
     }

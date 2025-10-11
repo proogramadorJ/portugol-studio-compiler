@@ -21,6 +21,10 @@ class ByteCodeGenerator : ExprVisitor<List<String>> {
         return left + right + listOf(opCode)
     }
 
+    override fun visitLogical(expr: Expr.Logical): List<String> {
+        TODO("Not yet implemented")
+    }
+
     fun generate(expr: Expr): List<String> {
         return expr.accept(this)
     }
