@@ -17,6 +17,47 @@ class Parser(private val tokens: List<Token>) {
         return or()
     }
 
+
+    private fun bitWiseOr(): Expr {
+        var expr = bitWiseXor()
+        while (match(TokenType.TK_BIT_OR)) {
+            val operator = previous()
+            val right = bitWiseXor()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun bitWiseXor(): Expr {
+        var expr = bitWiseAnd()
+        while (match(TokenType.TK_BIT_XOR)) {
+            val operator = previous()
+            val right = bitWiseAnd()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun bitWiseAnd(): Expr {
+        var expr = shift()
+        while (match(TokenType.TK_BIT_AND)) {
+            val operator = previous()
+            val right = shift()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun shift(): Expr {
+        var expr = equality()
+        while (match(TokenType.TK_BIT_SHIFT)) {
+            val operator = previous()
+            val right = equality()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
     private fun term(): Expr {
         var expr = factor()
         while (match(TokenType.TK_SOMA, TokenType.TK_SUBTRACAO)) {
@@ -24,7 +65,6 @@ class Parser(private val tokens: List<Token>) {
             val right = factor()
             expr = Expr.Binary(expr, operation, right)
         }
-
         return expr
     }
 
@@ -35,12 +75,11 @@ class Parser(private val tokens: List<Token>) {
             val right = unary()
             expr = Expr.Binary(expr, operation, right)
         }
-
         return expr
     }
 
     private fun unary(): Expr {
-        if (match(TokenType.TK_BIT_NOT)) { // TODO confirmar, mas acho que esse dialeto portugol não tem operadores unarios tipo -4, !verdadeiro
+        if (match(TokenType.TK_BIT_NOT, TokenType.TK_NAO)) {
             val operator = previous()
             val right = unary()
             return Expr.Unary(operator, right)
@@ -60,11 +99,11 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun and(): Expr {
-        var expr = equality()
+        var expr = bitWiseOr()
 
         while (match(TokenType.TK_E)) {
             val operator = previous()
-            val right = equality()
+            val right = bitWiseOr()
             expr = Expr.Logical(expr, operator, right)
         }
         return expr
