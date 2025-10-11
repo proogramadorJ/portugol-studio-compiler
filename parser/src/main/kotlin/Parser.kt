@@ -5,18 +5,38 @@ class Parser(private val tokens: List<Token>) {
     private var current = 0
 
     fun parse(): Expr {
-        val expr = expression();
+        val expr = expression()
         if (!isAtEnd()) {
             throw RuntimeException("Token inesperado após a expressão '${tokens[current].lexeme}'")
         }
-
         return expr
     }
+
 
     private fun expression(): Expr {
         return or()
     }
 
+
+    private fun or(): Expr {
+        var expr = and()
+        while (match(TokenType.TK_OU)) {
+            val operator = previous()
+            val right = and()
+            expr = Expr.Logical(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun and(): Expr {
+        var expr = bitWiseOr()
+        while (match(TokenType.TK_E)) {
+            val operator = previous()
+            val right = bitWiseOr()
+            expr = Expr.Logical(expr, operator, right)
+        }
+        return expr
+    }
 
     private fun bitWiseOr(): Expr {
         var expr = bitWiseXor()
@@ -27,6 +47,7 @@ class Parser(private val tokens: List<Token>) {
         }
         return expr
     }
+
 
     private fun bitWiseXor(): Expr {
         var expr = bitWiseAnd()
@@ -39,8 +60,34 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun bitWiseAnd(): Expr {
-        var expr = shift()
+        var expr = equality()
         while (match(TokenType.TK_BIT_AND)) {
+            val operator = previous()
+            val right = equality()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun equality(): Expr {
+        var expr = comparison()
+        while (match(TokenType.TK_DIFERENTE, TokenType.TK_IGUAL_IGUAL)) {
+            val operator = previous()
+            val right = comparison()
+            expr = Expr.Binary(expr, operator, right)
+        }
+        return expr
+    }
+
+    private fun comparison(): Expr {
+        var expr = shift()
+        while (match(
+                TokenType.TK_MAIOR,
+                TokenType.TK_MAIOR_OU_IGUAL,
+                TokenType.TK_MENOR,
+                TokenType.TK_MENOR_OU_IGUAL
+            )
+        ) {
             val operator = previous()
             val right = shift()
             expr = Expr.Binary(expr, operator, right)
@@ -49,14 +96,15 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun shift(): Expr {
-        var expr = equality()
+        var expr = term()
         while (match(TokenType.TK_BIT_SHIFT)) {
             val operator = previous()
-            val right = equality()
+            val right = term()
             expr = Expr.Binary(expr, operator, right)
         }
         return expr
     }
+
 
     private fun term(): Expr {
         var expr = factor()
@@ -87,56 +135,6 @@ class Parser(private val tokens: List<Token>) {
         return primary()
     }
 
-    private fun or(): Expr {
-        var expr = and()
-
-        while (match(TokenType.TK_OU)) {
-            val operator = previous()
-            val right = and()
-            expr = Expr.Logical(expr, operator, right)
-        }
-        return expr
-    }
-
-    private fun and(): Expr {
-        var expr = bitWiseOr()
-
-        while (match(TokenType.TK_E)) {
-            val operator = previous()
-            val right = bitWiseOr()
-            expr = Expr.Logical(expr, operator, right)
-        }
-        return expr
-    }
-
-    private fun equality(): Expr {
-        var expr = comparison()
-
-        while (match(TokenType.TK_DIFERENTE, TokenType.TK_IGUAL_IGUAL)) {
-            val operator = previous()
-            val right = comparison()
-            expr = Expr.Binary(expr, operator, right)
-        }
-        return expr
-    }
-
-    private fun comparison(): Expr {
-        var expr = term()
-
-        while (match(
-                TokenType.TK_MAIOR,
-                TokenType.TK_MAIOR_OU_IGUAL,
-                TokenType.TK_MENOR,
-                TokenType.TK_MENOR_OU_IGUAL
-            )
-        ) {
-            val operator = previous()
-            val right = term()
-            expr = Expr.Binary(expr, operator, right)
-        }
-        return expr
-    }
-
     private fun primary(): Expr {
         if (match(TokenType.TK_ABRE_PARENTESE)) {
             val expr = expression()
@@ -148,7 +146,11 @@ class Parser(private val tokens: List<Token>) {
 
         if (match(TokenType.TK_VERDADEIRO)) return Expr.Literal(true)
         if (match(TokenType.TK_FALSO)) return Expr.Literal(false)
-        if (match(TokenType.TK_NUMERO_LITERAL, TokenType.TK_STRING_LITERAL)) return Expr.Literal(previous().lexeme)
+
+        if (match(TokenType.TK_NUMERO_LITERAL, TokenType.TK_STRING_LITERAL)) {
+            return Expr.Literal(previous().lexeme)
+        }
+
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }
 
