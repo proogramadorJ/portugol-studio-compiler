@@ -25,6 +25,10 @@ class ASTPrinter : ExprVisitor<String> {
         return "(${expr.operator.lexeme}${right})"
     }
 
+    override fun visitVariable(expr: Expr.Variable): String {
+        TODO("Not yet implemented")
+    }
+
     fun print(expr: Expr) {
         println(expr.accept(this))
     }

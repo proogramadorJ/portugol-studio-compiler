@@ -11,15 +11,21 @@ enum class TokenType {
     TK_CASO, // caso
     TK_CASO_CONTRARIO, // caso contrario
     TK_ENQUANTO, // enquanto
+
     // TODO incluir do-while/ faca{ }enquanto(condicao)
     TK_PARA, // para
     TK_CONST, // const
 
-    TK_NUMERO_LITERAL,
+    //valores literais
+    TK_NUMERO_REAL_LITERAL,
+    TK_NUMERO_INTEIRO_LITERAL,
+    TK_CHAR_LITERAL,
     TK_STRING_LITERAL,
-    TK_VERDADEIRO, // literal verdadeiro
-    TK_FALSO, // literal falso
+    TK_VERDADEIRO_LITERAL,
+    TK_FALSO_LITERAL,
 
+
+    //tipos
     TK_INTEIRO, // inteiro
     TK_REAL, // real
     TK_CARACTER, // caracter

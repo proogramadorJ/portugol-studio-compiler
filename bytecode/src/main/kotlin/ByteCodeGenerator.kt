@@ -29,6 +29,10 @@ class ByteCodeGenerator : ExprVisitor<List<String>> {
         TODO("Not yet implemented")
     }
 
+    override fun visitVariable(expr: Expr.Variable): List<String> {
+        TODO("Not yet implemented")
+    }
+
     fun generate(expr: Expr): List<String> {
         return expr.accept(this)
     }

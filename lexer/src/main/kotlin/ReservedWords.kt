@@ -22,8 +22,8 @@ object ReservedWords {
         "ou" to TokenType.TK_OU,
         "nao" to TokenType.TK_NAO,
         "const" to TokenType.TK_CONST,
-        "verdadeiro" to TokenType.TK_VERDADEIRO,
-        "falso" to TokenType.TK_FALSO
+        "verdadeiro" to TokenType.TK_VERDADEIRO_LITERAL,
+        "falso" to TokenType.TK_FALSO_LITERAL
     )
 
 }

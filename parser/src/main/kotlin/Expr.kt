@@ -29,4 +29,11 @@ sealed interface Expr {
 
     }
 
+    data class Variable(val name: Token) : Expr {
+        override fun <R> accept(visitor: ExprVisitor<R>): R {
+           return visitor.visitVariable(this)
+        }
+
+    }
+
 }

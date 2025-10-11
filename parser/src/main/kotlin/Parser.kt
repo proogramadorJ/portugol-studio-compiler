@@ -144,11 +144,14 @@ class Parser(private val tokens: List<Token>) {
             return expr
         }
 
-        if (match(TokenType.TK_VERDADEIRO)) return Expr.Literal(true)
-        if (match(TokenType.TK_FALSO)) return Expr.Literal(false)
+        if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expr.Literal(true)
+        if (match(TokenType.TK_FALSO_LITERAL)) return Expr.Literal(false)
 
         if (match(TokenType.TK_NUMERO_LITERAL, TokenType.TK_STRING_LITERAL)) {
             return Expr.Literal(previous().lexeme)
+        }
+        if (match(TokenType.TK_IDENTIFICADOR)) {
+            return Expr.Variable(previous())
         }
 
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
@@ -175,5 +178,16 @@ class Parser(private val tokens: List<Token>) {
 
     private fun previous(): Token {
         return tokens[current - 1]
+    }
+
+    private fun consume(type: TokenType, msgError: String): Token {
+        if (check(type)) return advance()
+        throw RuntimeException(msgError) // TODO Substituir. Exibir linha e informações do token, e não lançar exceção, apenas exibir erro e encerrar o parser.
+
+    }
+
+    private fun check(type: TokenType): Boolean {
+        if (isAtEnd()) return false
+        return tokens[current].type == type
     }
 }
