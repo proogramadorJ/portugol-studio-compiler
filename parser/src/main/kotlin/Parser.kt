@@ -147,13 +147,13 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expr.Literal(true)
         if (match(TokenType.TK_FALSO_LITERAL)) return Expr.Literal(false)
 
-        if (match(TokenType.TK_NUMERO_LITERAL, TokenType.TK_STRING_LITERAL)) {
+        if (match(TokenType.TK_NUMERO_REAL_LITERAL, TokenType.TK_NUMERO_INTEIRO_LITERAL, TokenType.TK_STRING_LITERAL)) {
             return Expr.Literal(previous().lexeme)
         }
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expr.Variable(previous())
         }
-
+         //TODO INCLUIR AQUI DECLARAÇÃO DE VARIAVEIS
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }
 

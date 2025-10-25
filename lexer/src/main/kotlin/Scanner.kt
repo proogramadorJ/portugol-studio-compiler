@@ -153,11 +153,23 @@ class Scanner(source: String) {
                 }
 
                 '\'' -> {
-                    pos++ // consome aspa simples
-                    val c = next() // pega o caracter
-                    pos++ // teroricamente dever a aspa simples de fechamento
-                    if (isAtEnd() || peek() != '\'')
-                        throw RuntimeException("Caracter não finalizado corretamente na linha $currentLine")
+                    val ch = advance() //Consome ' e retorna o próximo
+                    val ch2 = advance()
+
+                    //TODO melhorar essa mensagem, dizer se é vazio ou não encerrado em mensagens separadas
+                    if (ch2 != '\'') {
+                        throw RuntimeException("Caracter vázio ou não finalizado corretamente na linha $currentLine")
+                    }
+
+                    tokens.add(
+                        Token(
+                            TokenType.TK_CHAR_LITERAL,
+                            currentLine,
+                            currentColumn,
+                            ch.toString(),
+                            ch.toString()
+                        )
+                    )
                     pos++
                 }
 
@@ -206,27 +218,16 @@ class Scanner(source: String) {
                     if (isDigit(currentChar)) {
                         val begin = pos
                         while (isDigit(peek())) pos++
+                        var isReal = false
 
                         if (pos < sourceCode.length && sourceCode[pos] == '.' && isDigit(next())) {
                             pos++
                             while (isDigit(peek())) pos++
+                            isReal = true
                         }
                         val literalNumber = sourceCode.substring(begin, pos)
 
-                        try {
-
-                            val literalValue = literalNumber.toInt()
-
-                            tokens.add(
-                                Token(
-                                    TokenType.TK_NUMERO_INTEIRO_LITERAL,
-                                    currentLine,
-                                    currentColumn,
-                                    literalNumber,
-                                    literalValue
-                                )
-                            )
-                        } catch (ex: NumberFormatException) {
+                        if (isReal) {
                             tokens.add(
                                 Token(
                                     TokenType.TK_NUMERO_REAL_LITERAL,
@@ -236,7 +237,18 @@ class Scanner(source: String) {
                                     literalNumber.toDouble()
                                 )
                             )
+                        } else {
+                            tokens.add(
+                                Token(
+                                    TokenType.TK_NUMERO_INTEIRO_LITERAL,
+                                    currentLine,
+                                    currentColumn,
+                                    literalNumber,
+                                    literalNumber.toInt()
+                                )
+                            )
                         }
+
 
                     } else if (isAlpha(currentChar)) {
                         val begin = pos
@@ -303,9 +315,19 @@ class Scanner(source: String) {
     }
 
     private fun advance(): Char {
-        if (isAtEnd()) throw RuntimeException("Fim inesperado de arquivo na linha $currentLine")
-        val ch = sourceCode[pos]
         pos++
-        return ch
+        if (isAtEnd()) {
+            return '\u0000'
+        }
+        return sourceCode[pos]
+    }
+
+    //TODO FINALIZAR ISSO
+    private fun isValidChar(ch: Char): Boolean {
+        return when (ch) {
+            '\'' -> false
+            '\"' -> false
+            else -> true
+        }
     }
 }
