@@ -1,0 +1,44 @@
+package com.pedrodev
+
+abstract class Expression {
+
+    abstract fun <R> accept(visitor: Visitor<R>): R
+
+    interface Visitor<R> {
+        fun visitLiteral(expression: Literal): R
+        fun visitBinary(expression: Binary): R
+        fun visitLogical(expression: Logical): R
+        fun visitUnary(expression: Unary): R
+        fun visitVariable(expression: Variable): R
+    }
+
+    class Binary(val left: Expression, val operator: Token, val right: Expression) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitBinary(this)
+        }
+    }
+
+    class Literal(val value: Any) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitLiteral(this)
+        }
+    }
+
+    class Logical(val left: Expression, val operator: Token, val right: Expression) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitLogical(this)
+        }
+    }
+
+    class Unary(val operator: Token, val right: Expression) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitUnary(this)
+        }
+    }
+
+    class Variable(val name: Token) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitVariable(this)
+        }
+    }
+}

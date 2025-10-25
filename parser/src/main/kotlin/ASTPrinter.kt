@@ -1,35 +1,43 @@
 package com.pedrodev
 
-class ASTPrinter : ExprVisitor<String> {
-    override fun visitLiteral(expr: Expr.Literal): String {
-        return expr.value.toString()
+class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
+    override fun visitLiteral(expression: Expression.Literal): String {
+        return expression.value.toString()
     }
 
-    override fun visitBinary(expr: Expr.Binary): String {
-        val left = expr.left.accept(this)
-        val right = expr.right.accept(this)
-        val operation = expr.operator.lexeme
+    override fun visitBinary(expression: Expression.Binary): String {
+        val left = expression.left.accept(this)
+        val right = expression.right.accept(this)
+        val operation = expression.operator.lexeme
 
         return "(${left} $operation ${right})"
     }
 
-    override fun visitLogical(expr: Expr.Logical): String {
-        val left = expr.left.accept(this)
-        val right = expr.right.accept(this)
-        val operation = expr.operator.lexeme
+    override fun visitLogical(expression: Expression.Logical): String {
+        val left = expression.left.accept(this)
+        val right = expression.right.accept(this)
+        val operation = expression.operator.lexeme
         return "(${left} $operation ${right})"
     }
 
-    override fun visitUnary(expr: Expr.Unary): String {
-        val right = expr.right.accept(this)
-        return "(${expr.operator.lexeme}${right})"
+    override fun visitUnary(expression: Expression.Unary): String {
+        val right = expression.right.accept(this)
+        return "(${expression.operator.lexeme}${right})"
     }
 
-    override fun visitVariable(expr: Expr.Variable): String {
+    override fun visitVariable(expression: Expression.Variable): String {
         TODO("Not yet implemented")
     }
 
-    fun print(expr: Expr) {
-        println(expr.accept(this))
+    fun print(expression: Expression) {
+        println(expression.accept(this))
+    }
+
+    override fun visitExprStatement(expr: Statement.Expr): Void? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitVarStatement(stmt: Statement.Var): Void? {
+        TODO("Not yet implemented")
     }
 }

@@ -12,11 +12,13 @@ fun main() {
     val tokens = scanner.scanTokens()
 
     val parser = Parser(tokens)
-    val expression = parser.parse()
+    val statements = parser.parse()
 
-    println("\nast")
-    val printer = ASTPrinter()
-    printer.print(expression)
+
+
+   // println("\nast")
+   // val printer = ASTPrinter()
+    //printer.print(expression)
 
     /**
     val codeGenerator = ByteCodeGenerator()
