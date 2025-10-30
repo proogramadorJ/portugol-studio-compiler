@@ -29,7 +29,7 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     }
 
     override fun visitVariable(expression: Expression.Variable): String {
-        TODO("Not yet implemented")
+       return expression.name.lexeme
     }
 
     fun print(statements: List<Statement>) {
@@ -47,7 +47,13 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     }
 
     override fun visitVarStatement(stmt: Statement.Var): Void? {
-        println(" ".repeat(shift) + "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${stmt.initializer?.accept(this)}>")
+        println(
+            " ".repeat(shift) + "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${
+                stmt.initializer?.accept(
+                    this
+                )
+            }>"
+        )
         return null
     }
 }
