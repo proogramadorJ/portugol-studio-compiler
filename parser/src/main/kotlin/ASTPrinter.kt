@@ -1,6 +1,9 @@
 package com.pedrodev
 
 class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
+
+    var shift = 4
+
     override fun visitLiteral(expression: Expression.Literal): String {
         return expression.value.toString()
     }
@@ -29,15 +32,22 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         TODO("Not yet implemented")
     }
 
-    fun print(expression: Expression) {
-        println(expression.accept(this))
+    fun print(statements: List<Statement>) {
+        println("=== AST ===")
+        println("Programa")
+        statements.forEach {
+            it.accept(this)
+            shift = 4
+        }
     }
 
     override fun visitExprStatement(expr: Statement.Expr): Void? {
-        TODO("Not yet implemented")
+        print(expr.expr.accept(this))
+        return null
     }
 
     override fun visitVarStatement(stmt: Statement.Var): Void? {
-        TODO("Not yet implemented")
+        println(" ".repeat(shift) + "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${stmt.initializer?.accept(this)}>")
+        return null
     }
 }

@@ -40,6 +40,8 @@ class Parser(private val tokens: List<Token>) {
         val name = previous()
         var expr: Expression? = null
 
+        //TODO o initializer de uma variavel pode ser uma função
+        // EX: inteiro diaAtual = getDiaAtual()
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
         }
@@ -181,7 +183,13 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expression.Literal(true)
         if (match(TokenType.TK_FALSO_LITERAL)) return Expression.Literal(false)
 
-        if (match(TokenType.TK_NUMERO_REAL_LITERAL, TokenType.TK_NUMERO_INTEIRO_LITERAL, TokenType.TK_STRING_LITERAL)) {
+        if (match(
+                TokenType.TK_NUMERO_REAL_LITERAL,
+                TokenType.TK_NUMERO_INTEIRO_LITERAL,
+                TokenType.TK_STRING_LITERAL,
+                TokenType.TK_CHAR_LITERAL
+            )
+        ) {
             return Expression.Literal(previous().lexeme)
         }
         if (match(TokenType.TK_IDENTIFICADOR)) {

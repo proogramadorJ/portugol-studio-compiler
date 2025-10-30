@@ -1,3 +1,4 @@
 programa{
- inteiro a = 12
+ inteiro a = 12 + 5 / 3
+ caracter b = 'C'
 }

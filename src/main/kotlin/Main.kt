@@ -16,10 +16,9 @@ fun main() {
     println("Análise Completa - OK")
 
 
-
-   // println("\nast")
-   // val printer = ASTPrinter()
-    //printer.print(expression)
+    // println("\nast")
+    val printer = ASTPrinter()
+    printer.print(statements)
 
     /**
     val codeGenerator = ByteCodeGenerator()
