@@ -5,27 +5,33 @@ class Parser(private val tokens: List<Token>) {
     private var current = 0
 
     fun parse(): List<Statement> {
-        val statements = mutableListOf<Statement>()
+        return programa().statements
+    }
 
-        consume(TokenType.TK_PROGRAMA, "Bloco 'Programa' não encontrado.");
+    private fun programa(): ProgramaSttm {
+        val progr = ProgramaSttm(mutableListOf())
+
+        consume(TokenType.TK_PROGRAMA, "Bloco 'programa' não encontrado.");
         consume(TokenType.TK_ABRE_CHAVE, "Esperado '{' apos 'Programa'.")
 
-        while (!isAtEnd()) {
-            declaration()?.let { statements.add(it) }
+        while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
+            declaration()?.let { progr.statements.add(it) }
         }
         consume(TokenType.TK_FECHA_CHAVE, "Esperado '}' de encerramento do bloco Programa.")
 
         if (!isAtEnd()) {
             throw RuntimeException("Token inesperado após a expressão '${tokens[current].lexeme}'.")
         }
-        return statements
+        println("Análise Sintatica- OK")
+        return progr
     }
 
     private fun declaration(): Statement? {
         if (match(TokenType.TK_INTEIRO, TokenType.TK_CARACTER, TokenType.TK_REAL, TokenType.TK_CADEIA)) {
             return varDeclaration()
+        } else {
+            throw RuntimeException("Esperado comando ou expressão. ")
         }
-        return null
     }
 
     private fun varDeclaration(): Statement {
@@ -194,8 +200,10 @@ class Parser(private val tokens: List<Token>) {
         return false
     }
 
+    //TODO espero que não quebre as outras expressões - TESTAR
     private fun isAtEnd(): Boolean {
-        return current >= tokens.size || tokens[current].type == TokenType.EOF
+        //É -2 porque O pnúltimo token é o } do fechamento do bloco 'programa' e o último o EOF
+        return tokens[current].type == TokenType.EOF
     }
 
     private fun advance(): Token {

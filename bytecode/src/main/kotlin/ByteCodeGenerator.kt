@@ -1,6 +1,6 @@
 package com.pedrodev
 
-class ByteCodeGenerator : ExprVisitor<List<String>> {
+class ByteCodeGenerator : Expression.Visitor<List<String>> {
     override fun visitLiteral(expression: Expression.Literal): List<String> {
         return listOf("PUSH ${expression.value}")
     }

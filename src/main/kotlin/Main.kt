@@ -5,7 +5,7 @@ import java.io.File
 fun main() {
 
     val codeFile =
-        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_numero_literal.portugol")
+        File("C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\teste_bloco_programa.portugol")
     val codeText = codeFile.readText(Charsets.UTF_8)
 
     val scanner = Scanner(codeText)
@@ -13,6 +13,7 @@ fun main() {
 
     val parser = Parser(tokens)
     val statements = parser.parse()
+    println("Análise Completa - OK")
 
 
 
