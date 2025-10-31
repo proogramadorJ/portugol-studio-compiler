@@ -2,9 +2,12 @@ package com.pedrodev
 
 class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
 
-    var shift = 4
+    var space = 4
 
     override fun visitLiteral(expression: Expression.Literal): String {
+        if (expression.value is Boolean) {
+            return if (expression.value) "verdadeiro" else "falso"
+        }
         return expression.value.toString()
     }
 
@@ -29,7 +32,12 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     }
 
     override fun visitVariable(expression: Expression.Variable): String {
-       return expression.name.lexeme
+        return expression.name.lexeme
+    }
+
+    override fun visitAssignExpr(expression: Expression.Assign): String {
+        space += 4
+        return " ".repeat(space) + "Assign<target: ${expression.name.lexeme}, value: ${expression.value.accept(this)}>"
     }
 
     fun print(statements: List<Statement>) {
@@ -37,23 +45,33 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         println("Programa")
         statements.forEach {
             it.accept(this)
-            shift = 4
+            space = 4
         }
     }
 
-    override fun visitExprStatement(expr: Statement.Expr): Void? {
-        print(expr.expr.accept(this))
+    override fun visitExprStatement(exprStatement: Statement.ExprStatement): Void? {
+        println(exprStatement.expr.accept(this))
         return null
     }
 
     override fun visitVarStatement(stmt: Statement.Var): Void? {
+        space += 4
         println(
-            " ".repeat(shift) + "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${
+            " ".repeat(space) + "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${
                 stmt.initializer?.accept(
                     this
                 )
             }>"
         )
+        space -= 4
+        return null
+    }
+
+    override fun visitFuncStatement(stmt: Statement.Function): Void? {
+        space += 4
+        println(" ".repeat(space) + "FuncDeclaraction<name: ${stmt.name.lexeme}, paramCount:${stmt.params.size}, returnType: ${stmt.returnType.type.name}>")
+        stmt.body.forEach { it.accept(this) }
+        space -= 4
         return null
     }
 }

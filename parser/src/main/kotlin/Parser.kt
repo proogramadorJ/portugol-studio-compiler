@@ -15,7 +15,7 @@ class Parser(private val tokens: List<Token>) {
         consume(TokenType.TK_ABRE_CHAVE, "Esperado '{' apos 'Programa'.")
 
         while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
-            declaration()?.let { progr.statements.add(it) }
+            topLevelDeclaration()?.let { progr.statements.add(it) }
         }
         consume(TokenType.TK_FECHA_CHAVE, "Esperado '}' de encerramento do bloco Programa.")
 
@@ -26,21 +26,109 @@ class Parser(private val tokens: List<Token>) {
         return progr
     }
 
-    private fun declaration(): Statement? {
-        if (match(TokenType.TK_INTEIRO, TokenType.TK_CARACTER, TokenType.TK_REAL, TokenType.TK_CADEIA)) {
+    private fun topLevelDeclaration(): Statement? {
+        if (match(
+                TokenType.TK_INTEIRO,
+                TokenType.TK_CARACTER,
+                TokenType.TK_REAL,
+                TokenType.TK_CADEIA,
+                TokenType.TK_LOGICO
+            )
+        ) {
             return varDeclaration()
-        } else {
-            throw RuntimeException("Esperado comando ou expressão. ")
+        }
+
+        if (match(TokenType.TK_FUNCAO)) {
+            return funcDeclaration()
+        }
+        return null
+    }
+
+    private fun funcDeclaration(): Statement {
+        var returnType = Token(TokenType.TK_VAZIO, -1, -1, "", "")
+
+        if (match(
+                TokenType.TK_VAZIO,
+                TokenType.TK_INTEIRO,
+                TokenType.TK_REAL,
+                TokenType.TK_CARACTER,
+                TokenType.TK_REAL,
+                TokenType.TK_CADEIA
+            )
+        ) {
+            returnType = previous()
+        }
+
+        consume(TokenType.TK_IDENTIFICADOR, "Esperado nome da função.")
+        val name = previous()
+        consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após nome da função.")
+        val parameters = mutableListOf<Param>()
+
+        if (!check(TokenType.TK_FECHA_PARENTESE)) {
+            do {
+                if (parameters.size >= 255) {
+                    throw RuntimeException("Função não pode ter mais de 255 parâmetros.")
+                }
+                if (!match(
+                        TokenType.TK_INTEIRO,
+                        TokenType.TK_REAL,
+                        TokenType.TK_LOGICO,
+                        TokenType.TK_CADEIA,
+                        TokenType.TK_CARACTER
+                    )
+                ) {
+                    throw RuntimeException("Tipo do parametro esperado.")
+                }
+                val type = previous()
+                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado.")))
+            } while (match(TokenType.TK_VIRGULA))
+        }
+
+        consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' após os parâmetros da função.")
+        consume(TokenType.TK_ABRE_CHAVE, "Esperado '{' antes do corpo da função.")
+
+        val body = block()
+        // A chave de fechamento é consumida em block()
+
+        return Statement.Function(name, returnType, parameters, body)
+    }
+
+    private fun block(): List<Statement> {
+        val statements = mutableListOf<Statement>()
+
+        while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
+            statement()?.let { statements.add(it) }
+        }
+        consume(TokenType.TK_FECHA_CHAVE, "Esperado '}' depois do  bloco.")
+        return statements
+    }
+
+    private fun statement(): Statement? {
+        return when {
+            match(
+                TokenType.TK_INTEIRO,
+                TokenType.TK_CARACTER,
+                TokenType.TK_REAL,
+                TokenType.TK_CADEIA,
+                TokenType.TK_LOGICO
+            ) -> {
+                varDeclaration()
+            }
+
+            else -> {
+                return expressionStatement()
+            }
+
         }
     }
 
     private fun varDeclaration(): Statement {
         val type = previous()
-        consume(TokenType.TK_IDENTIFICADOR, "Esperado nome da variavel após o tipo. Na linha ${type.line}")
+        consume(TokenType.TK_IDENTIFICADOR, "Esperado nome da variavel após o tipo. Na linha ${type.line}.")
         val name = previous()
         var expr: Expression? = null
 
-        //TODO o initializer de uma variavel pode ser uma função
+        //TODO o initializer de uma variavel pode ser o retorno de uma chamada função
         // EX: inteiro diaAtual = getDiaAtual()
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
@@ -48,11 +136,33 @@ class Parser(private val tokens: List<Token>) {
         return Statement.Var(name, type, expr)
     }
 
-
-    private fun expression(): Expression {
-        return or()
+    private fun expressionStatement(): Statement {
+        val expr = expression()
+        return Statement.ExprStatement(expr)
     }
 
+    private fun expression(): Expression {
+        return assignment()
+    }
+
+    private fun assignment(): Expression {
+        val expr = or()
+        if (match(TokenType.TK_IGUAL)) {
+            val equals = previous()
+            val value = assignment()
+            when (expr) {
+                is Expression.Variable -> {
+                    val name = expr.name
+                    return Expression.Assign(name, value)
+                }
+
+                else -> {
+                    throw RuntimeException("Alvo de atribuição inválido. Linha ${equals.line}")
+                }
+            }
+        }
+        return expr
+    }
 
     private fun or(): Expression {
         var expr = and()
@@ -208,9 +318,7 @@ class Parser(private val tokens: List<Token>) {
         return false
     }
 
-    //TODO espero que não quebre as outras expressões - TESTAR
     private fun isAtEnd(): Boolean {
-        //É -2 porque O pnúltimo token é o } do fechamento do bloco 'programa' e o último o EOF
         return tokens[current].type == TokenType.EOF
     }
 

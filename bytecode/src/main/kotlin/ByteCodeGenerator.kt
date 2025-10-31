@@ -33,6 +33,10 @@ class ByteCodeGenerator : Expression.Visitor<List<String>> {
         TODO("Not yet implemented")
     }
 
+    override fun visitAssignExpr(expression: Expression.Assign): List<String> {
+        TODO("Not yet implemented")
+    }
+
     fun generate(expression: Expression): List<String> {
         return expression.accept(this)
     }

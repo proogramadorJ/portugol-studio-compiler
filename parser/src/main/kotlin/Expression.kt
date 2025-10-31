@@ -10,6 +10,7 @@ abstract class Expression {
         fun visitLogical(expression: Logical): R
         fun visitUnary(expression: Unary): R
         fun visitVariable(expression: Variable): R
+        fun visitAssignExpr(expression: Assign): R
     }
 
     class Binary(val left: Expression, val operator: Token, val right: Expression) : Expression() {
@@ -39,6 +40,12 @@ abstract class Expression {
     class Variable(val name: Token) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVariable(this)
+        }
+    }
+
+    class Assign(val name: Token, val value: Expression) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitAssignExpr(this)
         }
     }
 }

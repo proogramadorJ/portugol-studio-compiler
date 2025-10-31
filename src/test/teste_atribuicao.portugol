@@ -1,0 +1,10 @@
+programa{
+ inteiro a
+ funcao inteiro a (){
+   inteiro b = a
+   a = b + 1
+ }
+
+funcao b(inteiro c){
+}
+}

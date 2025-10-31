@@ -1,0 +1,11 @@
+programa{
+ inteiro a = 12 + 5 / 3
+ caracter b = 'C'
+ inteiro c
+ inteiro d = a + c
+ // e minusculo reservado para and logico
+ real f
+ logico v = verdadeiro
+ logico zz = falso
+ logico abc
+}
