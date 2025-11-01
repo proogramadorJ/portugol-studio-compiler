@@ -1,0 +1,16 @@
+Programa{
+
+    funcao a(){
+        if(1 == 2){
+
+        }else{
+            inteiro c = 2 + 3
+        }
+
+        if(verdadeiro){
+          real b = 2.09
+        }
+
+
+    }
+}

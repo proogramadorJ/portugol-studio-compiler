@@ -1,0 +1,17 @@
+Programa{
+
+    funcao a(){
+        se(1 == 2){
+
+        }senao{
+            inteiro c = 2 + 3
+        }
+
+        se(verdadeiro){
+          real b = 2.09
+        }
+
+        se(falso) a = b
+
+    }
+}

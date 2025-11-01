@@ -1,0 +1,9 @@
+Programa{
+
+    funcao a(){
+        enquanto(verdadeiro){
+            a = b
+        }
+        enquanto(falso) a = c
+    }
+}

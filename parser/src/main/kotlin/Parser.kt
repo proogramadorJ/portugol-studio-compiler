@@ -41,7 +41,7 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_FUNCAO)) {
             return funcDeclaration()
         }
-        return null
+        throw RuntimeException("É permitido somente declaração de variáveis funções no bloco Programa. Encontrado Token ${tokens[current].lexeme} ")
     }
 
     private fun funcDeclaration(): Statement {
@@ -116,6 +116,7 @@ class Parser(private val tokens: List<Token>) {
             }
 
             match(TokenType.TK_SE) -> return ifStatement()
+            match(TokenType.TK_ENQUANTO) -> return whileStatement()
             match(TokenType.TK_ABRE_CHAVE) -> return Statement.Block(block())
 
             else -> {
@@ -123,6 +124,14 @@ class Parser(private val tokens: List<Token>) {
             }
 
         }
+    }
+
+    private fun whileStatement(): Statement.While {
+        consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'enquanto'.")
+        val condition = expression()
+        consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' depois da condição.")
+        val body = statement()
+        return Statement.While(condition, body)
     }
 
     private fun ifStatement(): Statement {
