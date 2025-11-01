@@ -1,5 +1,10 @@
 package com.pedrodev
 
+/**
+ * Analise sintatica
+ * Verifica se a sequencia de tokens está de acordo com a gramatica da linguagem.
+ * Utiliza um parser descendente recursivo para gerar a AST
+ */
 class Parser(private val tokens: List<Token>) {
 
     private var current = 0
