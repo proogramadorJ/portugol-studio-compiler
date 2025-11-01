@@ -103,7 +103,7 @@ class Parser(private val tokens: List<Token>) {
         return statements
     }
 
-    private fun statement(): Statement? {
+    private fun statement(): Statement {
         return when {
             match(
                 TokenType.TK_INTEIRO,
@@ -115,11 +115,23 @@ class Parser(private val tokens: List<Token>) {
                 varDeclaration()
             }
 
+            match(TokenType.TK_SE) -> return ifStatement()
+            match(TokenType.TK_ABRE_CHAVE) -> return Statement.Block(block())
+
             else -> {
                 return expressionStatement()
             }
 
         }
+    }
+
+    private fun ifStatement(): Statement {
+        consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'se'.")
+        val condition = expression()
+        consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' após condição do comando 'se'.")
+        val thenBranch = statement()
+        val elseBranch = if (match(TokenType.TK_SENAO)) statement() else null
+        return Statement.If(condition, thenBranch, elseBranch)
     }
 
     private fun varDeclaration(): Statement {
@@ -302,6 +314,7 @@ class Parser(private val tokens: List<Token>) {
         ) {
             return Expression.Literal(previous().lexeme)
         }
+        //Ainda não suporta chamada de funções
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous())
         }
@@ -333,8 +346,7 @@ class Parser(private val tokens: List<Token>) {
 
     private fun consume(type: TokenType, msgError: String): Token {
         if (check(type)) return advance()
-        throw RuntimeException(msgError) // TODO Substituir. Exibir linha e informações do token, e não lançar exceção, apenas exibir erro e encerrar o parser.
-
+        throw RuntimeException(msgError)
     }
 
     private fun check(type: TokenType): Boolean {

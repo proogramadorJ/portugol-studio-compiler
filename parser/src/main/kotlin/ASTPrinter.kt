@@ -38,6 +38,7 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     override fun visitAssignExpr(expression: Expression.Assign): String {
         space += 4
         return " ".repeat(space) + "Assign<target: ${expression.name.lexeme}, value: ${expression.value.accept(this)}>"
+        space -= 4
     }
 
     fun print(statements: List<Statement>) {
@@ -73,5 +74,19 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         stmt.body.forEach { it.accept(this) }
         space -= 4
         return null
+    }
+
+    override fun visitBlockStatement(stmt: Statement.Block): Void? {
+        space += 4
+
+        return null
+    }
+
+    override fun visitIfStatement(stmt: Statement.If): Void? {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitWhileStatement(stmt: Statement.While): Void? {
+        TODO("Not yet implemented")
     }
 }

@@ -1,10 +1,15 @@
 programa{
- inteiro a
- funcao inteiro a (){
-   inteiro b = a
-   a = b + 1
- }
+    inteiro a
 
-funcao b(inteiro c){
-}
+    funcao inteiro a (){
+        inteiro b = a
+        a = b + 1
+    }
+
+    funcao b (inteiro c){
+        real g = 23.09
+        d = 'C'
+        b = c  * 2
+        a = 2-1
+    }
 }

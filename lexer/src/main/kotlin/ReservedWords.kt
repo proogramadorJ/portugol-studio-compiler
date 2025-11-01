@@ -16,7 +16,7 @@ object ReservedWords {
         "caracter" to TokenType.TK_CARACTER,
         "cadeia" to TokenType.TK_CADEIA,
         "logico" to TokenType.TK_LOGICO,
-        "vazio" to TokenType.TK_VAZIO, // É UMA PALAVRA RESERVADA MESMO OU SÓ É USADA QUANDO O TIPO DE RETORNO DA FUNÇÃO É OMITIDO
+        "vazio" to TokenType.TK_VAZIO,
         "constante" to TokenType.TK_CONSTANTE,
         "e" to TokenType.TK_E,
         "ou" to TokenType.TK_OU,
