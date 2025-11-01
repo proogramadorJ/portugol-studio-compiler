@@ -1,10 +1,15 @@
 package com.pedrodev
 
+import java.util.Deque
+
 /**
  * Analisador sementico
  * Faz a resolução de escopos, verificação de tipos e enriquece a AST
  */
-class TypeAndScopeResolver  : Statement.Visitor<Void?>, Expression.Visitor<Void?>{
+class TypeCheckAndScopeResolver : Statement.Visitor<Void?>, Expression.Visitor<Void?> {
+
+  
+
     override fun visitExprStatement(exprStatement: Statement.ExprStatement): Void? {
         TODO("Not yet implemented")
     }
