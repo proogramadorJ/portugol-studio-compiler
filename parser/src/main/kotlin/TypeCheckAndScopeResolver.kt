@@ -1,14 +1,13 @@
 package com.pedrodev
 
-import java.util.Deque
-
 /**
- * Analisador sementico
+ * Analisador semantico
  * Faz a resolução de escopos, verificação de tipos e enriquece a AST
  */
-class TypeCheckAndScopeResolver : Statement.Visitor<Void?>, Expression.Visitor<Void?> {
+class TypeCheckAndScopeResolver : Statement.Visitor<Void?>, Expression.Visitor<TokenType?> {
 
-  
+    private val scopes: ArrayDeque<MutableMap<String, String>> = ArrayDeque()
+    private var offset: Int = 0
 
     override fun visitExprStatement(exprStatement: Statement.ExprStatement): Void? {
         TODO("Not yet implemented")
@@ -34,27 +33,28 @@ class TypeCheckAndScopeResolver : Statement.Visitor<Void?>, Expression.Visitor<V
         TODO("Not yet implemented")
     }
 
-    override fun visitLiteral(expression: Expression.Literal): Void? {
+    override fun visitLiteral(expression: Expression.Literal): TokenType? {
         TODO("Not yet implemented")
     }
 
-    override fun visitBinary(expression: Expression.Binary): Void? {
+    override fun visitBinary(expression: Expression.Binary): TokenType? {
         TODO("Not yet implemented")
     }
 
-    override fun visitLogical(expression: Expression.Logical): Void? {
+    override fun visitLogical(expression: Expression.Logical): TokenType? {
         TODO("Not yet implemented")
     }
 
-    override fun visitUnary(expression: Expression.Unary): Void? {
+    override fun visitUnary(expression: Expression.Unary): TokenType? {
         TODO("Not yet implemented")
     }
 
-    override fun visitVariable(expression: Expression.Variable): Void? {
+    override fun visitVariable(expression: Expression.Variable): TokenType? {
         TODO("Not yet implemented")
     }
 
-    override fun visitAssignExpr(expression: Expression.Assign): Void? {
+    override fun visitAssignExpr(expression: Expression.Assign): TokenType? {
         TODO("Not yet implemented")
     }
+
 }

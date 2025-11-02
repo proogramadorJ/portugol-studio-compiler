@@ -29,6 +29,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 #### Analisador semântico
 - [ ] Resolução de escopo
 - [ ] Resolução de tipos
+- [ ] Verificação de retorno de funções
 - [ ] Enriquecimento de AST
 
 #### Síntese e Otimização
