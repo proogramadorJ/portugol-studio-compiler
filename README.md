@@ -16,15 +16,15 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 #### Analisador sintático
 
--[x] Expressões
--[x] Declaração de variaveis de tipos básicos
--[ ] Declaração de arrays e matrizes
--[x] Atribuição de variavies
--[x] Estrutura condicional 'Se' 'Senao'
--[x] Estrutura de repetição 'Enquanto'
--[ ] Estrutura de repetição 'Para'
--[x] Declaração de funções
--[ ] Chamada de funções
+- [x] Expressões
+- [x] Declaração de variaveis de tipos básicos
+- [ ] Declaração de arrays e matrizes
+- [x] Atribuição de variavies
+- [x] Estrutura condicional 'Se' 'Senao'
+- [x] Estrutura de repetição 'Enquanto'
+- [ ] Estrutura de repetição 'Para'
+- [x] Declaração de funções
+- [ ] Chamada de funções
 
 #### Analisador semântico
 - [ ] Resolução de escopo
@@ -43,15 +43,15 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 #### Runtime/VM
 
--[ ] Expressões
--[ ] Declaração de variaveis de tipos básicos
--[ ] Declaração de arrays e matrizes
--[ ] Atribuição de variavies
--[ ] Estrutura condicional 'Se' 'Senao'
--[ ] Estrutura de repetição 'Enquanto'
--[ ] Estrutura de repetição 'Para'
--[ ] Declaração de funções
--[ ] Chamada de funções
+- [ ] Expressões
+- [ ] Declaração de variaveis de tipos básicos
+- [ ] Declaração de arrays e matrizes
+- [ ] Atribuição de variavies
+- [ ] Estrutura condicional 'Se' 'Senao'
+- [ ] Estrutura de repetição 'Enquanto'
+- [ ] Estrutura de repetição 'Para'
+- [ ] Declaração de funções
+- [ ] Chamada de funções
 
 ### Funcões da linguagem suportada
 
