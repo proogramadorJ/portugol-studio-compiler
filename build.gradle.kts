@@ -13,6 +13,7 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation(project("lexer"))
     implementation(project("parser"))
+    implementation(project("semantic"))
     implementation(project("vm"))
     implementation(project("bytecode"))
 }
