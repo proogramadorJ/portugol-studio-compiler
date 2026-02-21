@@ -19,7 +19,7 @@ abstract class Expression {
         }
     }
 
-    class Literal(val value: Any) : Expression() {
+    class Literal(val value: Any, val type: TokenType) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitLiteral(this)
         }

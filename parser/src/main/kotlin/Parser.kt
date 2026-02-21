@@ -316,8 +316,8 @@ class Parser(private val tokens: List<Token>) {
             return expr
         }
 
-        if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expression.Literal(true)
-        if (match(TokenType.TK_FALSO_LITERAL)) return Expression.Literal(false)
+        if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expression.Literal(true, previous().type)
+        if (match(TokenType.TK_FALSO_LITERAL)) return Expression.Literal(false, previous().type)
 
         if (match(
                 TokenType.TK_NUMERO_REAL_LITERAL,
@@ -326,7 +326,7 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.TK_CHAR_LITERAL
             )
         ) {
-            return Expression.Literal(previous().lexeme)
+            return Expression.Literal(previous().lexeme, previous().type)
         }
         //Ainda não suporta chamada de funções
         if (match(TokenType.TK_IDENTIFICADOR)) {
