@@ -159,7 +159,7 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
         }
-        return Statement.Var(name, type, expr)
+        return Statement.VarDeclaration(name, type, expr)
     }
 
     private fun expressionStatement(): Statement {

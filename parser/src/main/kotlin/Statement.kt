@@ -4,7 +4,7 @@ abstract class Statement {
 
     interface Visitor<R> {
         fun visitExprStatement(exprStatement: ExprStatement): R
-        fun visitVarStatement(stmt: Var): R
+        fun visitVarStatement(stmt: VarDeclaration): R
         fun visitFuncStatement(stmt: Function): R
         fun visitBlockStatement(stmt: Block): R
         fun visitIfStatement(stmt: If): R
@@ -19,7 +19,7 @@ abstract class Statement {
         }
     }
 
-    class Var(val name: Token, val type: Token, val initializer: Expression?) : Statement() {
+    class VarDeclaration(val name: Token, val declaredType: Token, val initializer: Expression?) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVarStatement(this)
         }
@@ -36,7 +36,6 @@ abstract class Statement {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitBlockStatement(this)
         }
-
     }
 
     class If(val condition: Expression, val thenBranch: Statement, val elseBranch: Statement?) : Statement() {

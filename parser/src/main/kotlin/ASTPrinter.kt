@@ -54,11 +54,11 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return null
     }
 
-    override fun visitVarStatement(stmt: Statement.Var): Void? {
+    override fun visitVarStatement(stmt: Statement.VarDeclaration): Void? {
         space += 4
         println(
             " ".repeat(space) +
-                    "VarDeclaration<type: ${stmt.type.type}, name: ${stmt.name.lexeme}, initializer: ${
+                    "VarDeclaration<type: ${stmt.declaredType.type}, name: ${stmt.name.lexeme}, initializer: ${
                         stmt.initializer?.accept(this)
                     }>"
         )
