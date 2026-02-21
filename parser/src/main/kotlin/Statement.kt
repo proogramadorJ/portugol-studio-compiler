@@ -1,10 +1,12 @@
 package com.pedrodev
 
+import symbols.Symbol
+
 abstract class Statement {
 
     interface Visitor<R> {
         fun visitExprStatement(exprStatement: ExprStatement): R
-        fun visitVarStatement(stmt: VarDeclaration): R
+        fun visitVarDeclarationStatement(stmt: VarDeclaration): R
         fun visitFuncStatement(stmt: Function): R
         fun visitBlockStatement(stmt: Block): R
         fun visitIfStatement(stmt: If): R
@@ -19,9 +21,9 @@ abstract class Statement {
         }
     }
 
-    class VarDeclaration(val name: Token, val declaredType: Token, val initializer: Expression?) : Statement() {
+    class VarDeclaration(val name: Token, val declaredType: Token, val initializer: Expression?, var symbol: Symbol?) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
-            return visitor.visitVarStatement(this)
+            return visitor.visitVarDeclarationStatement(this)
         }
     }
 

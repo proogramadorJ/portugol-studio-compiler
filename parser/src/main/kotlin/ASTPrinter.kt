@@ -54,7 +54,7 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return null
     }
 
-    override fun visitVarStatement(stmt: Statement.VarDeclaration): Void? {
+    override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration): Void? {
         space += 4
         println(
             " ".repeat(space) +

@@ -1,4 +1,4 @@
-package com.pedrodev
+package types
 
 enum class TokenType {
 

@@ -1,5 +1,7 @@
 package com.pedrodev
 
+import types.TokenType
+
 class Scanner(source: String) {
 
     private val tokens = mutableListOf<Token>()

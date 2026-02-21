@@ -1,5 +1,7 @@
 package com.pedrodev
 
+import types.TokenType
+
 /**
  * Analise sintatica
  * Verifica se a sequencia de tokens está de acordo com a gramatica da linguagem.
@@ -159,7 +161,7 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
         }
-        return Statement.VarDeclaration(name, type, expr)
+        return Statement.VarDeclaration(name, type, expr, null)
     }
 
     private fun expressionStatement(): Statement {
@@ -179,7 +181,7 @@ class Parser(private val tokens: List<Token>) {
             when (expr) {
                 is Expression.Variable -> {
                     val name = expr.name
-                    return Expression.Assign(name, value)
+                    return Expression.Assign(name, value, null)
                 }
 
                 else -> {
@@ -330,7 +332,7 @@ class Parser(private val tokens: List<Token>) {
         }
         //Ainda não suporta chamada de funções
         if (match(TokenType.TK_IDENTIFICADOR)) {
-            return Expression.Variable(previous())
+            return Expression.Variable(previous(), null)
         }
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }

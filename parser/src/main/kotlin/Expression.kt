@@ -1,5 +1,8 @@
 package com.pedrodev
 
+import symbols.Symbol
+import types.TokenType
+
 abstract class Expression {
 
     abstract fun <R> accept(visitor: Visitor<R>): R
@@ -37,13 +40,13 @@ abstract class Expression {
         }
     }
 
-    class Variable(val name: Token) : Expression() {
+    class Variable(val name: Token, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVariable(this)
         }
     }
 
-    class Assign(val name: Token, val value: Expression) : Expression() {
+    class Assign(val name: Token, val value: Expression, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitAssignExpr(this)
         }
