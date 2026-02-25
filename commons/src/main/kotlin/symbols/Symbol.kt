@@ -11,7 +11,7 @@ sealed class Symbol {
 class VarSymbol(
     override val name: String,
     val kind : SymbolKind,
-    val type: Type, // Tipo resolvido != do declarado e que está na ast
+    val type: Type,
     val storage: StorageKind,
     val index: Int? = null
 ) : Symbol()

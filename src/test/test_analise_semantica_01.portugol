@@ -1,5 +1,5 @@
 Programa{
-    inteiro a
+    inteiro a = 10
     inteiro b
 
     funcao inteiro c(inteiro c) {

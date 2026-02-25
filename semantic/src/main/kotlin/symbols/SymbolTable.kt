@@ -1,7 +1,5 @@
 package symbols
 
-import TokenTypeConverter
-import com.pedrodev.Token
 import exception.SemanticException
 import types.StorageKind
 import types.SymbolKind
@@ -14,16 +12,15 @@ class SymbolTable {
     private var globalIndex: Int = 0
     private var localIndex: Stack<Int> = Stack()
 
-    fun defineFunction(name: String, paramsType: List<Token>, returnType: Token): Symbol {
+    fun defineFunction(name: String, paramsType: List<Type>, returnType: Type): Symbol {
         if (globals.containsKey(name)) {
             throw RuntimeException("Função '$name' já declarada.")
         }
-        val types = paramsType.map { token -> TokenTypeConverter.internalTypeFromTokenType(token.type) }
 
         val symbol = FunctionSymbol(
             name = name,
-            parametersType = types,
-            returnType = TokenTypeConverter.internalTypeFromTokenType(returnType.type), // TODO funções do tipo void vai quebrar -> adicionar no mapa um tipo interno para void
+            parametersType = paramsType,
+            returnType = returnType, // TODO funções do tipo void vai quebrar -> adicionar no mapa um tipo interno para void
             entryPoint = null,
         )
 
@@ -31,21 +28,37 @@ class SymbolTable {
         return symbol
     }
 
-//    fun defineLocal(name: String, type: Type): Symbol {
-//        if(scopes.empty()){
-//            throw
-//        }
-//    }
+    //TODO Ainda não trata escopo de if/for/while
+    fun defineLocal(name: String, type: Type): Symbol {
+        if(scopes.empty()){
+            throw SemanticException("Variáveis locais só podem ser declaradas dentro de funções.")
+        }
+        if(scopes.peek().containsKey(name)) {
+            throw SemanticException("Variável '$name' já declarada.")
+        }
+        val varIndex = localIndex.peek()
+        localIndex[localIndex.size - 1] = varIndex + 1
 
-    fun defineGlobal(name: String, type: Token): Symbol {
+        val symbol = VarSymbol(
+            name = name,
+            storage = StorageKind.LOCAL,
+            kind = SymbolKind.VARIABLE,
+            type = type,
+            index =  varIndex
+        )
+
+        scopes.peek()[name] = symbol
+        return symbol
+    }
+
+    fun defineGlobal(name: String, type: Type): Symbol {
         if (globals.containsKey(name)) {
-            //TODO criar um tipo semantic exception
             throw SemanticException("Variável '$name' já declarada.")
         }
         val symbol = VarSymbol(
             name = name,
             kind = SymbolKind.VARIABLE,
-            type = TokenTypeConverter.internalTypeFromTokenType(type.type),
+            type = type,
             storage = StorageKind.GLOBAL,
             index = globalIndex++
         )
@@ -69,5 +82,15 @@ class SymbolTable {
 
     fun endScope() {
         scopes.pop()
+    }
+
+    fun beginFunction() {
+        localIndex.push(0)
+        beginScope()
+    }
+
+    fun endFunction() {
+        endScope()
+        localIndex.pop()
     }
 }

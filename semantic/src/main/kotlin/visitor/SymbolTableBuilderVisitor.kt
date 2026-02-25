@@ -2,8 +2,8 @@ package visitor
 
 import TokenTypeConverter
 import com.pedrodev.Statement
-import com.pedrodev.Token
 import symbols.SymbolTable
+import types.Type
 
 /**
  * Primeira travessia na AST -> Apenas cria Simbolos globais(Variavéis e funções)
@@ -13,15 +13,23 @@ class SymbolTableBuilderVisitor(
 ) : Statement.Visitor<Unit> {
 
     override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration) {
-        symbolTable.defineGlobal(
+        val symbol = symbolTable.defineGlobal(
             stmt.name.lexeme,
-            stmt.declaredType
+            TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type)
         )
+        stmt.symbol = symbol
     }
 
     override fun visitFuncStatement(stmt: Statement.Function) {
-        val paramsType: List<Token> = stmt.params.map { p -> p.dataTypeToken }
-        symbolTable.defineFunction(stmt.name.lexeme, paramsType, stmt.returnType)
+        val paramsType: List<Type> =
+            stmt.params.map { p -> TokenTypeConverter.internalTypeFromTokenType(p.dataTypeToken.type) }
+
+        val defineFunction = symbolTable.defineFunction(
+            stmt.name.lexeme,
+            paramsType,
+            TokenTypeConverter.internalTypeFromTokenType(stmt.returnType.type)
+        )
+        stmt.symbol = defineFunction
     }
 
     override fun visitExprStatement(exprStatement: Statement.ExprStatement) {
