@@ -101,6 +101,6 @@ class SymbolTable {
     }
 
     fun isInFucntion() : Boolean{
-        return !scopes.empty()
+        return localIndex.isNotEmpty()
     }
 }
