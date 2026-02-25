@@ -4,7 +4,8 @@ Programa{
 
     funcao inteiro c(inteiro c) {
        inteiro d
+       inteiro b
+       b = 10
+       b = a
     }
-
-
 }

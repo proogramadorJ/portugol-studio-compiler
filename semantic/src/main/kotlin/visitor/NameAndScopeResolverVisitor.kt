@@ -1,7 +1,9 @@
 package visitor
 
+import TokenTypeConverter
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import symbols.Symbol
 import symbols.SymbolTable
 
 /**
@@ -14,48 +16,81 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration) {
-        val symbol = symbolTable.resolve(stmt.name.lexeme)
-
+        if (symbolTable.isInFucntion()) {
+            val declaredVar: Symbol = symbolTable.defineVar(
+                stmt.name.lexeme,
+                TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type)
+            )
+            stmt.symbol = declaredVar
+        } else {
+            stmt.symbol = symbolTable.resolve(stmt.name.lexeme)
+        }
 
     }
 
     override fun visitFuncStatement(stmt: Statement.Function) {
+        symbolTable.beginFunction()
+        for (param in stmt.params) {
+            val sym = symbolTable.defineLocal(
+                param.identifierToken.lexeme,
+                TokenTypeConverter.internalTypeFromTokenType(param.dataTypeToken.type)
+            )
+            param.symbol = sym
+        }
 
+        stmt.body.forEach { it.accept(this) }
+        symbolTable.endFunction()
     }
 
     override fun visitBlockStatement(stmt: Statement.Block) {
-        TODO("Not yet implemented")
+        symbolTable.beginScope()
+        stmt.body.forEach { it.accept(this) }
+        symbolTable.endScope()
     }
 
     override fun visitIfStatement(stmt: Statement.If) {
-        TODO("Not yet implemented")
+        stmt.condition.accept(this)
+        symbolTable.beginScope()
+        stmt.thenBranch.accept(this)
+        symbolTable.endScope()
+        symbolTable.beginScope()
+        stmt.elseBranch?.accept(this)
+        symbolTable.endScope()
     }
 
     override fun visitWhileStatement(stmt: Statement.While) {
-        TODO("Not yet implemented")
+        stmt.condition.accept(this)
+        symbolTable.beginScope()
+        stmt.body.accept(this)
+        symbolTable.endScope()
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
-        TODO("Not yet implemented")
+
     }
 
     override fun visitBinary(expression: Expression.Binary) {
-        TODO("Not yet implemented")
+        expression.left.accept(this)
+        expression.right.accept(this)
     }
 
     override fun visitLogical(expression: Expression.Logical) {
-        TODO("Not yet implemented")
+        expression.left.accept(this)
+        expression.right.accept(this)
     }
 
     override fun visitUnary(expression: Expression.Unary) {
-        TODO("Not yet implemented")
+        expression.right.accept(this)
     }
 
     override fun visitVariable(expression: Expression.Variable) {
-        TODO("Not yet implemented")
+        val symbolVar = symbolTable.resolve(expression.name.lexeme)
+        expression.symbol = symbolVar
     }
 
     override fun visitAssignExpr(expression: Expression.Assign) {
-        TODO("Not yet implemented")
+        val targetVar = symbolTable.resolve(expression.name.lexeme)
+        expression.symbol = targetVar
+        expression.value.accept(this)
     }
 }

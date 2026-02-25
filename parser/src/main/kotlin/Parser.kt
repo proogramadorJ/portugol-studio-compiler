@@ -87,7 +87,7 @@ class Parser(private val tokens: List<Token>) {
                     throw RuntimeException("Tipo do parametro esperado.")
                 }
                 val type = previous()
-                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado.")))
+                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado."), null) )
             } while (match(TokenType.TK_VIRGULA))
         }
 

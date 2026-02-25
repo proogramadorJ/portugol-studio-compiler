@@ -5,7 +5,7 @@ import java.io.File
 
 fun main() {
 
-    val codePath = "C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\test_analise_semantica_01.portugol"
+    val codePath = "C:\\Desenvolvimento\\Projetos\\portugol-studio-compiler\\src\\test\\test_analise_semantica_01.portugol"
     println("Running code $codePath")
     val codeFile =
         File(codePath)

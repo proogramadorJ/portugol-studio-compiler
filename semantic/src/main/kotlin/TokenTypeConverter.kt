@@ -1,10 +1,5 @@
-import types.BoolType
-import types.CaracterType
-import types.IntType
-import types.RealType
-import types.StringType
-import types.TokenType
-import types.Type
+import exception.SemanticException
+import types.*
 
 object TokenTypeConverter {
     fun internalTypeFromTokenType(tokenType: TokenType): Type {
@@ -14,7 +9,8 @@ object TokenTypeConverter {
             TokenType.TK_LOGICO -> BoolType
             TokenType.TK_CARACTER -> CaracterType
             TokenType.TK_CADEIA -> StringType
-            else -> throw RuntimeException("Não existe tipo interno mapeado para '${tokenType.name}' ")// TODO Semantic Analyser exception
+            TokenType.TK_VAZIO -> VoidType
+            else -> throw SemanticException("Não existe tipo interno mapeado para '${tokenType.name}' ") // TODO trocar para uma Execption personalizada mais generica
         }
     }
 }

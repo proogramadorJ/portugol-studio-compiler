@@ -14,13 +14,13 @@ class SymbolTable {
 
     fun defineFunction(name: String, paramsType: List<Type>, returnType: Type): Symbol {
         if (globals.containsKey(name)) {
-            throw RuntimeException("Função '$name' já declarada.")
+            throw SemanticException("Função '$name' já declarada.")
         }
 
         val symbol = FunctionSymbol(
             name = name,
             parametersType = paramsType,
-            returnType = returnType, // TODO funções do tipo void vai quebrar -> adicionar no mapa um tipo interno para void
+            returnType = returnType,
             entryPoint = null,
         )
 
@@ -28,13 +28,19 @@ class SymbolTable {
         return symbol
     }
 
-    //TODO Ainda não trata escopo de if/for/while
+    fun defineVar(name: String, type: Type): Symbol {
+        if (localIndex.empty()) {
+            return defineGlobal(name, type)
+        }
+        return defineLocal(name, type)
+
+    }
     fun defineLocal(name: String, type: Type): Symbol {
-        if(scopes.empty()){
+        if (scopes.empty()) {
             throw SemanticException("Variáveis locais só podem ser declaradas dentro de funções.")
         }
-        if(scopes.peek().containsKey(name)) {
-            throw SemanticException("Variável '$name' já declarada.")
+        if (scopes.peek().containsKey(name)) {
+            throw SemanticException("Variável '$name' já declarada neste escopo.")
         }
         val varIndex = localIndex.peek()
         localIndex[localIndex.size - 1] = varIndex + 1
@@ -44,7 +50,7 @@ class SymbolTable {
             storage = StorageKind.LOCAL,
             kind = SymbolKind.VARIABLE,
             type = type,
-            index =  varIndex
+            index = varIndex
         )
 
         scopes.peek()[name] = symbol
@@ -65,16 +71,16 @@ class SymbolTable {
         globals[name] = symbol
         return symbol
     }
-
     fun resolve(name: String): Symbol? {
-        if (!scopes.empty() && scopes.peek().containsKey(name)) {
-            return scopes.peek()[name]
+        for (i in scopes.size - 1 downTo 0) {
+            if (scopes[i].containsKey(name)) {
+                return scopes[i][name]
+            }
         }
         val symbol = globals[name]
             ?: throw SemanticException("Identificador '$name' não declarado.")
         return symbol
     }
-
 
     fun beginScope() {
         scopes.push(mutableMapOf())
@@ -92,5 +98,9 @@ class SymbolTable {
     fun endFunction() {
         endScope()
         localIndex.pop()
+    }
+
+    fun isInFucntion() : Boolean{
+        return !scopes.empty()
     }
 }

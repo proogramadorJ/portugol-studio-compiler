@@ -1,3 +1,5 @@
 package com.pedrodev
 
-data class Param(val dataTypeToken: Token, val identifierToken: Token)
+import symbols.Symbol
+
+data class Param(val dataTypeToken: Token, val identifierToken: Token, var symbol : Symbol?)
