@@ -27,7 +27,7 @@ abstract class Statement {
         }
     }
 
-    class Function(val name: Token, val returnType: Token, val params: List<Param>, val body: List<Statement>) :
+    class Function(val name: Token, val returnType: Token, val params: List<Param>, val body: List<Statement>, var symbol: Symbol?) :
         Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitFuncStatement(this)

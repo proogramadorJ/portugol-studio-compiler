@@ -2,7 +2,7 @@ import com.pedrodev.Statement
 import symbols.SymbolTable
 import visitor.SymbolTableBuilderVisitor
 
-public class SemanticAnalyzer {
+class SemanticAnalyzer {
 
     fun analyze(statements: List<Statement>) {
 

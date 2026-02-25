@@ -10,6 +10,7 @@ fun main() {
     val codeFile =
         File(codePath)
     val codeText = codeFile.readText(Charsets.UTF_8)
+    println("code $codeText")
 
     val scanner = Scanner(codeText)
     val tokens = scanner.scanTokens()

@@ -97,7 +97,7 @@ class Parser(private val tokens: List<Token>) {
         val body = block()
         // A chave de fechamento é consumida em block()
 
-        return Statement.Function(name, returnType, parameters, body)
+        return Statement.Function(name, returnType, parameters, body, null)
     }
 
     private fun block(): List<Statement> {

@@ -1,4 +1,10 @@
 Programa{
     inteiro a
     inteiro b
+
+    funcao inteiro c(inteiro c) {
+       inteiro d
+    }
+
+
 }
