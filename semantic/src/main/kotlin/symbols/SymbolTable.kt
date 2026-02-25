@@ -2,6 +2,7 @@ package symbols
 
 import TokenTypeConverter
 import com.pedrodev.Token
+import exception.SemanticException
 import types.StorageKind
 import types.SymbolKind
 import types.Type
@@ -10,7 +11,8 @@ import java.util.*
 class SymbolTable {
     private val globals = mutableMapOf<String, Symbol>()
     private var scopes: Stack<MutableMap<String, Symbol>> = Stack()
-    private var globalIndex = 0
+    private var globalIndex: Int = 0
+    private var localIndex: Stack<Int> = Stack()
 
     fun defineFunction(name: String, paramsType: List<Token>, returnType: Token): Symbol {
         if (globals.containsKey(name)) {
@@ -29,15 +31,21 @@ class SymbolTable {
         return symbol
     }
 
-    fun defineGlobal(name: String, type: Type): Symbol {
+//    fun defineLocal(name: String, type: Type): Symbol {
+//        if(scopes.empty()){
+//            throw
+//        }
+//    }
+
+    fun defineGlobal(name: String, type: Token): Symbol {
         if (globals.containsKey(name)) {
             //TODO criar um tipo semantic exception
-            throw RuntimeException("Variável '$name' já declarada.")
+            throw SemanticException("Variável '$name' já declarada.")
         }
         val symbol = VarSymbol(
             name = name,
             kind = SymbolKind.VARIABLE,
-            type = type,
+            type = TokenTypeConverter.internalTypeFromTokenType(type.type),
             storage = StorageKind.GLOBAL,
             index = globalIndex++
         )
@@ -50,7 +58,7 @@ class SymbolTable {
             return scopes.peek()[name]
         }
         val symbol = globals[name]
-            ?: throw RuntimeException("Identificador '$name' não declarado.")
+            ?: throw SemanticException("Identificador '$name' não declarado.")
         return symbol
     }
 

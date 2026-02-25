@@ -1,5 +1,6 @@
 import com.pedrodev.Statement
 import symbols.SymbolTable
+import visitor.NameAndScopeResolverVisitor
 import visitor.SymbolTableBuilderVisitor
 
 class SemanticAnalyzer {
@@ -8,11 +9,11 @@ class SemanticAnalyzer {
 
         val symbolTable = SymbolTable()
         val symbolTableBuilderVisitor = SymbolTableBuilderVisitor(symbolTable)
+        val nameAndScopeResolverVisitor = NameAndScopeResolverVisitor(symbolTable)
 
         statements.forEach { s ->
             s.accept(symbolTableBuilderVisitor)
-            //TODO outros visitors da analise semantica
-
+            s.accept(nameAndScopeResolverVisitor)
         }
     }
 
