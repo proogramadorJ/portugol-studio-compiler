@@ -321,15 +321,11 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expression.Literal(true, previous().type)
         if (match(TokenType.TK_FALSO_LITERAL)) return Expression.Literal(false, previous().type)
 
-        if (match(
-                TokenType.TK_NUMERO_REAL_LITERAL,
-                TokenType.TK_NUMERO_INTEIRO_LITERAL,
-                TokenType.TK_STRING_LITERAL,
-                TokenType.TK_CHAR_LITERAL
-            )
-        ) {
-            return Expression.Literal(previous().lexeme, previous().type)
-        }
+        if(match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) return Expression.Literal(previous().lexeme.toInt(), previous().type)
+        if(match(TokenType.TK_NUMERO_REAL_LITERAL)) return Expression.Literal(previous().lexeme.toDouble(), previous().type)
+        if(match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(previous().lexeme[0], previous().type)
+        if (match(TokenType.TK_STRING_LITERAL)) return Expression.Literal(previous().lexeme, previous().type)
+
         //Ainda não suporta chamada de funções
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous(), null)

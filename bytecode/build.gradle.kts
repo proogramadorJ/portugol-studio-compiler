@@ -13,6 +13,8 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation(project(":parser"))
     implementation(project(":lexer"))
+    implementation(project(":semantic"))
+    implementation(project(":commons"))
 }
 
 tasks.test {

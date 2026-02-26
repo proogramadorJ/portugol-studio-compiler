@@ -1,0 +1,1 @@
+class Instruction(val opCode: OpCode, var operating: Int? = null)

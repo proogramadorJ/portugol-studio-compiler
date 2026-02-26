@@ -1,11 +1,12 @@
 package com.pedrodev
 
+import ByteCodeGenerator
 import SemanticAnalyzer
 import java.io.File
 
 fun main() {
 
-    val codePath = "C:\\Desenvolvimento\\Projetos\\portugol-studio-compiler\\src\\test\\test_analise_semantica_01.portugol"
+    val codePath = "C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\test_bytecode_01.portugol"
     println("Running code $codePath")
     val codeFile =
         File(codePath)
@@ -28,6 +29,10 @@ fun main() {
     // println("\nast")
     val printer = ASTPrinter()
     printer.print(statements)
+
+    val bytecodeGen = ByteCodeGenerator()
+    val code = bytecodeGen.genCode(statements)
+    val a = 10;
 
     /**
     val codeGenerator = ByteCodeGenerator()
