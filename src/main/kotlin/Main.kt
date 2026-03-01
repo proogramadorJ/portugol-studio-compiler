@@ -16,8 +16,9 @@ fun main() {
         inteiro result = 0
         inteiro a = 10
         inteiro b = 20
-        se(a <= b)
+        se(a >= b)
             result = 1000
+        senao result = 5000            
         
         result
         

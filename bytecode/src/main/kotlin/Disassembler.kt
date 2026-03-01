@@ -1,11 +1,10 @@
 class Disassembler {
     fun run(code: List<Instruction>) {
+        var i = 0
         code.forEach {
-            if (it.operating != null) {
-                println("${it.opCode} ${it.operating}")
-            } else {
-                println(it.opCode.name)
-            }
+            val operating = if (it.operating != null) it.operating else ""
+            println("$i -  ${it.opCode} $operating")
+            i++
         }
     }
 }
