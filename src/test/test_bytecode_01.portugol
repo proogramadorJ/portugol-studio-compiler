@@ -1,4 +1,8 @@
 Programa{
-    inteiro a = 10
-
+    inteiro a = 10 + 5
+    real b = a
+    cadeia c = "Olá mundo"
+    //logico d = false
+    //inteiro e = a + 2// TODO 'e' é uma palavra reservada, colocar erro que fique claro que não se deve usar palavra reservada como identificador
+    inteiro x = a + 2
 }

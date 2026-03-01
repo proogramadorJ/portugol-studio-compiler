@@ -1,12 +1,14 @@
 package com.pedrodev
 
 import ByteCodeGenerator
+import Disassembler
 import SemanticAnalyzer
 import java.io.File
 
 fun main() {
 
-    val codePath = "C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\test_bytecode_01.portugol"
+    val codePath =
+        "C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\test_bytecode_01_parser2.portugol"
     println("Running code $codePath")
     val codeFile =
         File(codePath)
@@ -18,37 +20,21 @@ fun main() {
     println("Análise léxica Completa - OK")
 
     val parser = Parser(tokens)
-    val statements = parser.parse()
+    val statements = parser.parse2()
     println("Análise sintatica Completa - OK")
 
     val semantic = SemanticAnalyzer()
     semantic.analyze(statements)
     println("Análise semantica Completa - OK")
 
-
-    // println("\nast")
     val printer = ASTPrinter()
     printer.print(statements)
 
+    println("=======================Bytecode=======================")
     val bytecodeGen = ByteCodeGenerator()
     val code = bytecodeGen.genCode(statements)
-    val a = 10;
 
-    /**
-    val codeGenerator = ByteCodeGenerator()
-    val byteCode = codeGenerator.generate(expression)
+    val disassembler = Disassembler()
+    disassembler.run(code)
 
-    println("\nbytecode")
-    for (instruction in byteCode) {
-    println(instruction)
-    }
-
-    val instructions = mutableListOf<String>()
-    instructions.addAll(byteCode)
-    instructions.add("PRINT")
-
-    println("\nevaluation")
-    val vm = VM(instructions)
-    vm.run()
-     **/
 }

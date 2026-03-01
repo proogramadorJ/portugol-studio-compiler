@@ -15,10 +15,35 @@ class Parser(private val tokens: List<Token>) {
         return programa().statements
     }
 
+    fun parse2(): List<Statement> {
+        val statements: MutableList<Statement> = mutableListOf()
+
+        while (!isAtEnd()) {
+            when {
+                match(
+                    TokenType.TK_INTEIRO,
+                    TokenType.TK_CARACTER,
+                    TokenType.TK_REAL,
+                    TokenType.TK_CADEIA,
+                    TokenType.TK_LOGICO
+                ) ->
+                    statements.add(varDeclaration())
+
+                match(TokenType.TK_FUNCAO) -> statements.add(funcDeclaration())
+                match(TokenType.TK_SE) -> statements.add(ifStatement())
+                match(TokenType.TK_ENQUANTO) -> statements.add(whileStatement())
+                match(TokenType.TK_ABRE_CHAVE) -> statements.add(Statement.Block(block()))
+                else -> statements.add(expressionStatement())
+            }
+
+        }
+        return statements
+    }
+
     private fun programa(): ProgramaSttm {
         val progr = ProgramaSttm(mutableListOf())
 
-        consume(TokenType.TK_PROGRAMA, "Bloco 'programa' não encontrado.");
+        consume(TokenType.TK_PROGRAMA, "Bloco 'programa' não encontrado.")
         consume(TokenType.TK_ABRE_CHAVE, "Esperado '{' apos 'Programa'.")
 
         while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
@@ -87,7 +112,7 @@ class Parser(private val tokens: List<Token>) {
                     throw RuntimeException("Tipo do parametro esperado.")
                 }
                 val type = previous()
-                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado."), null) )
+                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado."), null))
             } while (match(TokenType.TK_VIRGULA))
         }
 
@@ -321,9 +346,15 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_VERDADEIRO_LITERAL)) return Expression.Literal(true, previous().type)
         if (match(TokenType.TK_FALSO_LITERAL)) return Expression.Literal(false, previous().type)
 
-        if(match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) return Expression.Literal(previous().lexeme.toInt(), previous().type)
-        if(match(TokenType.TK_NUMERO_REAL_LITERAL)) return Expression.Literal(previous().lexeme.toDouble(), previous().type)
-        if(match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(previous().lexeme[0], previous().type)
+        if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) return Expression.Literal(
+            previous().lexeme.toInt(),
+            previous().type
+        )
+        if (match(TokenType.TK_NUMERO_REAL_LITERAL)) return Expression.Literal(
+            previous().lexeme.toDouble(),
+            previous().type
+        )
+        if (match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(previous().lexeme[0], previous().type)
         if (match(TokenType.TK_STRING_LITERAL)) return Expression.Literal(previous().lexeme, previous().type)
 
         //Ainda não suporta chamada de funções

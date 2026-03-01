@@ -22,10 +22,8 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
                 TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type)
             )
             stmt.symbol = declaredVar
-        } else {
-            stmt.symbol = symbolTable.resolve(stmt.name.lexeme)
         }
-
+        stmt.initializer?.accept(this)
     }
 
     override fun visitFuncStatement(stmt: Statement.Function) {

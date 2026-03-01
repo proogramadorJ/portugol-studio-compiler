@@ -1,0 +1,6 @@
+    inteiro a = 10 + 5
+    real b = a
+    cadeia c = "Olá mundo"
+    inteiro x = a + 2
+
+   x = 19 + 34
