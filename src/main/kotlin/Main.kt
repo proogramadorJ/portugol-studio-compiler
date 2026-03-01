@@ -28,24 +28,29 @@ fun main() {
     val codeText = inMemoryCode
     println("code $codeText")
 
+    println("=======================Analise Lexica=======================")
     val scanner = Scanner(codeText)
     val tokens = scanner.scanTokens()
-    println("Análise léxica Completa - OK")
+    println("Análise Léxica - OK")
 
+    println("=======================Analise Sintatica=======================")
     val parser = Parser(tokens)
     val statements = parser.parse2()
-    println("Análise sintatica Completa - OK")
+    println("Análise Sintatica - OK")
 
+    println("=======================Analise Semantica=======================")
     val semantic = SemanticAnalyzer()
     semantic.analyze(statements)
-    println("Análise semantica Completa - OK")
+    println("Análise Semantica - OK")
 
+    println("=======================Ast Printer=======================")
     val printer = ASTPrinter()
     printer.print(statements)
 
     println("=======================Bytecode=======================")
     val bytecodeGen = ByteCodeGenerator()
     val code = bytecodeGen.genCode(statements)
+    println("Bytecode Generation - OK")
 
     println("=======================Disassembler=======================")
     val disassembler = Disassembler()

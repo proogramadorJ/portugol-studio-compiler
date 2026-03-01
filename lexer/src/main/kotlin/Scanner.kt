@@ -271,7 +271,6 @@ class Scanner(source: String) {
         }
 
         tokens.add(Token(TokenType.EOF, -1, -1, "", null))
-        println("Análise Léxica - OK")
         return tokens
     }
 

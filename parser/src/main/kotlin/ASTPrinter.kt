@@ -41,7 +41,6 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     }
 
     fun print(statements: List<Statement>) {
-        println("=== AST ===")
         println("Programa")
         statements.forEach {
             it.accept(this)
