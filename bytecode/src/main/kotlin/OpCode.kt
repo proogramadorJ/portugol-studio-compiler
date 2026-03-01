@@ -2,6 +2,14 @@ enum class OpCode {
     //math
     ADD, SUB, MUL, DIV,
 
+    //logical
+    EQ, // EQUAL
+    NE, // NOT EQUAL
+    LT, // LESS THEN
+    LE, // LESS EQUAL
+    GT, // GREATER
+    GE, // GREATER EQUAL
+
     //variable
     LOAD_LOCAL, LOAD_GLOBAL,
     STORE_LOCAL, STORE_GLOBAL,
@@ -14,5 +22,9 @@ enum class OpCode {
 
     //VM Internal
     PRINT,
-    HALT
+    HALT,
+
+    //JMPs
+    JMP_IF_FALSE,
+    JMP
 }

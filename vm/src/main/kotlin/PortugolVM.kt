@@ -62,6 +62,47 @@ class PortugolVM(val bytecode : List<Instruction>, val constantPool: ConstantPoo
                 OpCode.RETURN -> TODO()
                 OpCode.PRINT -> printPeek()
                 OpCode.HALT -> break
+                OpCode.EQ -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value == b.value))
+                }
+                OpCode.NE -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value != b.value))
+                }
+                OpCode.LT -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value < b.value))
+                }
+                OpCode.LE -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value <= b.value))
+                }
+                OpCode.GT -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value > b.value))
+                }
+                OpCode.GE -> {
+                    val b = pop() as IntValue
+                    val a = pop() as IntValue
+                    push(BooleanValue( a.value >= b.value))
+                }
+                OpCode.JMP_IF_FALSE -> {
+                   val bValue  = pop() as BooleanValue
+                    if(!bValue.value){
+                        currentInstruction.operating.let { ip = it as Int }
+                        continue
+                    }
+                }
+                OpCode.JMP -> {
+                    currentInstruction.operating.let { ip = it as Int }
+                    continue
+                }
             }
             ip++
         }

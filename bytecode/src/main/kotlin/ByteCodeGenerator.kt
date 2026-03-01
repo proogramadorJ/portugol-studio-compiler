@@ -37,11 +37,24 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     }
 
     override fun visitBlockStatement(stmt: Statement.Block) {
-        TODO("Not yet implemented")
+        stmt.body.forEach { it.accept(this) }
     }
 
     override fun visitIfStatement(stmt: Statement.If) {
-        TODO("Not yet implemented")
+        stmt.condition.accept(this)
+        val jumpToElseAddr = bytecode.size
+        bytecode.add(Instruction(OpCode.JMP_IF_FALSE, 0))
+
+        stmt.thenBranch.accept(this)
+        if (stmt.elseBranch != null) {
+            val jumpToEndAddr = bytecode.size
+            bytecode.add(Instruction(OpCode.JMP, 0))
+            bytecode[jumpToElseAddr] = Instruction(OpCode.JMP_IF_FALSE, bytecode.size)
+            stmt.elseBranch?.accept(this)
+            bytecode[jumpToEndAddr] = Instruction(OpCode.JMP, bytecode.size)
+        } else {
+            bytecode[jumpToElseAddr] = Instruction(OpCode.JMP_IF_FALSE, bytecode.size)
+        }
     }
 
     override fun visitWhileStatement(stmt: Statement.While) {
@@ -71,7 +84,12 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
             TokenType.TK_SUBTRACAO -> OpCode.SUB
             TokenType.TK_MULTPLICACAO -> OpCode.MUL
             TokenType.TK_DIVISAO -> OpCode.DIV
-
+            TokenType.TK_IGUAL_IGUAL -> OpCode.EQ
+            TokenType.TK_DIFERENTE -> OpCode.NE
+            TokenType.TK_MAIOR -> OpCode.GT
+            TokenType.TK_MAIOR_OU_IGUAL -> OpCode.GE
+            TokenType.TK_MENOR -> OpCode.LT
+            TokenType.TK_MENOR_OU_IGUAL -> OpCode.LE
             else -> throw RuntimeException("Operador ${expression.operator.lexeme} não mapeado") // TODO criar exceção personalizada
         }
 
@@ -79,7 +97,7 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     }
 
     override fun visitLogical(expression: Expression.Logical) {
-        TODO("Not yet implemented")
+        TODO()
     }
 
     override fun visitUnary(expression: Expression.Unary) {

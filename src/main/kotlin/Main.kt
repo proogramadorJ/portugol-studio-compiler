@@ -13,11 +13,13 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode  = """
+        inteiro result = 0
         inteiro a = 10
-        inteiro b = 10
-        inteiro c = 10 * 10       
-        b = a + 2
-        b
+        inteiro b = 20
+        se(a <= b)
+            result = 1000
+        
+        result
         
     """.trimIndent()
 
