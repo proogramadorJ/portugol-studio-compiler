@@ -10,6 +10,7 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
 
     fun genCode(program: List<Statement>): MutableList<Instruction> {
         program.forEach { it.accept(this) }
+        bytecode.add(Instruction(OpCode.PRINT))
         bytecode.add(Instruction(OpCode.HALT))
         return bytecode
     }
