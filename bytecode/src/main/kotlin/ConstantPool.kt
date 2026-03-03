@@ -1,3 +1,5 @@
+import values.Value
+
 class ConstantPool {
     private var values = mutableListOf<Value>()
 

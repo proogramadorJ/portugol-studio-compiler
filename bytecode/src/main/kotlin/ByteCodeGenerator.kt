@@ -3,6 +3,10 @@ import com.pedrodev.Statement
 import symbols.VarSymbol
 import types.StorageKind
 import types.TokenType
+import values.BooleanValue
+import values.IntValue
+import values.RealValue
+import values.StringValue
 
 class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     private var bytecode = mutableListOf<Instruction>()
@@ -21,15 +25,34 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
 
     override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration) {
         stmt.initializer?.accept(this)
+        val symbol = stmt.symbol as VarSymbol
+        val opCode = if (symbol.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
 
-        if (stmt.initializer != null) {
-            val symbol = stmt.symbol as VarSymbol
-            val opCode = if (symbol.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
+        if (stmt.initializer == null) {
+            when (symbol.type.name) {
+                "inteiro" -> {
+                    stmt.initializer = Expression.Literal(0, TokenType.TK_NUMERO_INTEIRO_LITERAL)
+                }
 
-            bytecode.add(Instruction(opCode, symbol.index as Int))
-        } else {
-            //TODO inicializar variaveis com valor padrão Int -> 0, Real ->0.0,
+                "real" -> {
+                    stmt.initializer = Expression.Literal(0.0, TokenType.TK_NUMERO_REAL_LITERAL)
+                }
+
+                "logico" -> {
+                    stmt.initializer = Expression.Literal(false, TokenType.TK_FALSO_LITERAL)
+                }
+
+                "cadeia" -> {
+                    stmt.initializer = Expression.Literal("", TokenType.TK_STRING_LITERAL)
+                }
+
+                "caracter" -> { // TODO testar ver se isso não vai quebrar
+                    stmt.initializer = Expression.Literal('\u0000', TokenType.TK_CHAR_LITERAL)
+                }
+            }
+            stmt.initializer?.accept(this)
         }
+        bytecode.add(Instruction(opCode, symbol.index as Int))
     }
 
     override fun visitFuncStatement(stmt: Statement.Function) {

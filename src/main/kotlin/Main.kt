@@ -13,15 +13,11 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode  = """
-        inteiro result = 0
-        inteiro a = 10
-        inteiro b = 20
-        se(a >= b)
-            result = 1000
-        senao result = 5000            
-        
-        result
-        
+    real teste = 43.98
+    inteiro c  = 2
+    inteiro d = 2
+    cadeia a = "Olá meu nome é Pedro"
+    c > 2
     """.trimIndent()
 
 //    val codeFile =
