@@ -12,13 +12,11 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode = """
-    real teste = 43.98
-    inteiro c  = 2
-    inteiro d = 2
-    cadeia a = "Olá meu nome é Pedro"
-    cadeia x = "Pe"
-    cadeia xb = "PE"
-    "Ola mundo" + c
+    inteiro i = 0
+    enquanto( i < 3){
+        i = i + 1
+    }
+    i
     """.trimIndent()
 
 //    val codeFile =

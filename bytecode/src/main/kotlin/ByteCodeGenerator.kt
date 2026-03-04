@@ -82,7 +82,14 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     }
 
     override fun visitWhileStatement(stmt: Statement.While) {
-        TODO("Not yet implemented")
+        val conditionBeginAddr = bytecode.size
+        stmt.condition.accept(this)
+        bytecode.add(Instruction(OpCode.JMP_IF_FALSE))
+        val jmpIfFalseAddr = bytecode.size - 1
+        stmt.body.accept(this)
+        bytecode.add(Instruction(OpCode.JMP, conditionBeginAddr))
+        val endOfWhileAddr = bytecode.size
+        bytecode[jmpIfFalseAddr] = Instruction(OpCode.JMP_IF_FALSE, endOfWhileAddr)
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
