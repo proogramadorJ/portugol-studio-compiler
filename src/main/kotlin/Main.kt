@@ -4,7 +4,6 @@ import ByteCodeGenerator
 import Disassembler
 import PortugolVM
 import SemanticAnalyzer
-import java.io.File
 
 fun main() {
 
@@ -12,18 +11,20 @@ fun main() {
         "C:\\Users\\pedro\\Desenvolvimento\\desktop\\portugol-studio-compiler\\src\\test\\test_bytecode_01_parser2.portugol"
     println("Running code $codePath")
 
-    val inMemoryCode  = """
+    val inMemoryCode = """
     real teste = 43.98
     inteiro c  = 2
     inteiro d = 2
     cadeia a = "Olá meu nome é Pedro"
-    c > 2
+    cadeia x = "Pe"
+    cadeia xb = "PE"
+    "Ola mundo" + c
     """.trimIndent()
 
 //    val codeFile =
 //        File(codePath)
 //
-  //  val codeText = codeFile.readText(Charsets.UTF_8)
+    //  val codeText = codeFile.readText(Charsets.UTF_8)
     val codeText = inMemoryCode
     println("code $codeText")
 
@@ -59,7 +60,6 @@ fun main() {
     val vm = PortugolVM(code, bytecodeGen.constantPool)
     vm.run()
     println("VM execution finished with status 0")
-
 
 
 }

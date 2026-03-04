@@ -4,6 +4,7 @@ import symbols.VarSymbol
 import types.StorageKind
 import types.TokenType
 import values.BooleanValue
+import values.CharacterValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
@@ -91,6 +92,7 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
             TokenType.TK_STRING_LITERAL -> StringValue(expression.value as String)
             TokenType.TK_VERDADEIRO_LITERAL -> BooleanValue(true)
             TokenType.TK_FALSO_LITERAL -> BooleanValue(false)
+            TokenType.TK_CHAR_LITERAL -> CharacterValue(expression.value as Char)
             else -> throw RuntimeException("Valor literal do tipo ${expression.type} ainda não mapeado") // TODO criar Exception personalizada
         }
 

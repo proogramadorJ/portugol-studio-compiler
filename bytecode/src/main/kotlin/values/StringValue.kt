@@ -6,7 +6,7 @@ class StringValue(var value: String) : Value() {
     }
 
     override fun add(other: Value): Value {
-        return StringValue(value + other.toString())
+        return StringValue(value + other.str())
     }
 
 
