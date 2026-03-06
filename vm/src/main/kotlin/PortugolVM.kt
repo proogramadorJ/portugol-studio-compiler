@@ -1,17 +1,24 @@
 import exception.StackOverflow
 import exception.StackUnderflow
+import functions.io.Escreva
+import functions.NativeFunction
+import functions.string.NumeroCaracteres
 import values.BooleanValue
 import values.Value
 import java.util.*
 
-//TODO Adiconar no construtor  val defaultInPutStream : InputStream, val defaultOutputStream: OutputStream
 class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool) {
-    private var ip: Int = 0 // Instruction pointer
+    private var ip: Int = 0
     private var stack: Stack<Value> = Stack()
     private val maxSizeStack: Int = 255
+    private var nativeFunctions: MutableList<NativeFunction> = mutableListOf()
 
     // TODO Trocar para array de tamanho fixo baseado na quantidade de variaveis globais
     private var globalVars: Array<Value?> = arrayOfNulls(255)
+
+    init {
+        initNativeFunctions()
+    }
 
     fun run() {
         while (ip < bytecode.size) {
@@ -130,6 +137,12 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                     currentInstruction.operating.let { ip = it as Int }
                     continue
                 }
+
+                OpCode.CALL_NATIVE -> {
+                    val fIndex: Int = currentInstruction.operating as Int
+                    val function = nativeFunctions[fIndex]
+                    function.run(this)
+                }
             }
             ip++
         }
@@ -142,17 +155,22 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
         }
     }
 
-    private fun pop(): Value {
+    fun pop(): Value {
         if (stack.isEmpty()) {
             throw StackUnderflow("Erro na execução do programa: Tentativa de remover de uma pilha vázia.")
         }
         return stack.pop()
     }
 
-    private fun push(value: Value) {
+    fun push(value: Value) {
         if (stack.size >= maxSizeStack) {
             throw StackOverflow("Erro na execução do programa: Pilha de operandos ultrapassa o limite de $maxSizeStack elementos.")
         }
         stack.push(value)
+    }
+
+    private fun initNativeFunctions(){
+        nativeFunctions.add(Escreva())
+        nativeFunctions.add(NumeroCaracteres())
     }
 }

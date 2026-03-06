@@ -14,6 +14,7 @@ abstract class Expression {
         fun visitUnary(expression: Unary): R
         fun visitVariable(expression: Variable): R
         fun visitAssignExpr(expression: Assign): R
+        fun visitCallExpr(expression: Call): R
     }
 
     class Binary(val left: Expression, val operator: Token, val right: Expression) : Expression() {
@@ -49,6 +50,12 @@ abstract class Expression {
     class Assign(val name: Token, val value: Expression, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitAssignExpr(this)
+        }
+    }
+
+    class Call(val callee: Expression, val paren: Token, val arguments: List<Expression>) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitCallExpr(this)
         }
     }
 }

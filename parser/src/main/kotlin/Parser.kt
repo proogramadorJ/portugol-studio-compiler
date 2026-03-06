@@ -331,7 +331,29 @@ class Parser(private val tokens: List<Token>) {
             val right = unary()
             return Expression.Unary(operator, right)
         }
-        return primary()
+        return call()
+    }
+
+    private fun call() : Expression {
+        var expr = primary()
+        if(match(TokenType.TK_ABRE_PARENTESE)){
+            expr = finishCall(expr)
+        }
+        return expr
+    }
+
+    private fun finishCall(callee: Expression): Expression {
+        val arguments = mutableListOf<Expression>()
+        if (!check(TokenType.TK_FECHA_PARENTESE)) {
+            do {
+                if (arguments.size >= 255) {
+                    throw RuntimeException( "Função não pode ter mais de 255 argumentos.")
+                }
+                arguments.add(expression())
+            } while (match(TokenType.TK_VIRGULA))
+        }
+        val paren = consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' depois de argumentos.")
+        return Expression.Call(callee, paren, arguments)
     }
 
     private fun primary(): Expression {
@@ -357,7 +379,6 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(previous().lexeme[0], previous().type)
         if (match(TokenType.TK_STRING_LITERAL)) return Expression.Literal(previous().lexeme, previous().type)
 
-        //Ainda não suporta chamada de funções
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous(), null)
         }

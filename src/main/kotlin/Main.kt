@@ -4,6 +4,7 @@ import ByteCodeGenerator
 import Disassembler
 import PortugolVM
 import SemanticAnalyzer
+import symbols.SymbolTable
 
 fun main() {
 
@@ -12,11 +13,8 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode = """
-    inteiro i = 0
-    enquanto( i < 3){
-        i = i + 1
-    }
-    i
+    cadeia nome "Pedro" 
+    escreva(numero_caracteres(nome)) 
     """.trimIndent()
 
 //    val codeFile =
@@ -38,7 +36,7 @@ fun main() {
 
     println("=======================Analise Semantica=======================")
     val semantic = SemanticAnalyzer()
-    semantic.analyze(statements)
+    val symbolTable : SymbolTable = semantic.analyze(statements)
     println("Análise Semantica - OK")
 
     println("=======================Ast Printer=======================")
@@ -46,7 +44,7 @@ fun main() {
     printer.print(statements)
 
     println("=======================Bytecode=======================")
-    val bytecodeGen = ByteCodeGenerator()
+    val bytecodeGen = ByteCodeGenerator(symbolTable)
     val code = bytecodeGen.genCode(statements)
     println("Bytecode Generation - OK")
 

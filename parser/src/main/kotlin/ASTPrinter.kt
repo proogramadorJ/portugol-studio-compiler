@@ -40,6 +40,11 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return result
     }
 
+    override fun visitCallExpr(expression: Expression.Call): String {
+        //TODO implementar
+        return ""
+    }
+
     fun print(statements: List<Statement>) {
         println("Programa")
         statements.forEach {

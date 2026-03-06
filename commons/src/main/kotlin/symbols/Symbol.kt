@@ -20,5 +20,7 @@ class FunctionSymbol(
     override val name: String,
     val parametersType : List<Type>,
     val returnType: Type,
-    var entryPoint: Int? //Endereço do inicio da função no bytecode
+    var entryPoint: Int?,
+    var nativeIndex: Int?,
+    var native : Boolean = false
 ): Symbol()

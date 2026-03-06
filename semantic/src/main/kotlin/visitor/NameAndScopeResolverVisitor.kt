@@ -91,4 +91,9 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         expression.symbol = targetVar
         expression.value.accept(this)
     }
+
+    override fun visitCallExpr(expression: Expression.Call) {
+        // expression.callee.accept(this) TODO descomentar, pois funções não declaradas devem quebrar
+        expression.arguments.forEach { it.accept(this) }
+    }
 }

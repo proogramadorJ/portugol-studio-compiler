@@ -1,5 +1,7 @@
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import symbols.FunctionSymbol
+import symbols.SymbolTable
 import symbols.VarSymbol
 import types.StorageKind
 import types.TokenType
@@ -8,14 +10,14 @@ import values.CharacterValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
+import kotlin.math.exp
 
-class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
+class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     private var bytecode = mutableListOf<Instruction>()
     val constantPool = ConstantPool()
 
     fun genCode(program: List<Statement>): MutableList<Instruction> {
         program.forEach { it.accept(this) }
-        bytecode.add(Instruction(OpCode.PRINT))
         bytecode.add(Instruction(OpCode.HALT))
         return bytecode
     }
@@ -144,10 +146,21 @@ class ByteCodeGenerator : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
 
     override fun visitAssignExpr(expression: Expression.Assign) {
         expression.value.accept(this)
-
         val symbolTarget = expression.symbol as VarSymbol
         val opCode = if (symbolTarget.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
 
         bytecode.add(Instruction(opCode, symbolTarget.index))
+    }
+
+    override fun visitCallExpr(expression: Expression.Call) {
+        expression.arguments.forEach { it.accept(this) }
+        val name = expression.callee as Expression.Variable
+        val function = symbolTable.resolve(name.name.lexeme) as FunctionSymbol
+        if(function.native){
+            bytecode.add(Instruction(OpCode.CALL_NATIVE, function.nativeIndex))
+        }else{
+            TODO()
+        }
+
     }
 }

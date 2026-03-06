@@ -5,7 +5,8 @@ import visitor.SymbolTableBuilderVisitor
 
 class SemanticAnalyzer {
 
-    fun analyze(statements: List<Statement>) {
+
+    fun analyze(statements: List<Statement>): SymbolTable {
 
         val symbolTable = SymbolTable()
         val symbolTableBuilderVisitor = SymbolTableBuilderVisitor(symbolTable)
@@ -15,6 +16,7 @@ class SemanticAnalyzer {
             s.accept(symbolTableBuilderVisitor)
             s.accept(nameAndScopeResolverVisitor)
         }
+        return symbolTable
     }
 
 }

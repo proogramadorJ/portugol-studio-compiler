@@ -27,7 +27,9 @@ class SymbolTableBuilderVisitor(
         val defineFunction = symbolTable.defineFunction(
             stmt.name.lexeme,
             paramsType,
-            TokenTypeConverter.internalTypeFromTokenType(stmt.returnType.type)
+            TokenTypeConverter.internalTypeFromTokenType(stmt.returnType.type),
+            false,
+            null
         )
         stmt.symbol = defineFunction
     }

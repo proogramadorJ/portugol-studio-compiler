@@ -1,9 +1,12 @@
 package symbols
 
 import exception.SemanticException
+import types.IntType
 import types.StorageKind
+import types.StringType
 import types.SymbolKind
 import types.Type
+import types.VoidType
 import java.util.*
 
 class SymbolTable {
@@ -11,9 +14,14 @@ class SymbolTable {
     private var scopes: Stack<MutableMap<String, Symbol>> = Stack()
     private var globalIndex: Int = 0
     private var localIndex: Stack<Int> = Stack()
+    private var nativeCount: Int = 0
 
-    fun defineFunction(name: String, paramsType: List<Type>, returnType: Type): Symbol {
-        if (globals.containsKey(name)) {
+    init {
+        defineNativeFunctions()
+    }
+
+    fun defineFunction(name: String, paramsType: List<Type>, returnType: Type, native: Boolean, nativeIndex: Int?): Symbol {
+        if (globals.containsKey(name)) { // TODO Como tratar conflito com funções nativas
             throw SemanticException("Função '$name' já declarada.")
         }
 
@@ -22,6 +30,8 @@ class SymbolTable {
             parametersType = paramsType,
             returnType = returnType,
             entryPoint = null,
+            native = native,
+            nativeIndex = nativeIndex
         )
 
         globals[name] = symbol
@@ -35,6 +45,7 @@ class SymbolTable {
         return defineLocal(name, type)
 
     }
+
     fun defineLocal(name: String, type: Type): Symbol {
         if (scopes.empty()) {
             throw SemanticException("Variáveis locais só podem ser declaradas dentro de funções.")
@@ -71,6 +82,7 @@ class SymbolTable {
         globals[name] = symbol
         return symbol
     }
+
     fun resolve(name: String): Symbol? {
         for (i in scopes.size - 1 downTo 0) {
             if (scopes[i].containsKey(name)) {
@@ -100,7 +112,33 @@ class SymbolTable {
         localIndex.pop()
     }
 
-    fun isInFucntion() : Boolean{
+    fun isInFucntion(): Boolean {
         return localIndex.isNotEmpty()
+    }
+
+    fun defineNativeFunctions(){
+
+        val escreva =  FunctionSymbol(
+            name = "escreva",
+            parametersType = listOf(VoidType), //  VoidType = Qualquer tipo
+            returnType = VoidType,
+            entryPoint = null,
+            nativeIndex = nativeCount++,
+            native = true
+        )
+
+        val numeroCaracteres =  FunctionSymbol(
+            name = "numero_caracteres",
+            parametersType = listOf(StringType), //  VoidType = Qualquer tipo
+            returnType = IntType,
+            entryPoint = null,
+            nativeIndex = nativeCount++,
+            native = true
+        )
+
+        globals["escreva"] = escreva
+        globals["numero_caracteres"] = numeroCaracteres
+
+        globalIndex = globals.size
     }
 }
