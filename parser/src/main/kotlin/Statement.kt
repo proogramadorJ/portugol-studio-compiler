@@ -11,6 +11,7 @@ abstract class Statement {
         fun visitBlockStatement(stmt: Block): R
         fun visitIfStatement(stmt: If): R
         fun visitWhileStatement(stmt: While): R
+        fun visitReturnStatement(stmt: Return): R
     }
 
     abstract fun <R> accept(visitor: Visitor<R>): R
@@ -21,13 +22,20 @@ abstract class Statement {
         }
     }
 
-    class VarDeclaration(val name: Token, val declaredType: Token, var initializer: Expression?,  var symbol: Symbol?) : Statement() {
+    class VarDeclaration(val name: Token, val declaredType: Token, var initializer: Expression?, var symbol: Symbol?) :
+        Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVarDeclarationStatement(this)
         }
     }
 
-    class Function(val name: Token, val returnType: Token, val params: List<Param>, val body: List<Statement>, var symbol: Symbol?) :
+    class Function(
+        val name: Token,
+        val returnType: Token,
+        val params: List<Param>,
+        val body: List<Statement>,
+        var symbol: Symbol?
+    ) :
         Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitFuncStatement(this)
@@ -50,5 +58,12 @@ abstract class Statement {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitWhileStatement(this)
         }
+    }
+
+    class Return(val keyword: Token, val expression: Expression) : Statement() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitReturnStatement(this)
+        }
+
     }
 }

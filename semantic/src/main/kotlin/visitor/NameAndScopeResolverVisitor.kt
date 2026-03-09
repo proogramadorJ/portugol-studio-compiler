@@ -3,6 +3,7 @@ package visitor
 import TokenTypeConverter
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import symbols.FunctionSymbol
 import symbols.Symbol
 import symbols.SymbolTable
 
@@ -37,6 +38,8 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         }
 
         stmt.body.forEach { it.accept(this) }
+        val fsymbol = stmt.symbol as FunctionSymbol
+        fsymbol.localCount = symbolTable.currentIndexSize()
         symbolTable.endFunction()
     }
 
@@ -61,6 +64,10 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         symbolTable.beginScope()
         stmt.body.accept(this)
         symbolTable.endScope()
+    }
+
+    override fun visitReturnStatement(stmt: Statement.Return) {
+        stmt.expression.accept(this)
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
@@ -93,7 +100,7 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitCallExpr(expression: Expression.Call) {
-        // expression.callee.accept(this) TODO descomentar, pois funções não declaradas devem quebrar
+        expression.callee.accept(this)
         expression.arguments.forEach { it.accept(this) }
     }
 }

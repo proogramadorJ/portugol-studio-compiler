@@ -3,9 +3,10 @@ package com.pedrodev
 import types.TokenType
 
 object ReservedWords {
-    val reservedWords = mutableMapOf<String, TokenType>(
+    val reservedWords = mutableMapOf(
         "programa" to TokenType.TK_PROGRAMA,
         "funcao" to TokenType.TK_FUNCAO,
+        "retorne" to TokenType.TK_RETURNE,
         "se" to TokenType.TK_SE,
         "senao" to TokenType.TK_SENAO,
         "escolha" to TokenType.TK_ESCOLHA,

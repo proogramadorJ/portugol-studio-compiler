@@ -13,4 +13,6 @@ class ConstantPool {
         return values[index]
     }
 
+    fun size() : Int = values.size
+
 }

@@ -18,10 +18,9 @@ enum class OpCode {
     LOAD_CONST,
 
     //functions
-    CALL, CALL_NATIVE, RETURN,
+    CALL, CALL_NATIVE, RETURN, PUSH_NULL,
 
     //VM Internal
-    PRINT,
     HALT,
 
     //JMPs

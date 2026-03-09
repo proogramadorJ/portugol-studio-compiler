@@ -20,7 +20,8 @@ class FunctionSymbol(
     override val name: String,
     val parametersType : List<Type>,
     val returnType: Type,
-    var entryPoint: Int?,
     var nativeIndex: Int?,
-    var native : Boolean = false
+    var native : Boolean = false,
+    var localCount : Int = 0,
+    var constPoolAddres: Int?
 ): Symbol()

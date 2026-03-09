@@ -3,21 +3,25 @@ import exception.StackUnderflow
 import functions.io.Escreva
 import functions.NativeFunction
 import functions.string.NumeroCaracteres
+import internal.CallFrame
 import values.BooleanValue
+import values.FunctionValue
 import values.Value
 import java.util.*
 
 class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool) {
     private var ip: Int = 0
-    private var stack: Stack<Value> = Stack()
+    private var stack: Stack<Value?> = Stack()
     private val maxSizeStack: Int = 255
     private var nativeFunctions: MutableList<NativeFunction> = mutableListOf()
+    private var callFrames: Stack<CallFrame> = Stack()
 
     // TODO Trocar para array de tamanho fixo baseado na quantidade de variaveis globais
     private var globalVars: Array<Value?> = arrayOfNulls(255)
 
     init {
         initNativeFunctions()
+
     }
 
     fun run() {
@@ -74,15 +78,36 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                 }
 
                 OpCode.CALL -> {
-                    TODO()
+                    val function = constantPool.get(currentInstruction.operating as Int) as FunctionValue
+                    val basePointer = stack.size - function.arity
+                    val callFrame = CallFrame(
+                        basePointer = basePointer,
+                        function = function,
+                        returnAdress = ip + 1
+                    )
+
+                    callFrames.push(callFrame)
+                    var localFrameSizeToAdd = function.localCount - function.arity
+                    while (localFrameSizeToAdd > 0) {
+                        stack.push(null)
+                        localFrameSizeToAdd -= 1
+                    }
+                    ip = function.startAdres
+                    continue
                 }
 
                 OpCode.RETURN -> {
-                    TODO()
+                   val currentFrame = callFrames.pop()
+                    val returnValue = stack.pop()
+                    while(stack.size > currentFrame.basePointer){
+                        stack.pop()
+                    }
+                    stack.push(returnValue)
+                    ip = currentFrame.returnAdress
+                    continue
                 }
-
-                OpCode.PRINT -> {
-                    printPeek()
+                OpCode.PUSH_NULL -> {
+                    pushNull()
                 }
 
                 OpCode.HALT -> {
@@ -148,18 +173,12 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
         }
     }
 
-    private fun printPeek() {
-        if (stack.isNotEmpty()) {
-            val sValue = stack.pop()
-            println(sValue.str())
-        }
-    }
 
     fun pop(): Value {
         if (stack.isEmpty()) {
             throw StackUnderflow("Erro na execução do programa: Tentativa de remover de uma pilha vázia.")
         }
-        return stack.pop()
+        return stack.pop() ?: throw IllegalStateException("A pilha continha um valor nulo inesperado")
     }
 
     fun push(value: Value) {
@@ -169,8 +188,16 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
         stack.push(value)
     }
 
-    private fun initNativeFunctions(){
+    fun pushNull(){
+        if (stack.size >= maxSizeStack) {
+            throw StackOverflow("Erro na execução do programa: Pilha de operandos ultrapassa o limite de $maxSizeStack elementos.")
+        }
+        stack.push(null)
+    }
+
+    private fun initNativeFunctions() {
         nativeFunctions.add(Escreva())
         nativeFunctions.add(NumeroCaracteres())
     }
+
 }

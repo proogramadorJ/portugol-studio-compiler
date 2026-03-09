@@ -33,6 +33,7 @@ class Parser(private val tokens: List<Token>) {
                 match(TokenType.TK_SE) -> statements.add(ifStatement())
                 match(TokenType.TK_ENQUANTO) -> statements.add(whileStatement())
                 match(TokenType.TK_ABRE_CHAVE) -> statements.add(Statement.Block(block()))
+                match(TokenType.TK_RETURNE) -> statements.add(Statement.Return(previous(), expression()))
                 else -> statements.add(expressionStatement())
             }
 
@@ -129,7 +130,7 @@ class Parser(private val tokens: List<Token>) {
         val statements = mutableListOf<Statement>()
 
         while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
-            statement()?.let { statements.add(it) }
+            statement().let { statements.add(it) }
         }
         consume(TokenType.TK_FECHA_CHAVE, "Esperado '}' depois do  bloco.")
         return statements
@@ -181,8 +182,6 @@ class Parser(private val tokens: List<Token>) {
         val name = previous()
         var expr: Expression? = null
 
-        //TODO o initializer de uma variavel pode ser o retorno de uma chamada função
-        // EX: inteiro diaAtual = getDiaAtual()
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
         }
@@ -381,6 +380,9 @@ class Parser(private val tokens: List<Token>) {
 
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous(), null)
+        }
+        if(match(TokenType.TK_RETURNE)){
+            TODO()
         }
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }

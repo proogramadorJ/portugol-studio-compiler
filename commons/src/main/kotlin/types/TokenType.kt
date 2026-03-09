@@ -4,6 +4,7 @@ enum class TokenType {
 
     TK_PROGRAMA, //programa
     TK_FUNCAO, // funcao
+    TK_RETURNE,
     TK_SE, // se
     TK_SENAO, // senao
     TK_IDENTIFICADOR, // nome de variavel ou função

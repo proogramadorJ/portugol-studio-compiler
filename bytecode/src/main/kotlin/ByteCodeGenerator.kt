@@ -5,8 +5,10 @@ import symbols.SymbolTable
 import symbols.VarSymbol
 import types.StorageKind
 import types.TokenType
+import types.VoidType
 import values.BooleanValue
 import values.CharacterValue
+import values.FunctionValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
@@ -15,10 +17,17 @@ import kotlin.math.exp
 class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
     private var bytecode = mutableListOf<Instruction>()
     val constantPool = ConstantPool()
+    var indexMainFunction = -1
 
     fun genCode(program: List<Statement>): MutableList<Instruction> {
+        bytecode.add(Instruction(OpCode.JMP))
         program.forEach { it.accept(this) }
         bytecode.add(Instruction(OpCode.HALT))
+
+        if(indexMainFunction == - 1){ //função inicio não declarada
+            throw RuntimeException("Função inicio não declarada.")
+        }
+        bytecode[0] = Instruction(OpCode.JMP, indexMainFunction)
         return bytecode
     }
 
@@ -58,8 +67,32 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         bytecode.add(Instruction(opCode, symbol.index as Int))
     }
 
+    /**
+     * TODO por enquanto não suporta return
+     */
     override fun visitFuncStatement(stmt: Statement.Function) {
-        TODO("Not yet implemented")
+        val functionSymbol = stmt.symbol as FunctionSymbol
+        val startAdrr = bytecode.size
+        val isMainFunction = stmt.name.lexeme == "inicio"
+
+        val fValue = FunctionValue(
+            name = functionSymbol.name,
+            arity = stmt.params.size,
+            localCount = functionSymbol.localCount,
+            startAdres = startAdrr
+        )
+        val constIndex = constantPool.add(fValue)
+        functionSymbol.constPoolAddres = constIndex
+        stmt.body.forEach { it.accept(this) }
+
+        if(functionSymbol.returnType == VoidType && !isMainFunction){ //TODO Eu ACHO que se chamar a função inicio a partir de outra função vai quebrar
+            bytecode.add(Instruction(OpCode.PUSH_NULL))
+            bytecode.add(Instruction(OpCode.RETURN))
+        }
+
+        if(isMainFunction){
+            indexMainFunction = startAdrr
+        }
     }
 
     override fun visitBlockStatement(stmt: Statement.Block) {
@@ -92,6 +125,11 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         bytecode.add(Instruction(OpCode.JMP, conditionBeginAddr))
         val endOfWhileAddr = bytecode.size
         bytecode[jmpIfFalseAddr] = Instruction(OpCode.JMP_IF_FALSE, endOfWhileAddr)
+    }
+
+    override fun visitReturnStatement(stmt: Statement.Return) {
+       stmt.expression.accept(this)
+       bytecode.add(Instruction(OpCode.RETURN))
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
@@ -156,11 +194,11 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         expression.arguments.forEach { it.accept(this) }
         val name = expression.callee as Expression.Variable
         val function = symbolTable.resolve(name.name.lexeme) as FunctionSymbol
-        if(function.native){
-            bytecode.add(Instruction(OpCode.CALL_NATIVE, function.nativeIndex))
-        }else{
-            TODO()
-        }
 
+        if (function.native) {
+            bytecode.add(Instruction(OpCode.CALL_NATIVE, function.nativeIndex))
+        } else {
+            bytecode.add(Instruction(OpCode.CALL, function.constPoolAddres))
+        }
     }
 }

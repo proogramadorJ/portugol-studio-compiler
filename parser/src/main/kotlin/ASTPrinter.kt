@@ -41,8 +41,8 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     }
 
     override fun visitCallExpr(expression: Expression.Call): String {
-        //TODO implementar
-        return ""
+        val name = expression.callee as Expression.Variable
+        return name.name.lexeme + "(" +expression.arguments.forEach { it.accept(this) } + ")"
     }
 
     fun print(statements: List<Statement>) {
@@ -108,5 +108,9 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         stmt.body.accept(this)
         space -= 4
         return null
+    }
+
+    override fun visitReturnStatement(stmt: Statement.Return): Void? {
+        TODO("Not yet implemented")
     }
 }

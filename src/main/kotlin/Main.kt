@@ -13,14 +13,17 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode = """
-    cadeia nome "Pedro" 
-    escreva(numero_caracteres(nome)) 
+    funcao soma(inteiro a, inteiro b){
+        retorne a + b
+    }   
+    funcao print(){
+        escreva("print()")
+    }
+    funcao inicio(){
+      escreva(soma(2,3))
+    }    
     """.trimIndent()
 
-//    val codeFile =
-//        File(codePath)
-//
-    //  val codeText = codeFile.readText(Charsets.UTF_8)
     val codeText = inMemoryCode
     println("code $codeText")
 

@@ -20,7 +20,13 @@ class SymbolTable {
         defineNativeFunctions()
     }
 
-    fun defineFunction(name: String, paramsType: List<Type>, returnType: Type, native: Boolean, nativeIndex: Int?): Symbol {
+    fun defineFunction(
+        name: String,
+        paramsType: List<Type>,
+        returnType: Type,
+        native: Boolean,
+        nativeIndex: Int?
+    ): Symbol {
         if (globals.containsKey(name)) { // TODO Como tratar conflito com funções nativas
             throw SemanticException("Função '$name' já declarada.")
         }
@@ -29,9 +35,11 @@ class SymbolTable {
             name = name,
             parametersType = paramsType,
             returnType = returnType,
-            entryPoint = null,
             native = native,
-            nativeIndex = nativeIndex
+            nativeIndex = nativeIndex,
+            localCount = 0,
+            constPoolAddres = null
+
         )
 
         globals[name] = symbol
@@ -116,29 +124,34 @@ class SymbolTable {
         return localIndex.isNotEmpty()
     }
 
-    fun defineNativeFunctions(){
+    fun defineNativeFunctions() {
 
-        val escreva =  FunctionSymbol(
+        val escreva = FunctionSymbol(
             name = "escreva",
             parametersType = listOf(VoidType), //  VoidType = Qualquer tipo
             returnType = VoidType,
-            entryPoint = null,
             nativeIndex = nativeCount++,
-            native = true
+            native = true,
+            localCount = 0,
+            constPoolAddres = null
         )
 
-        val numeroCaracteres =  FunctionSymbol(
+        val numeroCaracteres = FunctionSymbol(
             name = "numero_caracteres",
             parametersType = listOf(StringType), //  VoidType = Qualquer tipo
             returnType = IntType,
-            entryPoint = null,
             nativeIndex = nativeCount++,
-            native = true
+            native = true,
+            constPoolAddres = null
         )
 
         globals["escreva"] = escreva
         globals["numero_caracteres"] = numeroCaracteres
 
         globalIndex = globals.size
+    }
+
+    fun currentIndexSize(): Int {
+        return localIndex.peek()
     }
 }
