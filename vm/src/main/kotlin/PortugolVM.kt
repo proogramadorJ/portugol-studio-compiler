@@ -21,10 +21,11 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
 
     init {
         initNativeFunctions()
-
+        initMainFrame()
     }
 
     fun run() {
+
         while (ip < bytecode.size) {
             val currentInstruction = bytecode[ip]
             val opCode = currentInstruction.opCode
@@ -55,7 +56,9 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                 }
 
                 OpCode.LOAD_LOCAL -> {
-                    TODO()
+                   val currentFrame = callFrames.peek()
+                   val localVarIndex = currentFrame.basePointer + currentInstruction.operating as Int
+                    stack.push(stack[localVarIndex])
                 }
 
                 OpCode.LOAD_GLOBAL -> {
@@ -64,7 +67,9 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                 }
 
                 OpCode.STORE_LOCAL -> {
-                    TODO()
+                    val currentFrame = callFrames.peek()
+                    val localVarIndex = currentFrame.basePointer + currentInstruction.operating as Int
+                    stack[localVarIndex] = pop()
                 }
 
                 OpCode.STORE_GLOBAL -> {
@@ -198,6 +203,14 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
     private fun initNativeFunctions() {
         nativeFunctions.add(Escreva())
         nativeFunctions.add(NumeroCaracteres())
+    }
+
+    private fun initMainFrame(){
+        //TODO tem que criar um frame para a função inicio
+//        callFrames.push(CallFrame(
+//            0,
+//            0
+//        ))
     }
 
 }

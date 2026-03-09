@@ -1,0 +1,15 @@
+   //TODO usar parser2 -> não precisa de Programa{}
+    funcao inteiro soma(inteiro a, inteiro b){
+        retorne a + b
+    }
+
+    funcao inteiro mult(inteiro a, inteiro b){
+        retorn a * b
+    }
+
+    funcao inicio(){
+      variavel inteiro a = 10
+      variavel inteiro b = 10
+      escreva(soma(3, 4))
+      escreva(mult(a, b))
+    }

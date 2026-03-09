@@ -148,15 +148,26 @@ class Parser(private val tokens: List<Token>) {
                 varDeclaration()
             }
 
-            match(TokenType.TK_SE) -> return ifStatement()
-            match(TokenType.TK_ENQUANTO) -> return whileStatement()
-            match(TokenType.TK_ABRE_CHAVE) -> return Statement.Block(block())
+            match(TokenType.TK_SE) -> ifStatement()
+            match(TokenType.TK_ENQUANTO) -> whileStatement()
+            match(TokenType.TK_ABRE_CHAVE) -> Statement.Block(block())
+            match(TokenType.TK_RETURNE) -> returnStatement()
 
             else -> {
-                return expressionStatement()
+                expressionStatement()
             }
 
         }
+    }
+
+    private fun returnStatement(): Statement.Return {
+        val keyword = previous()
+        var value: Expression = expression()
+//        if (!check(TokenType.SEMICOLON)) {
+//            value = expression()
+//        }
+
+        return Statement.Return(keyword, value)
     }
 
     private fun whileStatement(): Statement.While {
@@ -333,9 +344,9 @@ class Parser(private val tokens: List<Token>) {
         return call()
     }
 
-    private fun call() : Expression {
+    private fun call(): Expression {
         var expr = primary()
-        if(match(TokenType.TK_ABRE_PARENTESE)){
+        if (match(TokenType.TK_ABRE_PARENTESE)) {
             expr = finishCall(expr)
         }
         return expr
@@ -346,7 +357,7 @@ class Parser(private val tokens: List<Token>) {
         if (!check(TokenType.TK_FECHA_PARENTESE)) {
             do {
                 if (arguments.size >= 255) {
-                    throw RuntimeException( "Função não pode ter mais de 255 argumentos.")
+                    throw RuntimeException("Função não pode ter mais de 255 argumentos.")
                 }
                 arguments.add(expression())
             } while (match(TokenType.TK_VIRGULA))
@@ -380,9 +391,6 @@ class Parser(private val tokens: List<Token>) {
 
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous(), null)
-        }
-        if(match(TokenType.TK_RETURNE)){
-            TODO()
         }
         throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
     }
