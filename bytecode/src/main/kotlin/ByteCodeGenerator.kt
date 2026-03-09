@@ -92,6 +92,7 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
 
         if(isMainFunction){
             indexMainFunction = startAdrr
+            bytecode.add(Instruction(OpCode.HALT))
         }
     }
 

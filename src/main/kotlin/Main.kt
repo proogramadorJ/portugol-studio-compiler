@@ -13,15 +13,17 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode = """
-    funcao soma(inteiro a, inteiro b){
-        retorne a + b
-    }   
+  
     funcao print(){
         escreva("print()")
     }
-    funcao inicio(){
-      escreva(soma(2,3))
-    }    
+      funcao inicio(){
+      escreva("inicio()")
+    } 
+    
+    funcao inalcancavel(){
+        escreva("inalcancavel")
+    }
     """.trimIndent()
 
     val codeText = inMemoryCode
