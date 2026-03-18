@@ -13,19 +13,16 @@ fun main() {
     println("Running code $codePath")
 
     val inMemoryCode = """
-    funcao inteiro soma(inteiro a, inteiro b){
-        retorne a + b
+    funcao inteiro fibonacci(inteiro n) {
+        se (n <= 1) {
+            retorne n
+        }
+        retorne fibonacci(n - 1) + fibonacci(n - 2)
     }
-    
-    funcao inteiro mult(inteiro a, inteiro b){
-        retorne a * b
-    }
-     inteiro a = 10
-     inteiro b = 10
+
+   
     funcao inicio(){
-      
-      escreva(soma(3, 4))
-      escreva(mult(a, b))
+     escreva(fibonacci(10))
     }
     """.trimIndent()
 
