@@ -1,25 +1,44 @@
 plugins {
-    kotlin("jvm")
+    kotlin("multiplatform")
+    id("com.android.library")
 }
 
-group = "com.pedrodev"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation(kotlin("test"))
-    implementation(project(":parser"))
-    implementation(project(":lexer"))
-    implementation(project(":semantic"))
-    implementation(project(":commons"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
 kotlin {
-    jvmToolchain(17)
+    jvm()
+    androidTarget {
+        publishLibraryVariants("release")
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17)
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation(project(":parser"))
+                implementation(project(":lexer"))
+                implementation(project(":semantic"))
+                implementation(project(":commons"))
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation(kotlin("test"))
+            }
+        }
+        jvmMain { }
+        androidMain { }
+    }
+}
+
+android {
+    namespace = "com.pedrodev.bytecode"
+    compileSdk = 34
+    defaultConfig {
+        minSdk = 24
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }

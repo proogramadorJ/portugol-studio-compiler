@@ -1,26 +1,16 @@
 plugins {
-    kotlin("jvm") version "2.1.20"
+    kotlin("multiplatform") version "2.1.20" apply false
+    id("com.android.library") version "8.2.2" apply false
+    id("com.android.application") version "8.2.2" apply false
+    kotlin("plugin.compose") version "2.1.20" apply false
 }
 
-group = "com.pedrodev"
-version = "1.0-SNAPSHOT"
+allprojects {
+    group = "com.pedrodev"
+    version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testImplementation(kotlin("test"))
-    implementation(project("lexer"))
-    implementation(project("parser"))
-    implementation(project("semantic"))
-    implementation(project("vm"))
-    implementation(project("bytecode"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-}
-kotlin {
-    jvmToolchain(17)
+    repositories {
+        google()
+        mavenCentral()
+    }
 }
