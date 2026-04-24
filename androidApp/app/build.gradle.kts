@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.pedrodev.portugol_ide_mobile"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.pedrodev.portugol_ide_mobile"
         minSdk = 24
-        targetSdk = 34
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
