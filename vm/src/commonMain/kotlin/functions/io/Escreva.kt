@@ -10,8 +10,10 @@ class Escreva : NativeFunction {
     }
 
     override fun run(vm: PortugolVM) {
-        val value: Value = vm.pop()
-        println(value.str())
+        val value: Value? = vm.pop()
+        if (value != null) {
+            vm.console.print(value.str())
+            println(value.str())
+        }
     }
-
 }

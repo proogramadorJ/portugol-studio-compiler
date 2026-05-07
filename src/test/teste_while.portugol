@@ -1,9 +1,11 @@
 Programa{
 
     funcao a(){
-        enquanto(verdadeiro){
-            a = b
+        inteiro a = 100
+        enquanto(a > 1){
+            a = a - 1
+            escreva(a)
         }
-        enquanto(falso) a = c
+
     }
 }
