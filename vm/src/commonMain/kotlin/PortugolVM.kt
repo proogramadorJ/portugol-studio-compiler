@@ -162,6 +162,14 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                     }
                 }
 
+                OpCode.JMP_IF_TRUE -> {
+                    val bValue = pop() as BooleanValue
+                    if (bValue.value) {
+                        ip = currentInstruction.operating as Int
+                        continue
+                    }
+                }
+
                 OpCode.JMP -> {
                     ip = currentInstruction.operating as Int
                     continue
@@ -172,9 +180,24 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                     val function = nativeFunctions[fIndex]
                     function.run(this)
                 }
+
+                OpCode.POP -> {
+                    pop()
+                }
+
+                OpCode.DUP -> {
+                    push(peek())
+                }
             }
             ip++
         }
+    }
+
+    fun peek() : Value? {
+        if (stack.isEmpty()) {
+            throw StackUnderflow("Erro na execução do programa: Tentativa de remover de uma pilha vazia.")
+        }
+        return stack[stack.size - 1]
     }
 
     fun pop(): Value? {

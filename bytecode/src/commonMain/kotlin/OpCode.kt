@@ -22,8 +22,11 @@ enum class OpCode {
 
     //VM Internal
     HALT,
+    POP, //remove top element
+    DUP, //duplicate top element
 
     //JMPs
     JMP_IF_FALSE,
+    JMP_IF_TRUE,
     JMP
 }

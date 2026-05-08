@@ -13,7 +13,8 @@ import values.IntValue
 import values.RealValue
 import values.StringValue
 
-class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
+class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
+    Expression.Visitor<Unit> {
     private var bytecode = mutableListOf<Instruction>()
     val constantPool = ConstantPool()
     var indexMainFunction = -1
@@ -23,7 +24,7 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         program.forEach { it.accept(this) }
         bytecode.add(Instruction(OpCode.HALT))
 
-        if(indexMainFunction == - 1){ //função inicio não declarada
+        if (indexMainFunction == -1) { //função inicio não declarada
             throw RuntimeException("Função inicio não declarada.")
         }
         bytecode[0] = Instruction(OpCode.JMP, indexMainFunction)
@@ -37,7 +38,8 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration) {
         stmt.initializer?.accept(this)
         val symbol = stmt.symbol as VarSymbol
-        val opCode = if (symbol.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
+        val opCode =
+            if (symbol.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
 
         if (stmt.initializer == null) {
             when (symbol.type.name) {
@@ -81,12 +83,12 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         functionSymbol.constPoolAddres = constIndex
         stmt.body.forEach { it.accept(this) }
 
-        if(functionSymbol.returnType == VoidType && !isMainFunction){ //TODO Eu ACHO que se chamar a função inicio a partir de outra função vai quebrar
+        if (functionSymbol.returnType == VoidType && !isMainFunction) { //TODO Eu ACHO que se chamar a função inicio a partir de outra função vai quebrar
             bytecode.add(Instruction(OpCode.PUSH_NULL))
             bytecode.add(Instruction(OpCode.RETURN))
         }
 
-        if(isMainFunction){
+        if (isMainFunction) {
             indexMainFunction = startAdrr
             bytecode.add(Instruction(OpCode.HALT))
         }
@@ -125,8 +127,8 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitReturnStatement(stmt: Statement.Return) {
-       stmt.expression.accept(this)
-       bytecode.add(Instruction(OpCode.RETURN))
+        stmt.expression.accept(this)
+        bytecode.add(Instruction(OpCode.RETURN))
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
@@ -166,7 +168,25 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitLogical(expression: Expression.Logical) {
-        TODO()
+        expression.left.accept(this)
+
+        if (expression.operator.type == TokenType.TK_E) {
+            bytecode.add(Instruction(OpCode.DUP))
+
+            val shortCircuitJumpAddr = bytecode.size
+            bytecode.add(Instruction(OpCode.JMP_IF_FALSE, 0))
+            bytecode.add(Instruction(OpCode.POP))
+            expression.right.accept(this)
+            bytecode[shortCircuitJumpAddr] = Instruction(OpCode.JMP_IF_FALSE, bytecode.size)
+
+        } else if (expression.operator.type == TokenType.TK_OU) {
+            bytecode.add(Instruction(OpCode.DUP))
+            val shortCircuitJumpAddr = bytecode.size
+            bytecode.add(Instruction(OpCode.JMP_IF_TRUE, 0))
+            bytecode.add(Instruction(OpCode.POP))
+            expression.right.accept(this)
+            bytecode[shortCircuitJumpAddr] = Instruction(OpCode.JMP_IF_TRUE, bytecode.size)
+        }
     }
 
     override fun visitUnary(expression: Expression.Unary) {
@@ -175,14 +195,16 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
 
     override fun visitVariable(expression: Expression.Variable) {
         val symbol = expression.symbol as VarSymbol
-        val opCode = if (symbol.storage == StorageKind.LOCAL) OpCode.LOAD_LOCAL else OpCode.LOAD_GLOBAL
+        val opCode =
+            if (symbol.storage == StorageKind.LOCAL) OpCode.LOAD_LOCAL else OpCode.LOAD_GLOBAL
         bytecode.add(Instruction(opCode, symbol.index))
     }
 
     override fun visitAssignExpr(expression: Expression.Assign) {
         expression.value.accept(this)
         val symbolTarget = expression.symbol as VarSymbol
-        val opCode = if (symbolTarget.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
+        val opCode =
+            if (symbolTarget.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
 
         bytecode.add(Instruction(opCode, symbolTarget.index))
     }
