@@ -1,19 +1,28 @@
 import exception.StackOverflow
 import exception.StackUnderflow
+import functions.NativeFunction
 import functions.io.Escreva
+import functions.io.Leia
 import functions.string.NumeroCaracteres
 import internal.CallFrame
 import io.PortugolConsole
+import kotlinx.coroutines.CompletableDeferred
 import values.BooleanValue
 import values.FunctionValue
 import values.Value
 
-class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool, val console: PortugolConsole) {
+
+class PortugolVM(
+    val bytecode: List<Instruction>,
+    val constantPool: ConstantPool,
+    val console: PortugolConsole
+) {
     private var ip: Int = 0
     private var stack: MutableList<Value?> = mutableListOf()
     private val maxSizeStack: Int = 255
     private var nativeFunctions: MutableList<NativeFunction> = mutableListOf()
     private var callFrames: MutableList<CallFrame> = mutableListOf()
+    var pendingInput: CompletableDeferred<String>? = null
 
     // TODO Trocar para array de tamanho fixo baseado na quantidade de variaveis globais
     private var globalVars: Array<Value?> = arrayOfNulls(255)
@@ -23,7 +32,7 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
         initMainFrame()
     }
 
-    fun run() {
+    suspend fun run() {
         while (ip < bytecode.size) {
             val currentInstruction = bytecode[ip]
             val opCode = currentInstruction.opCode
@@ -55,7 +64,8 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
 
                 OpCode.LOAD_LOCAL -> {
                     val currentFrame = callFrames.last()
-                    val localVarIndex = currentFrame.basePointer + (currentInstruction.operating as Int)
+                    val localVarIndex =
+                        currentFrame.basePointer + (currentInstruction.operating as Int)
                     push(stack[localVarIndex])
                 }
 
@@ -66,7 +76,8 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
 
                 OpCode.STORE_LOCAL -> {
                     val currentFrame = callFrames.last()
-                    val localVarIndex = currentFrame.basePointer + (currentInstruction.operating as Int)
+                    val localVarIndex =
+                        currentFrame.basePointer + (currentInstruction.operating as Int)
                     stack[localVarIndex] = pop()
                 }
 
@@ -81,7 +92,8 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                 }
 
                 OpCode.CALL -> {
-                    val function = constantPool.get(currentInstruction.operating as Int) as FunctionValue
+                    val function =
+                        constantPool.get(currentInstruction.operating as Int) as FunctionValue
                     val basePointer = stack.size - function.arity
                     val callFrame = CallFrame(
                         basePointer = basePointer,
@@ -93,7 +105,7 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                     repeat(function.localCount - function.arity) {
                         push(null)
                     }
-                    
+
                     ip = function.startAdres
                     continue
                 }
@@ -104,12 +116,12 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
                     while (stack.size > currentFrame.basePointer) {
                         stack.removeAt(stack.size - 1)
                     }
-                    
+
                     push(returnValue)
                     ip = currentFrame.returnAdress
                     continue
                 }
-                
+
                 OpCode.PUSH_NULL -> {
                     push(null)
                 }
@@ -193,7 +205,7 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
         }
     }
 
-    fun peek() : Value? {
+    fun peek(): Value? {
         if (stack.isEmpty()) {
             throw StackUnderflow("Erro na execução do programa: Tentativa de remover de uma pilha vazia.")
         }
@@ -217,6 +229,7 @@ class PortugolVM(val bytecode: List<Instruction>, val constantPool: ConstantPool
     private fun initNativeFunctions() {
         nativeFunctions.add(Escreva())
         nativeFunctions.add(NumeroCaracteres())
+        nativeFunctions.add(Leia())
     }
 
     private fun initMainFrame() {

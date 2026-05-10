@@ -142,7 +142,8 @@ fun MainApp() {
             composable("terminal") {
                 TerminalScreen(
                     onBack = { navController.popBackStack() },
-                    consoleOutput = viewModel.consoleLines
+                    consoleOutput = viewModel.consoleLines,
+                    viewModel = viewModel
                 )
             }
         }

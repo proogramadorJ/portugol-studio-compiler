@@ -1,6 +1,8 @@
+package functions
+
 import PortugolVM
 
 interface NativeFunction {
     fun arity() : Int
-    fun run(vm: PortugolVM)
+    suspend fun run(vm: PortugolVM)
 }

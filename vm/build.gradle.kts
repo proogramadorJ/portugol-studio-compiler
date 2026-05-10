@@ -16,6 +16,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(project(":bytecode"))
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
             }
         }
         commonTest {

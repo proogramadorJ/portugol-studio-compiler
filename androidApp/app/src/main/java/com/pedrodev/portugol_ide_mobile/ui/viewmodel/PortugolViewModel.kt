@@ -16,6 +16,7 @@ import symbols.SymbolTable
 class PortugolViewModel : ViewModel() {
     private val consoleBuffer = ConsolePortugolBuffer()
     val consoleLines = consoleBuffer.output
+    var vm : PortugolVM? = null
 
     fun onExecute(codeText: String, onNavigate: () -> Unit) {
         onNavigate()
@@ -40,8 +41,8 @@ class PortugolViewModel : ViewModel() {
                 disassembler.run(code)
 
                 
-                val vm = PortugolVM(code, bytecodeGen.constantPool, consoleBuffer)
-                vm.run()
+                vm = PortugolVM(code, bytecodeGen.constantPool, consoleBuffer)
+                vm?.run()
                 
                 consoleBuffer.print("\n> Execução finalizada.")
             } catch (e: Exception) {
@@ -49,4 +50,12 @@ class PortugolViewModel : ViewModel() {
             }
         }
     }
+
+    fun submitInputToVM(inputText: String){
+        val deferred = vm?.pendingInput
+        if (deferred != null && !deferred.isCompleted) {
+            deferred.complete(inputText)
+        }
+    }
+
 }

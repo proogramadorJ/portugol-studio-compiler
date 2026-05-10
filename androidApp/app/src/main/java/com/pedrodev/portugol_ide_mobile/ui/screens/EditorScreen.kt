@@ -37,42 +37,8 @@ fun EditorScreen(
             )
             setText("""
                  funcao teste(){
-                     inteiro a = 100
-                     inteiro b = 200
-                     inteiro c = 300
-                     
-                     se(a < b e b < c){
-                        escreva("Ordem crescente")
-                     }
-                     
-                     se (falso ou verdadeiro){
-                        escreva("false ou true")
-                     }
-                     
-                     se(verdadeiro ou falso){
-                        escreva("true ou true")
-                     }
-                     
-                     se(falso ou falso){
-                        escreva("false ou false")
-                     }senao{
-                        escreva("false ou false")
-                     }
-                     
-                     se(verdadeiro e verdadeiro){
-                        escreva("true e true")
-                     }
-                     
-                     se(verdadeiro e falso){
-                        escreva("true e false")
-                     }
-                     
-                     se(falso e falso){
-                        escreva("false e false")
-                     }
-                     
-                     
-                     
+                     cadeia a = leia()
+                     escreva("Você digitou " + a)
                 }
                 funcao inicio() {
                    

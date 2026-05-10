@@ -145,8 +145,18 @@ class SymbolTable {
             constPoolAddres = null
         )
 
+        val leia = FunctionSymbol(
+            name = "leia",
+            parametersType = listOf(VoidType),
+            returnType = StringType,
+            nativeIndex = nativeCount++,
+            native = true,
+            constPoolAddres = null
+        )
+
         globals["escreva"] = escreva
         globals["numero_caracteres"] = numeroCaracteres
+        globals["leia"] = leia
 
         globalIndex = globals.size
     }
