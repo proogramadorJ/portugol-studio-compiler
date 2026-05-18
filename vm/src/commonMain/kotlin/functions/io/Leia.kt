@@ -16,9 +16,13 @@ class Leia : NativeFunction {
 
         vm.pendingInput = deferred
 
+        vm.updateIsWaitingForInput() //Abre console
+
         val input = deferred.await()
         vm.pendingInput = null
         //TODO Por enquanto só recebe String
         vm.push(StringValue(input))
+
+        vm.updateIsWaitingForInput()//Fecha console
     }
 }

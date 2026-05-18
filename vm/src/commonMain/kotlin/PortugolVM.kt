@@ -15,7 +15,8 @@ import values.Value
 class PortugolVM(
     val bytecode: List<Instruction>,
     val constantPool: ConstantPool,
-    val console: PortugolConsole
+    val console: PortugolConsole,
+    val updateIsWaitingForInput: () -> Unit
 ) {
     private var ip: Int = 0
     private var stack: MutableList<Value?> = mutableListOf()

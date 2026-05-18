@@ -98,49 +98,52 @@ fun TerminalScreen(
             }
 
             // Input Area
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "> ",
-                    color = Color.Green,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
-                )
-                BasicTextField(
-                    value = userInput,
-                    onValueChange = { userInput = it },
-                    textStyle = TextStyle(
-                        color = Color.White,
+            if(viewModel.isWaitingForInput.value){
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Black.copy(alpha = 0.5f))
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "> ",
+                        color = Color.Green,
                         fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.Bold,
                         fontSize = 16.sp
-                    ),
-                    modifier = Modifier.weight(1f),
-                    singleLine = true,
-                    cursorBrush = SolidColor(Color.White),
+                    )
+                    BasicTextField(
+                        value = userInput,
+                        onValueChange = { userInput = it },
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontFamily = FontFamily.Monospace,
+                            fontSize = 16.sp
+                        ),
+                        modifier = Modifier.weight(1f),
+                        singleLine = true,
+                        cursorBrush = SolidColor(Color.White),
 //                    keyboardActions = KeyboardActions(
 //                        onSend = {
 //                            viewModel.submitInputToVM(userInput)
 //                            userInput = ""
 //                        }
 //                    )
-                )
-                if (userInput.isNotBlank()) {
-                    IconButton(
-                        onClick = {
-                            viewModel.submitInputToVM(userInput)
-                            userInput = ""
+                    )
+                    if (userInput.isNotBlank()) {
+                        IconButton(
+                            onClick = {
+                                viewModel.submitInputToVM(userInput)
+                                userInput = ""
+                            }
+                        ) {
+                            Icon(Icons.Default.Send, contentDescription = "Enviar", tint = Color.White)
                         }
-                    ) {
-                        Icon(Icons.Default.Send, contentDescription = "Enviar", tint = Color.White)
                     }
                 }
             }
+
         }
     }
 }
