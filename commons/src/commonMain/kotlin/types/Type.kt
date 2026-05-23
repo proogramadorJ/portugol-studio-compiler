@@ -27,3 +27,7 @@ object CaracterType : Type() {
 object VoidType : Type() {
     override val name = "vazio"
 }
+
+object AnyType : Type() {
+    override val name = "qualquer"
+}

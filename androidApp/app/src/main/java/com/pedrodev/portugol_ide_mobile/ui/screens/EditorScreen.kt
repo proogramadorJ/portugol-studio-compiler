@@ -36,14 +36,20 @@ fun EditorScreen(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             setText("""
-                 funcao teste(){
-                     cadeia a = leia()
-                     escreva("Você digitou " + a)
+                funcao teste(){
+                   inteiro teste_ = 999
+                   escreva(teste_)
                 }
+                
                 funcao inicio() {
-                   
-                    
-                   teste()
+                   escreva("TESTE COM VALORES DO TIPO 'REAL'")
+                   real a  = 10
+                   real b =  10.45
+                   real c = a + b
+                   escreva( "a + b = " + c)
+                   escreva ("Digite o nova valor de 'a':")
+                   leia(a)
+                   escreva( "a + b = "+ (a + b))
                 }
                 
                

@@ -3,7 +3,11 @@ import com.pedrodev.Statement
 import symbols.FunctionSymbol
 import symbols.SymbolTable
 import symbols.VarSymbol
+import types.CaracterType
+import types.IntType
+import types.RealType
 import types.StorageKind
+import types.StringType
 import types.TokenType
 import types.VoidType
 import values.BooleanValue
@@ -216,6 +220,27 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
 
         if (function.native) {
             bytecode.add(Instruction(OpCode.CALL_NATIVE, function.nativeIndex))
+
+            if (function.name == "leia") { // TODO extrair processamento da função leia para uma função especifica
+                val arg0 = expression.arguments[0] as Expression.Variable
+                val symbol = (arg0.symbol as VarSymbol)
+
+                when (symbol.type) {
+                    IntType -> bytecode.add(Instruction(OpCode.STR_TO_INT))
+                    RealType -> bytecode.add(Instruction(OpCode.STR_TO_DOUBLE))
+                    CaracterType -> bytecode.add(Instruction(OpCode.STR_TO_CHAR))
+                    StringType -> {} // O valor do topo da pilha deixado por 'leia' já é uma string
+
+                    else -> {
+                        throw RuntimeException("Tipo inválido para função 'leia'.") // TODO melhorar essa mensagem
+                    }
+                }
+                if (symbol.storage == StorageKind.LOCAL) {
+                    bytecode.add(Instruction(OpCode.STORE_LOCAL, symbol.index))
+                } else {
+                    bytecode.add(Instruction(OpCode.STORE_GLOBAL, symbol.index))
+                }
+            }
         } else {
             bytecode.add(Instruction(OpCode.CALL, function.constPoolAddres))
         }

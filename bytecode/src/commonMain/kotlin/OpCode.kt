@@ -25,6 +25,10 @@ enum class OpCode {
     POP, //remove top element
     DUP, //duplicate top element
 
+    STR_TO_INT, // convert string to int
+    STR_TO_DOUBLE, // convert string to double
+    STR_TO_CHAR, // convert string to char
+
     //JMPs
     JMP_IF_FALSE,
     JMP_IF_TRUE,

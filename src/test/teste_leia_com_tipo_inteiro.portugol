@@ -1,0 +1,9 @@
+ funcao inicio() {
+                   inteiro a  = 10
+                   inteiro b =  10
+                   inteiro c = a + b
+                   escreva( "a + b = " + c)
+                   escreva ("Digite o nova valor de 'a':")
+                   leia(a)
+                   escreva( "a + b = "+ (a + b))
+                }

@@ -9,6 +9,9 @@ import io.PortugolConsole
 import kotlinx.coroutines.CompletableDeferred
 import values.BooleanValue
 import values.FunctionValue
+import values.IntValue
+import values.RealValue
+import values.StringValue
 import values.Value
 
 
@@ -200,6 +203,25 @@ class PortugolVM(
 
                 OpCode.DUP -> {
                     push(peek())
+                }
+
+                //TODO incluir tratamento de erro para conversão de valores nessas instruções
+
+                OpCode.STR_TO_INT -> {
+                    val value = pop() as StringValue
+                    push(IntValue(value.value.toInt()))
+                }
+                OpCode.STR_TO_DOUBLE -> {
+                    val value = pop() as StringValue
+                    push(RealValue(value.value.toDouble()))
+                }
+
+                OpCode.STR_TO_CHAR -> {
+                    val value = pop() as StringValue
+                    if(value.value.length != 1) {
+                        throw RuntimeException("Valor {${value.value}} 'inválido para tipo 'char'")
+                    }
+                    push(StringValue(value.value.toCharArray()[0].toString()))
                 }
             }
             ip++

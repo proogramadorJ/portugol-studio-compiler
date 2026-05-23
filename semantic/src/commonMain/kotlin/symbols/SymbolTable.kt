@@ -1,6 +1,7 @@
 package symbols
 
 import exception.SemanticException
+import types.AnyType
 import types.IntType
 import types.StorageKind
 import types.StringType
@@ -147,7 +148,7 @@ class SymbolTable {
 
         val leia = FunctionSymbol(
             name = "leia",
-            parametersType = listOf(VoidType),
+            parametersType = listOf(AnyType),
             returnType = StringType,
             nativeIndex = nativeCount++,
             native = true,

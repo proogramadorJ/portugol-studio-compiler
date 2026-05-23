@@ -29,6 +29,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pedrodev.portugol_ide_mobile.ui.viewmodel.PortugolViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,6 +52,16 @@ fun TerminalScreen(
     var userInput by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val logs = remember { mutableStateListOf<String>() }
+//    val cursorFocusRequest = remember { FocusRequester() }
+//    var cursorVisible by remember { mutableStateOf(true) }
+//
+//    LaunchedEffect(Unit) {
+//        cursorFocusRequest.requestFocus()
+//        while(true){
+//            cursorVisible = !cursorVisible
+//            delay(500)
+//        }
+//    }
 
     LaunchedEffect(Unit) {
         consoleOutput.collect { message ->
@@ -102,7 +115,8 @@ fun TerminalScreen(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.Black.copy(alpha = 0.5f))
+                        //.background(Color.Black.copy(alpha = 0.5f))
+                        .background(Color(0xFF1E1E1E))
                         .padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -122,8 +136,10 @@ fun TerminalScreen(
                             fontSize = 16.sp
                         ),
                         modifier = Modifier.weight(1f),
+                          //  .focusRequester( cursorFocusRequest),
                         singleLine = true,
-                        cursorBrush = SolidColor(Color.White),
+                        cursorBrush = SolidColor(if (viewModel.isWaitingForInput.value) Color.White else Color.Transparent),
+
 //                    keyboardActions = KeyboardActions(
 //                        onSend = {
 //                            viewModel.submitInputToVM(userInput)

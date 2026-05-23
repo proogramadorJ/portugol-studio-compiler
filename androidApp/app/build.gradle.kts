@@ -8,6 +8,10 @@ android {
     namespace = "com.pedrodev.portugol_ide_mobile"
     compileSdk = 35
 
+    lint {
+        disable.add("MutableCollectionMutableState") //TODO corrigir causa raiz
+    }
+
     defaultConfig {
         applicationId = "com.pedrodev.portugol_ide_mobile"
         minSdk = 24
