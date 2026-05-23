@@ -1,4 +1,4 @@
-package com.pedrodev.portugol_ide_mobile.ui.screens
+package com.pedrodev.portugol_ide_mobile.ui.screens.terminal
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Send
@@ -29,8 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
@@ -39,7 +36,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pedrodev.portugol_ide_mobile.ui.viewmodel.PortugolViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,16 +48,7 @@ fun TerminalScreen(
     var userInput by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val logs = remember { mutableStateListOf<String>() }
-//    val cursorFocusRequest = remember { FocusRequester() }
-//    var cursorVisible by remember { mutableStateOf(true) }
-//
-//    LaunchedEffect(Unit) {
-//        cursorFocusRequest.requestFocus()
-//        while(true){
-//            cursorVisible = !cursorVisible
-//            delay(500)
-//        }
-//    }
+
 
     LaunchedEffect(Unit) {
         consoleOutput.collect { message ->

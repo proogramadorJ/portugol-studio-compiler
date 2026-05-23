@@ -1,4 +1,4 @@
-package com.pedrodev.portugol_ide_mobile.ui.screens
+package com.pedrodev.portugol_ide_mobile.ui.screens.editor
 
 import android.view.ViewGroup
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,48 +16,20 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import io.github.rosemoe.sora.event.ContentChangeEvent
 import io.github.rosemoe.sora.widget.CodeEditor
+import io.github.rosemoe.sora.widget.subscribeEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditorScreen(
+    codeText: String,
+    onCodeChange: (String) -> Unit,
     onExecute: (String) -> Unit,
     onOpenDrawer: () -> Unit
 ) {
-    val context = LocalContext.current
-    val editor = remember {
-        CodeEditor(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-            setText("""
-                funcao teste(){
-                   inteiro teste_ = 999
-                   escreva(teste_)
-                }
-                
-                funcao inicio() {
-                   escreva("TESTE COM VALORES DO TIPO 'REAL'")
-                   real a  = 10
-                   real b =  10.45
-                   real c = a + b
-                   escreva( "a + b = " + c)
-                   escreva ("Digite o nova valor de 'a':")
-                   leia(a)
-                   escreva( "a + b = "+ (a + b))
-                }
-                
-               
-                
-            """.trimIndent())
-        }
-    }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -71,7 +43,7 @@ fun EditorScreen(
         },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = { onExecute(editor.text.toString()) },
+                onClick = { onExecute(codeText) },
                 containerColor = MaterialTheme.colorScheme.primaryContainer
             ) {
                 Icon(Icons.Default.PlayArrow, "Executar")
@@ -85,8 +57,31 @@ fun EditorScreen(
             color = MaterialTheme.colorScheme.background
         ) {
             AndroidView(
-                factory = { editor },
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
+                factory = { context ->
+                    CodeEditor(context).apply {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setText(codeText)
+
+                        subscribeEvent<ContentChangeEvent> { _, _ ->
+                            val currentText = this.text.toString()
+                            if (currentText != codeText) {
+                                onCodeChange(currentText)
+                            }
+                        }
+                    }
+                },
+                update = { editor ->
+                    if (editor.text.toString() != codeText) {
+                        editor.setText(codeText)
+                    }
+                },
+                onRelease = { editor ->
+                    editor.release()
+                }
             )
         }
     }

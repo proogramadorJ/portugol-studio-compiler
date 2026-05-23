@@ -20,8 +20,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.pedrodev.portugol_ide_mobile.ui.screens.EditorScreen
-import com.pedrodev.portugol_ide_mobile.ui.screens.TerminalScreen
+import com.pedrodev.portugol_ide_mobile.ui.screens.editor.EditorScreen
+import com.pedrodev.portugol_ide_mobile.ui.screens.editor.EditorViewModel
+import com.pedrodev.portugol_ide_mobile.ui.screens.terminal.TerminalScreen
 import com.pedrodev.portugol_ide_mobile.ui.theme.PortugolidemobileTheme
 import com.pedrodev.portugol_ide_mobile.ui.viewmodel.PortugolViewModel
 import kotlinx.coroutines.launch
@@ -43,6 +44,7 @@ class MainActivity : ComponentActivity() {
 fun MainApp() {
     val navController = rememberNavController()
     val viewModel: PortugolViewModel = viewModel()
+    val editorViewModel: EditorViewModel = viewModel()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
@@ -129,6 +131,10 @@ fun MainApp() {
         NavHost(navController = navController, startDestination = "editor") {
             composable("editor") {
                 EditorScreen(
+                    codeText = editorViewModel.codeText,
+                    onCodeChange = { newCode ->
+                        editorViewModel.updateCode(newCode)
+                    },
                     onExecute = { code ->
                         viewModel.onExecute(code) {
                             navController.navigate("terminal")
