@@ -13,3 +13,11 @@
       escreva(soma(3, 4))
       escreva(mult(a, b))
     }
+
+      funcao inteiro fibonacci(inteiro n){
+            se(n <= 1){
+                retorne n
+            }
+            retorne fibonacci(n - 1) + fibonacci(n - 2)
+
+       }
