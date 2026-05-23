@@ -114,8 +114,8 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 ```
 
 ### Capturas de Tela
-![Screenshot do App](/androidApp/screenshoots/fibonacci_code.png)
-![Screenshot do App](/androidApp/screenshoots/fibonacci_console.png)
+<img src="/androidApp/screenshoots/fibonacci_code.png" alt="Screenshot do App" width="300">
+<img src="/androidApp/screenshoots/fibonacci_console.png" alt="Screenshot do App" width="300">
 
 ### Referências
 
