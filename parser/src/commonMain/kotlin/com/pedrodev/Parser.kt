@@ -336,7 +336,7 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun unary(): Expression {
-        if (match(TokenType.TK_BIT_NOT, TokenType.TK_NAO)) {
+        if (match(TokenType.TK_BIT_NOT, TokenType.TK_NAO, TokenType.TK_SUBTRACAO)) {
             val operator = previous()
             val right = unary()
             return Expression.Unary(operator, right)
@@ -363,7 +363,7 @@ class Parser(private val tokens: List<Token>) {
             } while (match(TokenType.TK_VIRGULA))
         }
         val paren = consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' depois de argumentos.")
-        return Expression.Call(callee, paren, arguments)
+        return Expression.Call(callee, paren, arguments, null)
     }
 
     private fun primary(): Expression {

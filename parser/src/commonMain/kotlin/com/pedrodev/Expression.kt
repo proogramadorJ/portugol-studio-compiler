@@ -53,7 +53,7 @@ abstract class Expression {
         }
     }
 
-    class Call(val callee: Expression, val paren: Token, val arguments: List<Expression>) : Expression() {
+    class Call(val callee: Expression, val paren: Token, val arguments: List<Expression>, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitCallExpr(this)
         }

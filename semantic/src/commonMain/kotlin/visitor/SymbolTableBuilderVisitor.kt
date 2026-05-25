@@ -47,6 +47,6 @@ class SymbolTableBuilderVisitor(
     }
 
     override fun visitReturnStatement(stmt: Statement.Return) {
-        TODO("Not yet implemented")
+
     }
 }
