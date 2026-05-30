@@ -130,7 +130,10 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitDoWhileStatement(stmt: Statement.DoWhile) {
-        TODO("Not yet implemented")
+       val bodyBegin = bytecode.size
+       stmt.body.accept(this)
+       stmt.condition.accept(this)
+       bytecode.add(Instruction(OpCode.JMP_IF_TRUE, bodyBegin))
     }
 
     override fun visitForStatement(stmt: Statement.For) {

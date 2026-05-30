@@ -1,0 +1,7 @@
+funcao inicio(){
+    inteiro a = 10
+    faca{
+    escreva(a)
+    a = a + 1
+    }enquanto( a < 10)
+}
