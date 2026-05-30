@@ -26,7 +26,6 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     fun genCode(program: List<Statement>): MutableList<Instruction> {
         bytecode.add(Instruction(OpCode.JMP))
         program.forEach { it.accept(this) }
-        bytecode.add(Instruction(OpCode.HALT))
 
         if (indexMainFunction == -1) { //função inicio não declarada
             throw RuntimeException("Função inicio não declarada.")
@@ -128,6 +127,24 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         bytecode.add(Instruction(OpCode.JMP, conditionBeginAddr))
         val endOfWhileAddr = bytecode.size
         bytecode[jmpIfFalseAddr] = Instruction(OpCode.JMP_IF_FALSE, endOfWhileAddr)
+    }
+
+    override fun visitDoWhileStatement(stmt: Statement.DoWhile) {
+        TODO("Not yet implemented")
+    }
+
+    override fun visitForStatement(stmt: Statement.For) {
+        stmt.expressionInitializer?.accept(this)
+        stmt.varDeclarationInitializer?.accept(this)
+        val conditionBeginAddr = bytecode.size
+        stmt.condition.accept(this)
+        bytecode.add(Instruction(OpCode.JMP_IF_FALSE))
+        val jmpIfFalseAddr = bytecode.size - 1
+        stmt.body.accept(this)
+        stmt.increment.accept(this)
+        bytecode.add(Instruction(OpCode.JMP, conditionBeginAddr))
+        val endOfForAddr = bytecode.size
+        bytecode[jmpIfFalseAddr] = Instruction(OpCode.JMP_IF_FALSE, endOfForAddr)
     }
 
     override fun visitReturnStatement(stmt: Statement.Return) {

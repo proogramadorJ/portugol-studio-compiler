@@ -13,6 +13,7 @@ object ReservedWords {
         "caso" to TokenType.TK_CASO,
         "contrario" to TokenType.TK_CASO_CONTRARIO,
         "enquanto" to TokenType.TK_ENQUANTO,
+        "faca" to TokenType.TK_FACA,
         "para" to TokenType.TK_PARA,
         "inteiro" to TokenType.TK_INTEIRO,
         "real" to TokenType.TK_REAL,

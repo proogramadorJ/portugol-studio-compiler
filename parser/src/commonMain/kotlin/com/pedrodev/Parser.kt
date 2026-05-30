@@ -32,8 +32,16 @@ class Parser(private val tokens: List<Token>) {
                 match(TokenType.TK_FUNCAO) -> statements.add(funcDeclaration())
                 match(TokenType.TK_SE) -> statements.add(ifStatement())
                 match(TokenType.TK_ENQUANTO) -> statements.add(whileStatement())
+                match(TokenType.TK_FACA) -> statements.add(doWhileStatement())
+                match(TokenType.TK_PARA) -> statements.add(forStatement())
                 match(TokenType.TK_ABRE_CHAVE) -> statements.add(Statement.Block(block()))
-                match(TokenType.TK_RETURNE) -> statements.add(Statement.Return(previous(), expression()))
+                match(TokenType.TK_RETURNE) -> statements.add(
+                    Statement.Return(
+                        previous(),
+                        expression()
+                    )
+                )
+
                 else -> statements.add(expressionStatement())
             }
 
@@ -113,7 +121,13 @@ class Parser(private val tokens: List<Token>) {
                     throw RuntimeException("Tipo do parametro esperado.")
                 }
                 val type = previous()
-                parameters.add(Param(type, consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado."), null))
+                parameters.add(
+                    Param(
+                        type,
+                        consume(TokenType.TK_IDENTIFICADOR, "Nome do parâmetro esperado."),
+                        null
+                    )
+                )
             } while (match(TokenType.TK_VIRGULA))
         }
 
@@ -150,6 +164,8 @@ class Parser(private val tokens: List<Token>) {
 
             match(TokenType.TK_SE) -> ifStatement()
             match(TokenType.TK_ENQUANTO) -> whileStatement()
+            match(TokenType.TK_FACA) -> doWhileStatement()
+            match(TokenType.TK_PARA) -> forStatement()
             match(TokenType.TK_ABRE_CHAVE) -> Statement.Block(block())
             match(TokenType.TK_RETURNE) -> returnStatement()
 
@@ -162,11 +178,7 @@ class Parser(private val tokens: List<Token>) {
 
     private fun returnStatement(): Statement.Return {
         val keyword = previous()
-        var value: Expression = expression()
-//        if (!check(TokenType.SEMICOLON)) {
-//            value = expression()
-//        }
-
+        val value: Expression = expression()
         return Statement.Return(keyword, value)
     }
 
@@ -176,6 +188,41 @@ class Parser(private val tokens: List<Token>) {
         consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' depois da condição.")
         val body = statement()
         return Statement.While(condition, body)
+    }
+
+    private fun doWhileStatement(): Statement.DoWhile {
+        val body = statement()
+        consume(TokenType.TK_ENQUANTO, "Esperado 'enquanto' após o corpo do laço.")
+        consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'enquanto'.")
+        val condition = expression()
+        consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' depois da condição.")
+        return Statement.DoWhile(condition, body)
+    }
+
+    private fun forStatement(): Statement.For {
+        var initializer : Expression? = null
+        var varDeclarationInitializer : Statement? = null
+
+        consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'para'.")
+
+        if(match(TokenType.TK_INTEIRO, TokenType.TK_REAL, TokenType.TK_CARACTER, TokenType.TK_CADEIA, TokenType.TK_LOGICO)) {
+            varDeclarationInitializer = varDeclaration()
+        }else{
+            initializer = expression()
+        }
+        consume(TokenType.TK_PONTO_E_VIRGULA, "Esperado ';' após a inicialização do laço.")
+
+        val condition = expression()
+        consume(TokenType.TK_PONTO_E_VIRGULA, "Esperado ';' após a condição do laço.")
+
+        val increment = expression()
+        consume(
+            TokenType.TK_FECHA_PARENTESE,
+            "Esperado ')' depois da expressão de incremento/decremento do laço. 'para'"
+        )
+
+        val body = statement()
+        return Statement.For(initializer, varDeclarationInitializer, condition, increment, body)
     }
 
     private fun ifStatement(): Statement {
@@ -189,7 +236,10 @@ class Parser(private val tokens: List<Token>) {
 
     private fun varDeclaration(): Statement {
         val type = previous()
-        consume(TokenType.TK_IDENTIFICADOR, "Esperado nome da variavel após o tipo. Na linha ${type.line}.")
+        consume(
+            TokenType.TK_IDENTIFICADOR,
+            "Esperado nome da variavel após o tipo. Na linha ${type.line}."
+        )
         val name = previous()
         var expr: Expression? = null
 
@@ -386,8 +436,14 @@ class Parser(private val tokens: List<Token>) {
             previous().lexeme.toDouble(),
             previous().type
         )
-        if (match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(previous().lexeme[0], previous().type)
-        if (match(TokenType.TK_STRING_LITERAL)) return Expression.Literal(previous().lexeme, previous().type)
+        if (match(TokenType.TK_CHAR_LITERAL)) return Expression.Literal(
+            previous().lexeme[0],
+            previous().type
+        )
+        if (match(TokenType.TK_STRING_LITERAL)) return Expression.Literal(
+            previous().lexeme,
+            previous().type
+        )
 
         if (match(TokenType.TK_IDENTIFICADOR)) {
             return Expression.Variable(previous(), null)

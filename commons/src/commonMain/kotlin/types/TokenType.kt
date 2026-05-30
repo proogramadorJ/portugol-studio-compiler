@@ -12,8 +12,7 @@ enum class TokenType {
     TK_CASO, // caso
     TK_CASO_CONTRARIO, // caso contrario
     TK_ENQUANTO, // enquanto
-
-    // TODO incluir do-while/ faca{ }enquanto(condicao)
+    TK_FACA, // faca
     TK_PARA, // para
     TK_CONST, // const
 
@@ -60,6 +59,7 @@ enum class TokenType {
     TK_BIT_SHIFT, // <<
 
     TK_VIRGULA, // ,
+    TK_PONTO_E_VIRGULA, // ,
     TK_ABRE_CHAVE, //{
     TK_FECHA_CHAVE, // }
     TK_ABRE_PARENTESE, // (

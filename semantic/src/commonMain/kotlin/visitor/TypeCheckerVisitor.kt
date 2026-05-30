@@ -147,7 +147,7 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
         val expressionType = expression.value.accept(this)
         val targetType = (expression.symbol as VarSymbol).type
         if (expressionType != targetType) {
-            throw SemanticException("Não é póssivel atribuir um valor do tipo '${expressionType.name}' para a variável do tipo '${targetType.name}'")
+            throw SemanticException("Não é póssivel atribuir um valor do tipo '${expressionType.name}' para uma variável do tipo '${targetType.name}'")
         }
         return VoidType
     }
@@ -190,8 +190,9 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
             val valueType = stmt.initializer!!.accept(this)
             val varSymbol = stmt.symbol as VarSymbol
 
-            if (valueType != varSymbol.type) {
-                throw SemanticException("O tipo '${valueType.name}' não é compatível com o tipo da variável '${varSymbol.type.name}'")
+            val isIntToDouble = varSymbol.type == RealType && valueType == IntType
+            if ((valueType != varSymbol.type) && !isIntToDouble) {
+                throw SemanticException("O tipo '${valueType.name}' não é compatível com o tipo de variável '${varSymbol.type.name}'")
             }
         }
     }
@@ -208,14 +209,26 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
     }
 
     override fun visitIfStatement(stmt: Statement.If) {
-        if(stmt.condition.accept(this) != BoolType){
+        if (stmt.condition.accept(this) != BoolType) {
             throw SemanticException("A expressão do comando 'se' deve ser do tipo 'logico'")
         }
     }
 
     override fun visitWhileStatement(stmt: Statement.While) {
-        if(stmt.condition.accept(this) != BoolType){
+        if (stmt.condition.accept(this) != BoolType) {
             throw SemanticException("A expressão do comando 'enquanto' deve ser do tipo 'logico'")
+        }
+    }
+
+    override fun visitDoWhileStatement(stmt: Statement.DoWhile) {
+        if (stmt.condition.accept(this) != BoolType) {
+            throw SemanticException("A expressão do comando 'faça enquanto' deve ser do tipo 'logico'")
+        }
+    }
+
+    override fun visitForStatement(stmt: Statement.For) {
+        if (stmt.condition.accept(this) != BoolType) {
+            throw SemanticException("A expressão do comando 'para' deve ser do tipo 'logico'")
         }
     }
 

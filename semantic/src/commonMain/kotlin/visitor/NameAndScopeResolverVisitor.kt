@@ -10,7 +10,8 @@ import symbols.SymbolTable
 /**
  * Segunda travessia na AST -> Cria simbolos locais(variaveis), resolve nomes e cria escopos.
  */
-class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Unit>, Expression.Visitor<Unit> {
+class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
+    Expression.Visitor<Unit> {
 
     override fun visitExprStatement(exprStatement: Statement.ExprStatement) {
         exprStatement.expr.accept(this)
@@ -61,6 +62,23 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
 
     override fun visitWhileStatement(stmt: Statement.While) {
         stmt.condition.accept(this)
+        symbolTable.beginScope()
+        stmt.body.accept(this)
+        symbolTable.endScope()
+    }
+
+    override fun visitDoWhileStatement(stmt: Statement.DoWhile) {
+        stmt.condition.accept(this)
+        symbolTable.beginScope()
+        stmt.body.accept(this)
+        symbolTable.endScope()
+    }
+
+    override fun visitForStatement(stmt: Statement.For) {
+        stmt.expressionInitializer?.accept(this)
+        stmt.varDeclarationInitializer?.accept(this)
+        stmt.condition.accept(this)
+        stmt.increment.accept(this)
         symbolTable.beginScope()
         stmt.body.accept(this)
         symbolTable.endScope()

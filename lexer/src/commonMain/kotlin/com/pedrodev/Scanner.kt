@@ -13,6 +13,11 @@ class Scanner(source: String) {
     fun scanTokens(): List<Token> {
         while (pos < sourceCode.length) {
             when (val currentChar = sourceCode[pos]) {
+                ';' -> {
+                    pos++
+                    tokens.add(Token(TokenType.TK_PONTO_E_VIRGULA, currentLine, currentColumn, ";", null))
+                    currentColumn++
+                }
                 ',' -> {
                     pos++
                     tokens.add(Token(TokenType.TK_VIRGULA, currentLine, currentColumn, ",", null))

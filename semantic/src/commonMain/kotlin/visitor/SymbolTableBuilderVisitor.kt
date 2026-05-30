@@ -46,6 +46,14 @@ class SymbolTableBuilderVisitor(
     override fun visitWhileStatement(stmt: Statement.While) {
     }
 
+    override fun visitDoWhileStatement(stmt: Statement.DoWhile) {
+
+    }
+
+    override fun visitForStatement(stmt: Statement.For) {
+
+    }
+
     override fun visitReturnStatement(stmt: Statement.Return) {
 
     }

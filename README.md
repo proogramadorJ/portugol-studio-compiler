@@ -22,7 +22,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
-- [ ] Estrutura de repetição 'Para'
+- [x] Estrutura de repetição 'Para'
 - [x] Declaração de funções
 - [X] Chamada de funções
 
@@ -40,7 +40,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
-- [ ] Estrutura de repetição 'Para'
+- [X] Estrutura de repetição 'Para'
 - [x] Declaração de funções
 - [X] Chamada de funções
 
@@ -52,7 +52,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
-- [ ] Estrutura de repetição 'Para'
+- [X] Estrutura de repetição 'Para'
 - [x] Declaração de funções
 - [x] Chamada de funções
 
@@ -64,7 +64,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [ ] Suporte a vetores e matrizes
 - [x] Se Senao (if, else)
 - [x] Enquanto (while)
-- [ ] Para  (for)
+- [X] Para  (for)
 - [ ] Caso Escolha(switch case)
 - [x] Procedimentos (funções)
 

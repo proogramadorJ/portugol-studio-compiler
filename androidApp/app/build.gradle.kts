@@ -9,7 +9,8 @@ android {
     compileSdk = 35
 
     lint {
-        disable.add("MutableCollectionMutableState") //TODO corrigir causa raiz
+        disable.add("MutableCollectionMutableState")
+        disable.add( "AutoboxingStateCreation")
     }
 
     defaultConfig {

@@ -110,6 +110,14 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return null
     }
 
+    override fun visitDoWhileStatement(stmt: Statement.DoWhile): Void? {
+        return null
+    }
+
+    override fun visitForStatement(stmt: Statement.For): Void? {
+       return null
+    }
+
     override fun visitReturnStatement(stmt: Statement.Return): Void? {
        return null
     }

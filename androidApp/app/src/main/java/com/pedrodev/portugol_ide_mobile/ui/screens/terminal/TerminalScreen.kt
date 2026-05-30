@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -48,6 +49,7 @@ fun TerminalScreen(
     var userInput by remember { mutableStateOf("") }
     val listState = rememberLazyListState()
     val logs = remember { mutableStateListOf<String>() }
+    val isWaitingForInput by viewModel.isWaitingForInput.collectAsState()
 
 
     LaunchedEffect(Unit) {
@@ -98,7 +100,7 @@ fun TerminalScreen(
             }
 
             // Input Area
-            if(viewModel.isWaitingForInput.value){
+            if(isWaitingForInput){
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -125,7 +127,7 @@ fun TerminalScreen(
                         modifier = Modifier.weight(1f),
                           //  .focusRequester( cursorFocusRequest),
                         singleLine = true,
-                        cursorBrush = SolidColor(if (viewModel.isWaitingForInput.value) Color.White else Color.Transparent),
+                        cursorBrush = SolidColor(if (isWaitingForInput) Color.White else Color.Transparent),
 
 //                    keyboardActions = KeyboardActions(
 //                        onSend = {

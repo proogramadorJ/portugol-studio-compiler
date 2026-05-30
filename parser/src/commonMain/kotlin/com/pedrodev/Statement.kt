@@ -11,6 +11,8 @@ abstract class Statement {
         fun visitBlockStatement(stmt: Block): R
         fun visitIfStatement(stmt: If): R
         fun visitWhileStatement(stmt: While): R
+        fun visitDoWhileStatement(stmt: DoWhile): R
+        fun visitForStatement(stmt: For): R
         fun visitReturnStatement(stmt: Return): R
     }
 
@@ -57,6 +59,18 @@ abstract class Statement {
     class While(val condition: Expression, val body: Statement) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitWhileStatement(this)
+        }
+    }
+
+    class DoWhile(val condition: Expression, val body: Statement) : Statement() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitDoWhileStatement(this)
+        }
+    }
+
+    class For(val expressionInitializer: Expression?, val varDeclarationInitializer: Statement?, val condition: Expression, val increment: Expression, val body: Statement) : Statement() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitForStatement(this)
         }
     }
 
