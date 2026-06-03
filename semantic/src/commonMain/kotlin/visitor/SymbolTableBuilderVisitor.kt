@@ -15,7 +15,8 @@ class SymbolTableBuilderVisitor(
     override fun visitVarDeclarationStatement(stmt: Statement.VarDeclaration) {
         val symbol = symbolTable.defineGlobal(
             stmt.name.lexeme,
-            TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type)
+            TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type),
+            stmt,
         )
         stmt.symbol = symbol
     }

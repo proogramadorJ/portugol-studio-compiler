@@ -25,9 +25,12 @@ class Parser(private val tokens: List<Token>) {
                     TokenType.TK_CARACTER,
                     TokenType.TK_REAL,
                     TokenType.TK_CADEIA,
-                    TokenType.TK_LOGICO
-                ) ->
+                    TokenType.TK_LOGICO,
+                    TokenType.TK_CONST
+                ) -> {
                     statements.add(varDeclaration())
+                }
+
 
                 match(TokenType.TK_FUNCAO) -> statements.add(funcDeclaration())
                 match(TokenType.TK_SE) -> statements.add(ifStatement())
@@ -73,7 +76,8 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.TK_CARACTER,
                 TokenType.TK_REAL,
                 TokenType.TK_CADEIA,
-                TokenType.TK_LOGICO
+                TokenType.TK_LOGICO,
+                TokenType.TK_CONST,
             )
         ) {
             return varDeclaration()
@@ -157,7 +161,8 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.TK_CARACTER,
                 TokenType.TK_REAL,
                 TokenType.TK_CADEIA,
-                TokenType.TK_LOGICO
+                TokenType.TK_LOGICO,
+                TokenType.TK_CONST,
             ) -> {
                 varDeclaration()
             }
@@ -200,14 +205,22 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun forStatement(): Statement.For {
-        var initializer : Expression? = null
-        var varDeclarationInitializer : Statement? = null
+        var initializer: Expression? = null
+        var varDeclarationInitializer: Statement? = null
 
         consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'para'.")
 
-        if(match(TokenType.TK_INTEIRO, TokenType.TK_REAL, TokenType.TK_CARACTER, TokenType.TK_CADEIA, TokenType.TK_LOGICO)) {
+        if (match(
+                TokenType.TK_INTEIRO,
+                TokenType.TK_REAL,
+                TokenType.TK_CARACTER,
+                TokenType.TK_CADEIA,
+                TokenType.TK_LOGICO,
+                TokenType.TK_CONST
+            )
+        ) {
             varDeclarationInitializer = varDeclaration()
-        }else{
+        } else {
             initializer = expression()
         }
         consume(TokenType.TK_PONTO_E_VIRGULA, "Esperado ';' após a inicialização do laço.")
@@ -235,7 +248,21 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun varDeclaration(): Statement {
-        val type = previous()
+        var type = previous()
+        var isConst = false
+
+        if (type.type == TokenType.TK_CONST) {
+            type = consume(
+                "Esperado o tipo da variavel após 'const' na linha ${type.line}.",
+                TokenType.TK_INTEIRO,
+                TokenType.TK_REAL,
+                TokenType.TK_CARACTER,
+                TokenType.TK_CADEIA,
+                TokenType.TK_LOGICO
+            )
+            isConst = true
+        }
+
         consume(
             TokenType.TK_IDENTIFICADOR,
             "Esperado nome da variavel após o tipo. Na linha ${type.line}."
@@ -246,7 +273,13 @@ class Parser(private val tokens: List<Token>) {
         if (match(TokenType.TK_IGUAL)) {
             expr = expression()
         }
-        return Statement.VarDeclaration(name, type, expr, null)
+        return Statement.VarDeclaration(
+            name,
+            type,
+            expr,
+            null,
+            isConst
+        )
     }
 
     private fun expressionStatement(): Statement {
@@ -476,6 +509,13 @@ class Parser(private val tokens: List<Token>) {
 
     private fun consume(type: TokenType, msgError: String): Token {
         if (check(type)) return advance()
+        throw RuntimeException(msgError)
+    }
+
+    private fun consume(msgError: String, vararg types: TokenType): Token {
+        for (type in types) {
+            if (check(type)) return advance()
+        }
         throw RuntimeException(msgError)
     }
 

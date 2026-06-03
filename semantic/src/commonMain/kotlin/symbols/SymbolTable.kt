@@ -1,5 +1,6 @@
 package symbols
 
+import com.pedrodev.Statement
 import exception.SemanticException
 import types.AnyType
 import types.IntType
@@ -47,15 +48,15 @@ class SymbolTable {
         return symbol
     }
 
-    fun defineVar(name: String, type: Type): Symbol {
+    fun defineVar(name: String, type: Type, stmt: Statement.VarDeclaration): Symbol {
         if (localIndex.empty()) {
-            return defineGlobal(name, type)
+            return defineGlobal(name, type, stmt)
         }
-        return defineLocal(name, type)
+        return defineLocal(name, type, stmt)
 
     }
 
-    fun defineLocal(name: String, type: Type): Symbol {
+    fun defineLocal(name: String, type: Type, stmt: Statement.VarDeclaration?): Symbol {
         if (scopes.empty()) {
             throw SemanticException("Variáveis locais só podem ser declaradas dentro de funções.")
         }
@@ -70,14 +71,15 @@ class SymbolTable {
             storage = StorageKind.LOCAL,
             kind = SymbolKind.VARIABLE,
             type = type,
-            index = varIndex
+            index = varIndex,
+            isConst = stmt?.isConst == true
         )
 
         scopes.peek()[name] = symbol
         return symbol
     }
 
-    fun defineGlobal(name: String, type: Type): Symbol {
+    fun defineGlobal(name: String, type: Type, stmt: Statement.VarDeclaration): Symbol {
         if (globals.containsKey(name)) {
             throw SemanticException("Variável '$name' já declarada.")
         }
@@ -86,7 +88,8 @@ class SymbolTable {
             kind = SymbolKind.VARIABLE,
             type = type,
             storage = StorageKind.GLOBAL,
-            index = globalIndex++
+            index = globalIndex++,
+            isConst = stmt.isConst
         )
         globals[name] = symbol
         return symbol

@@ -13,7 +13,8 @@ class VarSymbol(
     val kind : SymbolKind,
     val type: Type,
     val storage: StorageKind,
-    val index: Int? = null
+    val index: Int? = null,
+    var isConst: Boolean = false
 ) : Symbol()
 
 class FunctionSymbol(

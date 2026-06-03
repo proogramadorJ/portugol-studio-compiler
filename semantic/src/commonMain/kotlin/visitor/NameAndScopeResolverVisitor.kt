@@ -6,6 +6,7 @@ import com.pedrodev.Statement
 import symbols.FunctionSymbol
 import symbols.Symbol
 import symbols.SymbolTable
+import symbols.VarSymbol
 
 /**
  * Segunda travessia na AST -> Cria simbolos locais(variaveis), resolve nomes e cria escopos.
@@ -21,7 +22,8 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         if (symbolTable.isInFucntion()) {
             val declaredVar: Symbol = symbolTable.defineVar(
                 stmt.name.lexeme,
-                TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type)
+                TokenTypeConverter.internalTypeFromTokenType(stmt.declaredType.type),
+                stmt
             )
             stmt.symbol = declaredVar
         }
@@ -33,7 +35,8 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         for (param in stmt.params) {
             val sym = symbolTable.defineLocal(
                 param.identifierToken.lexeme,
-                TokenTypeConverter.internalTypeFromTokenType(param.dataTypeToken.type)
+                TokenTypeConverter.internalTypeFromTokenType(param.dataTypeToken.type),
+                null
             )
             param.symbol = sym
         }

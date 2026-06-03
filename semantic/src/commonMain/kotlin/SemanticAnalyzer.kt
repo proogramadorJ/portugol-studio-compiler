@@ -1,11 +1,11 @@
 import com.pedrodev.Statement
 import symbols.SymbolTable
 import visitor.NameAndScopeResolverVisitor
+import visitor.SemanticRulesVisitor
 import visitor.SymbolTableBuilderVisitor
 import visitor.TypeCheckerVisitor
 
 class SemanticAnalyzer {
-
 
     fun analyze(statements: List<Statement>): SymbolTable {
 
@@ -13,11 +13,13 @@ class SemanticAnalyzer {
         val symbolTableBuilderVisitor = SymbolTableBuilderVisitor(symbolTable)
         val nameAndScopeResolverVisitor = NameAndScopeResolverVisitor(symbolTable)
         val typeCheckerVisitor = TypeCheckerVisitor()
+        val semanticRulesVisitor = SemanticRulesVisitor(symbolTable)
 
         statements.forEach { s ->
             s.accept(symbolTableBuilderVisitor)
             s.accept(nameAndScopeResolverVisitor)
             s.accept(typeCheckerVisitor)
+            s.accept(semanticRulesVisitor)
         }
         return symbolTable
     }

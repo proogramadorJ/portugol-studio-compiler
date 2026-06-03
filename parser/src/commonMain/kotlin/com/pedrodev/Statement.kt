@@ -24,7 +24,7 @@ abstract class Statement {
         }
     }
 
-    class VarDeclaration(val name: Token, val declaredType: Token, var initializer: Expression?, var symbol: Symbol?) :
+    class VarDeclaration(val name: Token, val declaredType: Token, var initializer: Expression?, var symbol: Symbol? , val isConst: Boolean) :
         Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVarDeclarationStatement(this)

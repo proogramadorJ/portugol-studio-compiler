@@ -18,6 +18,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 - [x] Expressões
 - [x] Declaração de variaveis de tipos básicos
+- [x] Declaração de constantes de tipos básicos
 - [ ] Declaração de arrays e matrizes
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
@@ -29,7 +30,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 #### Analisador semântico
 - [x] Resolução de escopo
-- [ ] Resolução de tipos
+- [x] Resolução de tipos
 - [ ] Verificação de retorno de funções
 - [x] Tabela de simbolos
 
@@ -63,7 +64,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 - [x] Operações Aritimeticas
 - [x] Suporte a variaveis
-- [ ] Suporte constantes
+- [x] Suporte constantes
 - [ ] Suporte a vetores e matrizes
 - [x] Se Senao (if, else)
 - [x] Enquanto (while)
@@ -114,7 +115,6 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 18 -  CALL 0
 19 -  CALL_NATIVE 0
 20 -  HALT 
-21 -  HALT 
 ```
 
 ### Capturas de Tela
