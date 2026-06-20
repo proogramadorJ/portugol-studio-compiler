@@ -14,6 +14,7 @@ enum class TokenType {
     TK_ENQUANTO, // enquanto
     TK_FACA, // faca
     TK_PARA, // para
+    TK_PARE, // pare
     TK_CONST, // const
 
     //valores literais
@@ -32,7 +33,7 @@ enum class TokenType {
     TK_CADEIA, // cadeia
     TK_LOGICO, // logico
     TK_VAZIO, // vazio
-    TK_CONSTANTE, // constante
+    //TK_CONSTANTE, // constante
 
     TK_SOMA, // +
     TK_SUBTRACAO, // -

@@ -91,6 +91,9 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         stmt.expression.accept(this)
     }
 
+    override fun visitSwitchStatement(stmt: Statement.Switch) {
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
 
     }

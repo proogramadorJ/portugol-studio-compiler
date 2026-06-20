@@ -14,6 +14,7 @@ abstract class Statement {
         fun visitDoWhileStatement(stmt: DoWhile): R
         fun visitForStatement(stmt: For): R
         fun visitReturnStatement(stmt: Return): R
+        fun visitSwitchStatement(stmt: Switch): R
     }
 
     abstract fun <R> accept(visitor: Visitor<R>): R
@@ -78,6 +79,11 @@ abstract class Statement {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitReturnStatement(this)
         }
+    }
 
+    class Switch(expr: Expression, cases : List<Pair<Expression, Statement>>, defaultCase : Statement?) : Statement(){
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitSwitchStatement(this)
+        }
     }
 }
