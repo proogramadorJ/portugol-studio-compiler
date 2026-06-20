@@ -251,28 +251,14 @@ class Parser(private val tokens: List<Token>) {
 
         while (!check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
 
-            if (match(TokenType.TK_CASO)) {
-                val caseExpression = expression()
-                consume(TokenType.TK_DOIS_PONTOS, "Esperado ':' depois do valor do caso.")
-                val statements = mutableListOf<Statement>()
+            consume(TokenType.TK_CASO, "Esperado comando 'caso' ou 'caso contrario'")
 
-                while (!check(TokenType.TK_CASO) && !check(TokenType.TK_CASO_CONTRARIO) && !check(TokenType.TK_FECHA_CHAVE ) && !isAtEnd()) {
-                    statements.add(statement())
-
-                    val caseBody = if(statements.size == 1){
-                        statements[0]
-                    }else {
-                        Statement.Block(statements)
-                    }
-                    cases.add(Pair(caseExpression, caseBody))
-                }
-
-            } else if (match(TokenType.TK_CASO_CONTRARIO)) {
-                if(defaultCase != null){
+            if (match(TokenType.TK_CASO_CONTRARIO)) {
+                if (defaultCase != null) {
                     throw ParseException("Somente um comando 'caso contrario' é permitido.")
                 }
 
-                consume(TokenType.TK_DOIS_PONTOS,"Esperado ':' depois de 'caso contrario'.")
+                consume(TokenType.TK_DOIS_PONTOS, "Esperado ':' depois de 'caso contrario'.")
                 val statements = mutableListOf<Statement>()
                 while (!check(TokenType.TK_CASO) && !check(TokenType.TK_FECHA_CHAVE) && !isAtEnd()) {
                     statements.add(statement())
@@ -283,11 +269,29 @@ class Parser(private val tokens: List<Token>) {
                 } else {
                     Statement.Block(statements)
                 }
-
             } else {
-                throw ParseException("Esperado comando 'caso' ou 'caso contrario'")
+                val caseExpression = expression()
+                consume(TokenType.TK_DOIS_PONTOS, "Esperado ':' depois do valor do caso.")
+                val statements = mutableListOf<Statement>()
+
+                while (!check(TokenType.TK_CASO) && !check(TokenType.TK_CASO_CONTRARIO) && !check(
+                        TokenType.TK_FECHA_CHAVE
+                    ) && !isAtEnd()
+                ) {
+                    statements.add(statement())
+
+                    val caseBody = if (statements.size == 1) {
+                        statements[0]
+                    } else {
+                        Statement.Block(statements)
+                    }
+                    cases.add(Pair(caseExpression, caseBody))
+                }
             }
         }
+
+        consume(TokenType.TK_FECHA_CHAVE, "Esperado '}' depois dos casos.")
+
         return Statement.Switch(expr, cases, defaultCase)
     }
 
