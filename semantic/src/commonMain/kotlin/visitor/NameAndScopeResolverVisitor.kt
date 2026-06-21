@@ -6,7 +6,6 @@ import com.pedrodev.Statement
 import symbols.FunctionSymbol
 import symbols.Symbol
 import symbols.SymbolTable
-import symbols.VarSymbol
 
 /**
  * Segunda travessia na AST -> Cria simbolos locais(variaveis), resolve nomes e cria escopos.
@@ -92,6 +91,7 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitSwitchStatement(stmt: Statement.Switch) {
+        stmt.expr.accept(this)
     }
 
     override fun visitLiteral(expression: Expression.Literal) {

@@ -155,6 +155,33 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         bytecode.add(Instruction(OpCode.RETURN))
     }
 
+    override fun visitSwitchStatement(stmt: Statement.Switch) {
+       stmt.expr.accept(this)
+
+        val casesJumpIndex = mutableListOf<Int>()
+
+
+        for(case in stmt.cases){
+            bytecode.add(Instruction(OpCode.DUP))
+            case.first.accept(this)
+            bytecode.add(Instruction(OpCode.EQ))
+            bytecode.add(Instruction(OpCode.JMP_IF_FALSE))
+            val nextCaseInstructionAddr = bytecode.size - 1
+            case.second.accept(this)
+            bytecode.add(Instruction(OpCode.JMP))
+            casesJumpIndex.add(bytecode.size - 1)
+            bytecode[nextCaseInstructionAddr] = Instruction(OpCode.JMP_IF_FALSE, bytecode.size)
+        }
+
+        bytecode.add(Instruction(OpCode.POP))
+        stmt.defaultCase?.accept(this)
+
+        for(index in casesJumpIndex ){
+            bytecode[index] = Instruction(OpCode.JMP, bytecode.size)
+        }
+
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
         val portugolValue = when (expression.type) {
             TokenType.TK_NUMERO_INTEIRO_LITERAL -> IntValue(expression.value as Int)

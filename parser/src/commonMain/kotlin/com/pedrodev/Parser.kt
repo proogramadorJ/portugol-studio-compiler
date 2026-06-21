@@ -245,6 +245,8 @@ class Parser(private val tokens: List<Token>) {
         val expr = expression()
         consume(TokenType.TK_FECHA_PARENTESE, "Esperado ')' após a expressão do comando 'escolha'.")
 
+        consume(TokenType.TK_ABRE_CHAVE, "Esperado '{' após a expressão do comando 'escolha'.")
+
         val cases = mutableListOf<Pair<Expression, Statement>>()
         var defaultCase: Statement? = null
 

@@ -55,6 +55,7 @@ class PortugolViewModel : ViewModel() {
                 consoleBuffer.print("\n> Execução finalizada.")
             } catch (e: Exception) {
                 consoleBuffer.print("\n> ERRO: ${e.message}")
+               e.printStackTrace()
             }
         }
     }

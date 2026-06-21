@@ -81,7 +81,7 @@ abstract class Statement {
         }
     }
 
-    class Switch(expr: Expression, cases : List<Pair<Expression, Statement>>, defaultCase : Statement?) : Statement(){
+    class Switch(val expr: Expression, val cases : List<Pair<Expression, Statement>>, val defaultCase : Statement?) : Statement(){
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitSwitchStatement(this)
         }

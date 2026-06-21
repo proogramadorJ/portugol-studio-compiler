@@ -121,4 +121,8 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     override fun visitReturnStatement(stmt: Statement.Return): Void? {
        return null
     }
+
+    override fun visitSwitchStatement(stmt: Statement.Switch): Void? {
+        return null
+    }
 }
