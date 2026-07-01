@@ -15,6 +15,7 @@ abstract class Statement {
         fun visitForStatement(stmt: For): R
         fun visitReturnStatement(stmt: Return): R
         fun visitSwitchStatement(stmt: Switch): R
+        fun visitArrayDeclarationStatement(stmt: ArrayDeclaration) : R
     }
 
     abstract fun <R> accept(visitor: Visitor<R>): R
@@ -84,6 +85,12 @@ abstract class Statement {
     class Switch(val expr: Expression, val cases : List<Pair<Expression, Statement>>, val defaultCase : Statement?) : Statement(){
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitSwitchStatement(this)
+        }
+    }
+
+    class ArrayDeclaration(val type : Token, val name : Token, val size: Expression, var values: List<Expression>?) : Statement(){
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitArrayDeclarationStatement(this)
         }
     }
 }

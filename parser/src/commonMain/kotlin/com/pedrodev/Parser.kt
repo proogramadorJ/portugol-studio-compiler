@@ -296,7 +296,6 @@ class Parser(private val tokens: List<Token>) {
 
         return Statement.Switch(expr, cases, defaultCase)
     }
-
     private fun ifStatement(): Statement {
         consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'se'.")
         val condition = expression()
@@ -304,6 +303,20 @@ class Parser(private val tokens: List<Token>) {
         val thenBranch = statement()
         val elseBranch = if (match(TokenType.TK_SENAO)) statement() else null
         return Statement.If(condition, thenBranch, elseBranch)
+    }
+
+    //WIP
+    private fun declaration() : Statement?{
+        val type = previous()
+        val name = consume("Esperado identificador após ${type.lexeme}", TokenType.TK_IDENTIFICADOR)
+
+        if(match(TokenType.TK_ABRE_COLCHETE)){ // array ou matriz
+
+        }else{// variavel ou const
+            return varDeclaration()
+        }
+
+        return null
     }
 
     private fun varDeclaration(): Statement {
@@ -340,6 +353,15 @@ class Parser(private val tokens: List<Token>) {
             isConst
         )
     }
+
+
+
+    private fun arrayDeclaration() : Statement? {
+        return null
+    }
+
+
+
 
     private fun expressionStatement(): Statement {
         val expr = expression()

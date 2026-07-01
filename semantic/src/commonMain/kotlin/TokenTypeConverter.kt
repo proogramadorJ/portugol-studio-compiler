@@ -10,7 +10,7 @@ object TokenTypeConverter {
             TokenType.TK_CARACTER -> CaracterType
             TokenType.TK_CADEIA -> StringType
             TokenType.TK_VAZIO -> VoidType
-            else -> throw SemanticException("Não existe tipo interno mapeado para '${tokenType.name}' ") // TODO trocar para uma Execption personalizada mais generica
+            else -> throw SemanticException("Não existe tipo interno mapeado para '${tokenType.name}' ")
         }
     }
 }
