@@ -61,4 +61,8 @@ class SymbolTableBuilderVisitor(
 
     override fun visitSwitchStatement(stmt: Statement.Switch) {
     }
+
+    override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+
+    }
 }

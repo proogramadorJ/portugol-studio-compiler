@@ -240,6 +240,9 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
     override fun visitSwitchStatement(stmt: Statement.Switch) {
     }
 
+    override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+    }
+
     private fun isNumericType(leftType: Type, rightType: Type): Boolean {
         return numericTypes.contains(leftType) && numericTypes.contains(rightType)
     }

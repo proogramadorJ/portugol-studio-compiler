@@ -94,6 +94,10 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         stmt.expr.accept(this)
     }
 
+    override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
 
     }

@@ -25,13 +25,12 @@ class Parser(private val tokens: List<Token>) {
                     TokenType.TK_CARACTER,
                     TokenType.TK_REAL,
                     TokenType.TK_CADEIA,
-                    TokenType.TK_LOGICO,
-                    TokenType.TK_CONST
+                    TokenType.TK_LOGICO
                 ) -> {
-                    statements.add(varDeclaration())
+                    statements.add(declaration())
                 }
 
-
+                match(TokenType.TK_CONST) -> statements.add(varDeclaration())
                 match(TokenType.TK_FUNCAO) -> statements.add(funcDeclaration())
                 match(TokenType.TK_SE) -> statements.add(ifStatement())
                 match(TokenType.TK_ENQUANTO) -> statements.add(whileStatement())
@@ -78,12 +77,14 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.TK_REAL,
                 TokenType.TK_CADEIA,
                 TokenType.TK_LOGICO,
-                TokenType.TK_CONST,
             )
         ) {
-            return varDeclaration()
+            return declaration()
         }
 
+        if(match(TokenType.TK_CONST)) {
+            return varDeclaration()
+        }
         if (match(TokenType.TK_FUNCAO)) {
             return funcDeclaration()
         }
@@ -163,11 +164,11 @@ class Parser(private val tokens: List<Token>) {
                 TokenType.TK_REAL,
                 TokenType.TK_CADEIA,
                 TokenType.TK_LOGICO,
-                TokenType.TK_CONST,
             ) -> {
-                varDeclaration()
+                declaration()
             }
 
+            match(TokenType.TK_CONST) -> varDeclaration()
             match(TokenType.TK_SE) -> ifStatement()
             match(TokenType.TK_ENQUANTO) -> whileStatement()
             match(TokenType.TK_FACA) -> doWhileStatement()
@@ -296,6 +297,7 @@ class Parser(private val tokens: List<Token>) {
 
         return Statement.Switch(expr, cases, defaultCase)
     }
+
     private fun ifStatement(): Statement {
         consume(TokenType.TK_ABRE_PARENTESE, "Esperado '(' após comando 'se'.")
         val condition = expression()
@@ -305,18 +307,16 @@ class Parser(private val tokens: List<Token>) {
         return Statement.If(condition, thenBranch, elseBranch)
     }
 
-    //WIP
-    private fun declaration() : Statement?{
+    private fun declaration(): Statement {
         val type = previous()
-        val name = consume("Esperado identificador após ${type.lexeme}", TokenType.TK_IDENTIFICADOR)
 
-        if(match(TokenType.TK_ABRE_COLCHETE)){ // array ou matriz
+        consume("Esperado identificador após ${type.lexeme}", TokenType.TK_IDENTIFICADOR)
 
-        }else{// variavel ou const
-            return varDeclaration()
+        if (match(TokenType.TK_ABRE_COLCHETE)) {
+            return arrayDeclaration()
         }
-
-        return null
+        current--
+        return varDeclaration()
     }
 
     private fun varDeclaration(): Statement {
@@ -354,13 +354,70 @@ class Parser(private val tokens: List<Token>) {
         )
     }
 
+    /**
+     * inteiro vetor[5]
+     * caracter vetor2[200]
+     *
+     * //vetores inicializados
+     * real vetor3[2] = {1.4,2.5}
+     * logico vetor4[4] = {verdadeiro,falso,verdadeiro,verdadeiro}
+     * cadeia vetor5[] = {"Questão","Fundamental"}
+     *
+     * //Mudando o valor do vetor5 na posição 0 de "Questão" para "Pergunta"
+     * vetor5[0] = "Pergunta"
+     */
+    private fun arrayDeclaration(): Statement {
+        //current = O que vem depois de '['
+        //current - 2 = identificador
+        //current -3 = tipo
 
+        val type = tokens[current - 3]
+        val name = tokens[current - 2]
+        val initializationValues = mutableListOf<Expression>()
+        var size = 0
 
-    private fun arrayDeclaration() : Statement? {
-        return null
+        if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) {
+            size = previous().lexeme.toInt()
+        }
+
+        consume("Esperado ']' mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
+
+        if (size == 0) { //Obrigatoria initializacao
+            consume(
+                "Obrigatoria a initialização do Vetor quando o tamanho não é especificado na declaração.",
+                TokenType.TK_IGUAL
+            )
+            consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+            do {
+                initializationValues.add(expression())
+            } while (match(TokenType.TK_VIRGULA))
+
+            consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+
+            return Statement.ArrayDeclaration(
+                type,
+                name,
+                Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
+                initializationValues
+            )
+        }
+
+        if (match(TokenType.TK_IGUAL)) {
+            consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+            do {
+                initializationValues.add(expression())
+            } while (match(TokenType.TK_VIRGULA))
+
+            consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+        }
+
+        return Statement.ArrayDeclaration(
+            type,
+            name,
+            Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
+            initializationValues
+        )
     }
-
-
 
 
     private fun expressionStatement(): Statement {
@@ -603,5 +660,9 @@ class Parser(private val tokens: List<Token>) {
     private fun check(type: TokenType): Boolean {
         if (isAtEnd()) return false
         return tokens[current].type == type
+    }
+
+    private fun peek(): Token {
+        return tokens[current]
     }
 }

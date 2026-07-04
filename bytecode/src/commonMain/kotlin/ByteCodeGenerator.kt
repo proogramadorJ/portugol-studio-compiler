@@ -182,6 +182,10 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
 
     }
 
+    override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
         val portugolValue = when (expression.type) {
             TokenType.TK_NUMERO_INTEIRO_LITERAL -> IntValue(expression.value as Int)

@@ -58,6 +58,10 @@ class SemanticRulesVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Uni
     override fun visitSwitchStatement(stmt: Statement.Switch) {
     }
 
+    override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
     }
 
