@@ -45,6 +45,10 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return name.name.lexeme + "(" +expression.arguments.forEach { it.accept(this) } + ")"
     }
 
+    override fun visitArrayAccess(expression: Expression.ArrayAccess): String {
+        return ""
+    }
+
     fun print(statements: List<Statement>) {
         println("Programa")
         statements.forEach {

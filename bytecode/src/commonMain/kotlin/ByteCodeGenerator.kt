@@ -296,4 +296,8 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
             bytecode.add(Instruction(OpCode.CALL, function.constPoolAddres))
         }
     }
+
+    override fun visitArrayAccess(expression: Expression.ArrayAccess) {
+
+    }
 }

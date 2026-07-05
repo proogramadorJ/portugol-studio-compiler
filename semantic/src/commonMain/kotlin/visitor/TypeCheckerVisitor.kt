@@ -3,6 +3,7 @@ package visitor
 import com.pedrodev.Expression
 import com.pedrodev.Statement
 import exception.SemanticException
+import symbols.ArraySymbol
 import symbols.VarSymbol
 import types.BoolType
 import types.CaracterType
@@ -159,6 +160,11 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
     override fun visitCallExpr(expression: Expression.Call): Type {
 
         return VoidType
+    }
+
+    override fun visitArrayAccess(expression: Expression.ArrayAccess): Type {
+        val arraySymbol = expression.symbol as ArraySymbol
+        return arraySymbol.type
     }
 
     fun getTypeFromTokenType(tkType: TokenType): Type {

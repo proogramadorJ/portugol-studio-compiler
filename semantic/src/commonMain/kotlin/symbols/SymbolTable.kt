@@ -9,7 +9,7 @@ import types.StringType
 import types.SymbolKind
 import types.Type
 import types.VoidType
-import java.util.*
+import java.util.Stack
 
 class SymbolTable {
     private val globals = mutableMapOf<String, Symbol>()
@@ -69,14 +69,20 @@ class SymbolTable {
             }
         }
 
-        val storageKind = if(localIndex.empty()) StorageKind.GLOBAL else StorageKind.LOCAL
-
-        return ArraySimbol(
+        val storageKind = if (localIndex.empty()) StorageKind.GLOBAL else StorageKind.LOCAL
+        val arraySymbol = ArraySymbol(
             name,
             type,
             arrayCount++,
             storageKind
         )
+
+        if (storageKind == StorageKind.GLOBAL) {
+            globals[name] = arraySymbol
+        } else {
+            scopes.peek()[name] = arraySymbol
+        }
+        return arraySymbol
     }
 
     fun defineLocal(name: String, type: Type, stmt: Statement.VarDeclaration?): Symbol {

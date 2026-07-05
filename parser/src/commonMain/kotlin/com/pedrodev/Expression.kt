@@ -15,6 +15,7 @@ abstract class Expression {
         fun visitVariable(expression: Variable): R
         fun visitAssignExpr(expression: Assign): R
         fun visitCallExpr(expression: Call): R
+        fun visitArrayAccess(expression : ArrayAccess): R
     }
 
     class Binary(val left: Expression, val operator: Token, val right: Expression) : Expression() {
@@ -56,6 +57,12 @@ abstract class Expression {
     class Call(val callee: Expression, val paren: Token, val arguments: List<Expression>, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitCallExpr(this)
+        }
+    }
+
+    class ArrayAccess(val name: Token, val index : Int, var symbol: Symbol?) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitArrayAccess(this)
         }
     }
 }

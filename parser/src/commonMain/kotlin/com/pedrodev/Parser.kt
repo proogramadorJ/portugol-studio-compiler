@@ -624,9 +624,24 @@ class Parser(private val tokens: List<Token>) {
         )
 
         if (match(TokenType.TK_IDENTIFICADOR)) {
+            val name = previous()
+            if(match(TokenType.TK_ABRE_COLCHETE)){
+                return arrayAccessExpr(name)
+            }
             return Expression.Variable(previous(), null)
         }
-        throw RuntimeException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
+        throw ParseException("Esperado expressão, mas encontrou: ${tokens.getOrNull(current)?.lexeme ?: "EOF"} ")
+    }
+
+    private fun arrayAccessExpr(name: Token): Expression {
+       val index = consume("Esperado índice do vetor, mas encontrou '${peek().lexeme}'", TokenType.TK_NUMERO_INTEIRO_LITERAL)
+       consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
+
+        return Expression.ArrayAccess(
+            name,
+            index.lexeme.toInt(),
+            null
+        )
     }
 
     private fun match(vararg types: TokenType): Boolean {

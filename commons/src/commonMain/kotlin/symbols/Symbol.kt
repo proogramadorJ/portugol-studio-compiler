@@ -27,7 +27,7 @@ class FunctionSymbol(
     var constPoolAddres: Int?
 ) : Symbol()
 
-class ArraySimbol(
+class ArraySymbol(
     override val name: String,
     val type: Type,
     val index: Int? = null,
