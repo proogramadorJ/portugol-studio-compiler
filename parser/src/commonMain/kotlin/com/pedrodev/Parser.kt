@@ -373,11 +373,14 @@ class Parser(private val tokens: List<Token>) {
 
         val type = tokens[current - 3]
         val name = tokens[current - 2]
+        var declaredSize : Int ? = null
         val initializationValues = mutableListOf<Expression>()
         var size = 0
 
+
         if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) {
             size = previous().lexeme.toInt()
+            declaredSize = size
         }
 
         consume("Esperado ']' mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
@@ -397,8 +400,10 @@ class Parser(private val tokens: List<Token>) {
             return Statement.ArrayDeclaration(
                 type,
                 name,
+                declaredSize,
                 Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
-                initializationValues
+                initializationValues,
+                null
             )
         }
 
@@ -414,8 +419,10 @@ class Parser(private val tokens: List<Token>) {
         return Statement.ArrayDeclaration(
             type,
             name,
+            declaredSize,
             Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
-            initializationValues
+            initializationValues,
+            null
         )
     }
 

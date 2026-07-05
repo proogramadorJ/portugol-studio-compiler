@@ -88,7 +88,7 @@ abstract class Statement {
         }
     }
 
-    class ArrayDeclaration(val type : Token, val name : Token, var size: Expression, var values: List<Expression>) : Statement(){
+    class ArrayDeclaration(val type : Token, val name : Token, var declaredSize : Int ?, var size: Expression, var values: List<Expression>, var symbol: Symbol?) : Statement(){
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitArrayDeclarationStatement(this)
         }

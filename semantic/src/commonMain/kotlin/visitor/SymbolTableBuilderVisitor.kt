@@ -6,7 +6,7 @@ import symbols.SymbolTable
 import types.Type
 
 /**
- * Primeira travessia na AST -> Apenas cria Simbolos globais(Variavéis e funções)
+ * Primeira travessia na AST -> Apenas cria Simbolos globais(Variáveis, Arrays e funções)
  */
 class SymbolTableBuilderVisitor(
     private val symbolTable: SymbolTable
@@ -63,6 +63,10 @@ class SymbolTableBuilderVisitor(
     }
 
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
-
+        val symbol = symbolTable.defineArray(
+            stmt.name.lexeme,
+            TokenTypeConverter.internalTypeFromTokenType(stmt.type.type)
+        )
+        stmt.symbol = symbol
     }
 }

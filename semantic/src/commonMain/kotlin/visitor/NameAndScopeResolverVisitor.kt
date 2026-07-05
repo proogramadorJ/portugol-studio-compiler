@@ -8,7 +8,7 @@ import symbols.Symbol
 import symbols.SymbolTable
 
 /**
- * Segunda travessia na AST -> Cria simbolos locais(variaveis), resolve nomes e cria escopos.
+ * Segunda travessia na AST -> Cria símbolos locais(variáveis e arrays), resolve nomes e cria escopos.
  */
 class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     Expression.Visitor<Unit> {
@@ -95,7 +95,13 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
-
+        if(symbolTable.isInFucntion()){
+            val symbol = symbolTable.defineArray(
+                stmt.name.lexeme,
+                TokenTypeConverter.internalTypeFromTokenType(stmt.type.type)
+            )
+            stmt.symbol = symbol
+        }
     }
 
     override fun visitLiteral(expression: Expression.Literal) {

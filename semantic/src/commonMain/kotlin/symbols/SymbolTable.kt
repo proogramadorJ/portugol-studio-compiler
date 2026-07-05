@@ -17,6 +17,7 @@ class SymbolTable {
     private var globalIndex: Int = 0
     private var localIndex: Stack<Int> = Stack()
     private var nativeCount: Int = 0
+    private var arrayCount: Int = 0
 
     init {
         defineNativeFunctions()
@@ -54,6 +55,28 @@ class SymbolTable {
         }
         return defineLocal(name, type, stmt)
 
+    }
+
+    fun defineArray(name: String, type: Type): Symbol {
+        if (localIndex.empty()) { //Global
+            if (globals.containsKey(name)) {
+                throw SemanticException("Variável '$name' já declarada.")
+            }
+
+        } else { //Local
+            if (scopes.peek().containsKey(name)) {
+                throw SemanticException("Variável '$name' já declarada neste escopo.")
+            }
+        }
+
+        val storageKind = if(localIndex.empty()) StorageKind.GLOBAL else StorageKind.LOCAL
+
+        return ArraySimbol(
+            name,
+            type,
+            arrayCount++,
+            storageKind
+        )
     }
 
     fun defineLocal(name: String, type: Type, stmt: Statement.VarDeclaration?): Symbol {

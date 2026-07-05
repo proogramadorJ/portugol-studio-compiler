@@ -5,12 +5,12 @@ import types.SymbolKind
 import types.Type
 
 sealed class Symbol {
-    abstract val name : String
+    abstract val name: String
 }
 
 class VarSymbol(
     override val name: String,
-    val kind : SymbolKind,
+    val kind: SymbolKind,
     val type: Type,
     val storage: StorageKind,
     val index: Int? = null,
@@ -19,10 +19,17 @@ class VarSymbol(
 
 class FunctionSymbol(
     override val name: String,
-    val parametersType : List<Type>,
+    val parametersType: List<Type>,
     val returnType: Type,
     var nativeIndex: Int?,
-    var native : Boolean = false,
-    var localCount : Int = 0,
+    var native: Boolean = false,
+    var localCount: Int = 0,
     var constPoolAddres: Int?
-): Symbol()
+) : Symbol()
+
+class ArraySimbol(
+    override val name: String,
+    val type: Type,
+    val index: Int? = null,
+    val storage: StorageKind
+) : Symbol()
