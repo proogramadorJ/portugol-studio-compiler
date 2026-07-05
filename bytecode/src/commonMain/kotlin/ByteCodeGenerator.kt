@@ -1,5 +1,6 @@
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import symbols.ArraySymbol
 import symbols.FunctionSymbol
 import symbols.SymbolTable
 import symbols.VarSymbol
@@ -183,6 +184,12 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
+        val arraySymbol = stmt.symbol as ArraySymbol
+        bytecode.add(Instruction(OpCode.PUSH, arraySymbol.index)) //índice que vai servir de referencia na heap
+        val size = if(stmt.declaredSize != null) stmt.declaredSize else stmt.size
+        //TODO ainda falta adicionar o tipo na pilha
+       // val type : Int = when (stmt.)
+        bytecode.add(Instruction(OpCode.ALLOC_NEW_ARRAY, size))
 
     }
 

@@ -401,7 +401,7 @@ class Parser(private val tokens: List<Token>) {
                 type,
                 name,
                 declaredSize,
-                Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
+                initializationValues.size,
                 initializationValues,
                 null
             )
@@ -420,7 +420,7 @@ class Parser(private val tokens: List<Token>) {
             type,
             name,
             declaredSize,
-            Expression.Literal(initializationValues.size, TokenType.TK_NUMERO_INTEIRO_LITERAL),
+            initializationValues.size,
             initializationValues,
             null
         )

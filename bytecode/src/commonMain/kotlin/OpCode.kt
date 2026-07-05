@@ -14,6 +14,11 @@ enum class OpCode {
     LOAD_LOCAL, LOAD_GLOBAL,
     STORE_LOCAL, STORE_GLOBAL,
 
+    //array
+    ALLOC_NEW_ARRAY,
+    STORE_ARRAY,
+    LOAD_ARRAY,
+
     //const
     LOAD_CONST,
 
@@ -22,6 +27,7 @@ enum class OpCode {
 
     //VM Internal
     HALT,
+    PUSH,
     POP, //remove top element
     DUP, //duplicate top element
 

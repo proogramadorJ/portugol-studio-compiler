@@ -1,6 +1,6 @@
 package functions.io
 
-import PortugolVM
+import VM
 import functions.NativeFunction
 import values.Value
 
@@ -9,7 +9,7 @@ class Escreva : NativeFunction {
         return 0
     }
 
-    override suspend fun run(vm: PortugolVM) {
+    override suspend fun run(vm: VM) {
         val value: Value? = vm.pop()
         if (value != null) {
             vm.console.print(value.str())

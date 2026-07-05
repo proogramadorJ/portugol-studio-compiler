@@ -2,7 +2,7 @@ package com.pedrodev.portugol_ide_mobile.ui.viewmodel
 
 import ByteCodeGenerator
 import Disassembler
-import PortugolVM
+import VM
 import SemanticAnalyzer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,7 +18,7 @@ import symbols.SymbolTable
 class PortugolViewModel : ViewModel() {
     private val consoleBuffer = ConsolePortugolBuffer()
     val consoleLines = consoleBuffer.output
-    var vm: PortugolVM? = null
+    var vm: VM? = null
     private var _isWaitingForInput = MutableStateFlow(false)
     val isWaitingForInput = _isWaitingForInput.asStateFlow()
 
@@ -45,7 +45,7 @@ class PortugolViewModel : ViewModel() {
                 disassembler.run(code)
 
 
-                vm = PortugolVM(
+                vm = VM(
                     code,
                     bytecodeGen.constantPool,
                     consoleBuffer,

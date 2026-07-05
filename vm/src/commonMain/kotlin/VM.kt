@@ -8,14 +8,16 @@ import internal.CallFrame
 import io.PortugolConsole
 import kotlinx.coroutines.CompletableDeferred
 import values.BooleanValue
+import values.CharacterValue
 import values.FunctionValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
 import values.Value
+import kotlin.arrayOfNulls
 
 
-class PortugolVM(
+class VM(
     val bytecode: List<Instruction>,
     val constantPool: ConstantPool,
     val console: PortugolConsole,
@@ -27,6 +29,7 @@ class PortugolVM(
     private var nativeFunctions: MutableList<NativeFunction> = mutableListOf()
     private var callFrames: MutableList<CallFrame> = mutableListOf()
     var pendingInput: CompletableDeferred<String>? = null
+    var heap = mutableMapOf<Int, Array<Value?>>()
 
     // TODO Trocar para array de tamanho fixo baseado na quantidade de variaveis globais
     private var globalVars: Array<Value?> = arrayOfNulls(255)
@@ -211,6 +214,7 @@ class PortugolVM(
                     val value = pop() as StringValue
                     push(IntValue(value.value.toInt()))
                 }
+
                 OpCode.STR_TO_DOUBLE -> {
                     val value = pop() as StringValue
                     push(RealValue(value.value.toDouble()))
@@ -218,13 +222,45 @@ class PortugolVM(
 
                 OpCode.STR_TO_CHAR -> {
                     val value = pop() as StringValue
-                    if(value.value.length != 1) {
+                    if (value.value.length != 1) {
                         throw RuntimeException("Valor {${value.value}} 'inválido para tipo 'char'")
                     }
                     push(StringValue(value.value.toCharArray()[0].toString()))
                 }
+
+                OpCode.ALLOC_NEW_ARRAY -> {
+                    val size = currentInstruction.operating as Int
+                    val arrayIndex = (pop() as IntValue).value
+                    val arrayType = (pop() as IntValue).value
+                    allocNewArray(arrayIndex, arrayType, size)
+                }
+
+                OpCode.STORE_ARRAY -> {
+
+                }
+
+                OpCode.LOAD_ARRAY -> {
+
+                }
+
+                OpCode.PUSH -> {
+
+                }
             }
             ip++
+        }
+    }
+
+    private fun allocNewArray(arrayIndex: Int, arrayType: Int, size: Int) {
+        heap[arrayIndex] = Array(size) {
+            when (arrayType) {
+                1 -> CharacterValue('\u0000')
+                2 -> BooleanValue(false)
+                3 -> IntValue(0)
+                4 -> RealValue(0.0)
+                5 -> StringValue("")
+                else -> throw RuntimeException("Tipo de dado inesperado na Máquina Virtual: $arrayType")
+            }
         }
     }
 

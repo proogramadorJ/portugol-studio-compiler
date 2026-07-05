@@ -1,6 +1,6 @@
 package functions.io
 
-import PortugolVM
+import VM
 import functions.NativeFunction
 import kotlinx.coroutines.CompletableDeferred
 import values.StringValue
@@ -10,7 +10,7 @@ class Leia : NativeFunction {
        return 0;
     }
 
-    override suspend fun run(vm: PortugolVM) {
+    override suspend fun run(vm: VM) {
         //Promisse
         val deferred = CompletableDeferred<String>()
 
