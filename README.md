@@ -19,7 +19,8 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [x] Expressões
 - [x] Declaração de variaveis de tipos básicos
 - [x] Declaração de constantes de tipos básicos
-- [ ] Declaração de arrays e matrizes
+- [x] Declaração de arrays
+- [ ] Declaração de matrizes
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
@@ -38,7 +39,8 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 - [x] Expressões
 - [x] Declaração de variaveis de tipos básicos
-- [ ] Declaração de arrays e matrizes
+- [x] Declaração de arrays
+- [ ] Declaração de matrizes
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
@@ -51,7 +53,8 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 - [x] Expressões
 - [x] Declaração de variaveis de tipos básicos
-- [ ] Declaração de arrays e matrizes
+- [x] Declaração de arrays
+- [ ] Declaração de matrizes
 - [x] Atribuição de variavies
 - [x] Estrutura condicional 'Se' 'Senao'
 - [x] Estrutura de repetição 'Enquanto'
@@ -65,7 +68,8 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 - [x] Operações Aritimeticas
 - [x] Suporte a variaveis
 - [x] Suporte constantes
-- [ ] Suporte a vetores e matrizes
+- [x] Suporte a vetores
+- [ ] Suporte a matrizes
 - [x] Se Senao (if, else)
 - [x] Enquanto (while)
 - [x] Faca-Enquanto (do-while)
