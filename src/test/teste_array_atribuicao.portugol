@@ -1,0 +1,16 @@
+funcao inicio(){
+	cadeia nomes[] = {"Ana", "Pedro", "Maria"}
+	
+	escreva("nomes\n")
+	para( inteiro i = 0; i < 3; i = i + 1){
+		escreva(nomes[i])
+	}
+	cadeia novoNome = "Sansao"
+	nomes[1] = novoNome
+	
+	escreva("nomes depois\n")
+	para(  i = 0; i < 3; i = i + 1){
+		escreva(nomes[i])
+	}
+	
+}

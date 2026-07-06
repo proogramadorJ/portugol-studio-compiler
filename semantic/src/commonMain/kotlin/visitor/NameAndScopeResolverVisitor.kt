@@ -133,6 +133,12 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         expression.value.accept(this)
     }
 
+    override fun visitAssignArrayExpr(expression: Expression.AssignArray) {
+        val targetVar = symbolTable.resolve(expression.name.lexeme)
+        expression.symbol = targetVar
+        expression.value.accept(this)
+    }
+
     override fun visitCallExpr(expression: Expression.Call) {
         expression.callee.accept(this)
         expression.arguments.forEach { it.accept(this) }

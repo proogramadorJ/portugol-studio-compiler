@@ -17,6 +17,7 @@ import values.FunctionValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
+import kotlin.math.exp
 
 class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     Expression.Visitor<Unit> {
@@ -283,6 +284,13 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
             if (symbolTarget.storage == StorageKind.LOCAL) OpCode.STORE_LOCAL else OpCode.STORE_GLOBAL
 
         bytecode.add(Instruction(opCode, symbolTarget.index))
+    }
+
+    override fun visitAssignArrayExpr(expression: Expression.AssignArray) {
+        val arraySymbol = expression.symbol as ArraySymbol
+        expression.value.accept(this)
+        expression.index.accept(this) //índice no vetor
+        bytecode.add(Instruction(OpCode.STORE_ARRAY, arraySymbol.index )) //key do array na heap
     }
 
     override fun visitCallExpr(expression: Expression.Call) {

@@ -447,6 +447,11 @@ class Parser(private val tokens: List<Token>) {
                     return Expression.Assign(name, value, null)
                 }
 
+                is Expression.ArrayAccess -> {
+                    val name = expr.name
+                    return Expression.AssignArray(name, value, expr.index, null)
+                }
+
                 else -> {
                     throw RuntimeException("Alvo de atribuição inválido. Linha ${equals.line}")
                 }

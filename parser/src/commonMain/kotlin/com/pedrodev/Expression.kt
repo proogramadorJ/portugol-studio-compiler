@@ -14,6 +14,7 @@ abstract class Expression {
         fun visitUnary(expression: Unary): R
         fun visitVariable(expression: Variable): R
         fun visitAssignExpr(expression: Assign): R
+        fun visitAssignArrayExpr(expression: AssignArray): R
         fun visitCallExpr(expression: Call): R
         fun visitArrayAccess(expression : ArrayAccess): R
     }
@@ -51,6 +52,12 @@ abstract class Expression {
     class Assign(val name: Token, val value: Expression, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitAssignExpr(this)
+        }
+    }
+
+    class AssignArray(val name: Token, val value: Expression, val index: Expression,  var symbol: Symbol?) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitAssignArrayExpr(this)
         }
     }
 

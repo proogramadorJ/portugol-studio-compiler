@@ -148,9 +148,18 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
         val expressionType = expression.value.accept(this)
         val targetType = (expression.symbol as VarSymbol).type
         if (expressionType != targetType) {
-            throw SemanticException("Não é póssivel atribuir um valor do tipo '${expressionType.name}' para uma variável do tipo '${targetType.name}'")
+            throw SemanticException("Não é possível atribuir um valor do tipo '${expressionType.name}' para uma variável do tipo '${targetType.name}'")
         }
-        return VoidType
+        return targetType //TODO testar, antes estava return VoidType fixo
+    }
+
+    override fun visitAssignArrayExpr(expression: Expression.AssignArray): Type {
+        val expressionType = expression.value.accept(this)
+        val targetType = (expression.symbol as ArraySymbol).type
+        if (expressionType != targetType) {
+            throw SemanticException("Não é possível atribuir um valor do tipo '${expressionType.name}' para um array do tipo '${targetType.name}'")
+        }
+        return targetType //TODO testar, antes estava return VoidType fixo
     }
 
     // TODO incluir Symbol na expression Call, a ser preenchido com o Symbol da função.

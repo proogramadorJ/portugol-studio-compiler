@@ -40,6 +40,10 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return result
     }
 
+    override fun visitAssignArrayExpr(expression: Expression.AssignArray): String {
+        return ""
+    }
+
     override fun visitCallExpr(expression: Expression.Call): String {
         val name = expression.callee as Expression.Variable
         return name.name.lexeme + "(" +expression.arguments.forEach { it.accept(this) } + ")"
