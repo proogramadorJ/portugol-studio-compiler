@@ -139,6 +139,7 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitArrayAccess(expression: Expression.ArrayAccess) {
+        expression.index.accept(this)
         val arraySymbol = symbolTable.resolve(expression.name.lexeme)
         expression.symbol = arraySymbol
     }

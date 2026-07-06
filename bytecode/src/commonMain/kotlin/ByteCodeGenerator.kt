@@ -199,6 +199,12 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         bytecode.add(Instruction(OpCode.PUSH, type ))
         bytecode.add(Instruction(OpCode.PUSH, size))
         bytecode.add(Instruction(OpCode.ALLOC_NEW_ARRAY, arraySymbol.index))
+
+        stmt.values.forEachIndexed  { index, item ->
+            item.accept(this) //valor
+            bytecode.add(Instruction(OpCode.PUSH, index))
+            bytecode.add(Instruction(OpCode.STORE_ARRAY, arraySymbol.index))
+        }
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
@@ -313,6 +319,8 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitArrayAccess(expression: Expression.ArrayAccess) {
-
+        expression.index.accept(this)
+        val arraySymbol = expression.symbol as ArraySymbol
+        bytecode.add(Instruction(OpCode.LOAD_ARRAY, arraySymbol.index ))
     }
 }
