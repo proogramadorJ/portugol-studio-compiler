@@ -634,12 +634,12 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun arrayAccessExpr(name: Token): Expression {
-       val index = consume("Esperado índice do vetor, mas encontrou '${peek().lexeme}'", TokenType.TK_NUMERO_INTEIRO_LITERAL)
+       val index = expression()
        consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
 
         return Expression.ArrayAccess(
             name,
-            index.lexeme.toInt(),
+            index,
             null
         )
     }

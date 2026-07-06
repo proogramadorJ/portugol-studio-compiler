@@ -185,12 +185,20 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
 
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
         val arraySymbol = stmt.symbol as ArraySymbol
-        bytecode.add(Instruction(OpCode.PUSH, arraySymbol.index)) //índice que vai servir de referencia na heap
         val size = if(stmt.declaredSize != null) stmt.declaredSize else stmt.size
-        //TODO ainda falta adicionar o tipo na pilha
-       // val type : Int = when (stmt.)
-        bytecode.add(Instruction(OpCode.ALLOC_NEW_ARRAY, size))
 
+        val type = when(stmt.type.type){
+            TokenType.TK_CARACTER -> 1
+            TokenType.TK_LOGICO -> 2
+            TokenType.TK_INTEIRO -> 3
+            TokenType.TK_REAL -> 4
+            TokenType.TK_CADEIA -> 5
+            else -> throw RuntimeException("Erro ao gerar bytecode, tipo ${stmt.type.type} incompatível com vetor.")
+
+        }
+        bytecode.add(Instruction(OpCode.PUSH, type ))
+        bytecode.add(Instruction(OpCode.PUSH, size))
+        bytecode.add(Instruction(OpCode.ALLOC_NEW_ARRAY, arraySymbol.index))
     }
 
     override fun visitLiteral(expression: Expression.Literal) {

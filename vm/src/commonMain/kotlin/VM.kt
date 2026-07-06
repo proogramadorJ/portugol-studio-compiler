@@ -229,22 +229,32 @@ class VM(
                 }
 
                 OpCode.ALLOC_NEW_ARRAY -> {
-                    val size = currentInstruction.operating as Int
-                    val arrayIndex = (pop() as IntValue).value
+                    val arrayHeapAddr = currentInstruction.operating as Int
+                    val size = (pop() as IntValue).value
                     val arrayType = (pop() as IntValue).value
-                    allocNewArray(arrayIndex, arrayType, size)
+                    allocNewArray(arrayHeapAddr, arrayType, size)
                 }
 
+                //TODO incluir verificação de index out of bounds heap[arrayHeapAddr]?.lenght
                 OpCode.STORE_ARRAY -> {
+                    val arrayHeapAddr = currentInstruction.operating as Int
+                    val arrayIndex = (pop() as IntValue).value
+                    val value = pop()
 
+                    heap[arrayHeapAddr]?.set(arrayIndex, value)
                 }
 
+                //TODO incluir verificação de index out of bounds heap[arrayHeapAddr]?.lenght
                 OpCode.LOAD_ARRAY -> {
-
+                    val arrayHeapAddr = currentInstruction.operating as Int
+                    val arrayIndex = (pop() as IntValue).value
+                    val value = heap[arrayHeapAddr]?.get(arrayIndex)
+                    push(value)
                 }
 
                 OpCode.PUSH -> {
-
+                    val value = currentInstruction.operating as Int
+                    push(IntValue(value))
                 }
             }
             ip++

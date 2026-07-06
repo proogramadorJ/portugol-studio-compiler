@@ -60,7 +60,7 @@ abstract class Expression {
         }
     }
 
-    class ArrayAccess(val name: Token, val index : Int, var symbol: Symbol?) : Expression() {
+    class ArrayAccess(val name: Token, val index : Expression, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitArrayAccess(this)
         }
