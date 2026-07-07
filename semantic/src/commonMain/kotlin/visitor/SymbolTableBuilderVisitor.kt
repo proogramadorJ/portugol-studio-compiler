@@ -69,4 +69,8 @@ class SymbolTableBuilderVisitor(
         )
         stmt.symbol = symbol
     }
+
+    override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
+        TODO("Not yet implemented")
+    }
 }

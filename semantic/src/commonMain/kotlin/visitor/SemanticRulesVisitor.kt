@@ -62,6 +62,10 @@ class SemanticRulesVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Uni
 
     }
 
+    override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
+
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
     }
 

@@ -15,7 +15,8 @@ abstract class Statement {
         fun visitForStatement(stmt: For): R
         fun visitReturnStatement(stmt: Return): R
         fun visitSwitchStatement(stmt: Switch): R
-        fun visitArrayDeclarationStatement(stmt: ArrayDeclaration) : R
+        fun visitArrayDeclarationStatement(stmt: ArrayDeclaration): R
+        fun visitMatrixDeclarationStatement(stmt: MatrixDeclaration): R
     }
 
     abstract fun <R> accept(visitor: Visitor<R>): R
@@ -26,7 +27,13 @@ abstract class Statement {
         }
     }
 
-    class VarDeclaration(val name: Token, val declaredType: Token, var initializer: Expression?, var symbol: Symbol? , val isConst: Boolean) :
+    class VarDeclaration(
+        val name: Token,
+        val declaredType: Token,
+        var initializer: Expression?,
+        var symbol: Symbol?,
+        val isConst: Boolean
+    ) :
         Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitVarDeclarationStatement(this)
@@ -52,7 +59,8 @@ abstract class Statement {
         }
     }
 
-    class If(val condition: Expression, val thenBranch: Statement, val elseBranch: Statement?) : Statement() {
+    class If(val condition: Expression, val thenBranch: Statement, val elseBranch: Statement?) :
+        Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitIfStatement(this)
         }
@@ -70,7 +78,13 @@ abstract class Statement {
         }
     }
 
-    class For(val expressionInitializer: Expression?, val varDeclarationInitializer: Statement?, val condition: Expression, val increment: Expression, val body: Statement) : Statement() {
+    class For(
+        val expressionInitializer: Expression?,
+        val varDeclarationInitializer: Statement?,
+        val condition: Expression,
+        val increment: Expression,
+        val body: Statement
+    ) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitForStatement(this)
         }
@@ -82,15 +96,38 @@ abstract class Statement {
         }
     }
 
-    class Switch(val expr: Expression, val cases : List<Pair<Expression, Statement>>, val defaultCase : Statement?) : Statement(){
+    class Switch(
+        val expr: Expression,
+        val cases: List<Pair<Expression, Statement>>,
+        val defaultCase: Statement?
+    ) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitSwitchStatement(this)
         }
     }
 
-    class ArrayDeclaration(val type : Token, val name : Token, var declaredSize : Int ?, var size: Int, var values: List<Expression>, var symbol: Symbol?) : Statement(){
+    class ArrayDeclaration(
+        val type: Token,
+        val name: Token,
+        var declaredSize: Int?,
+        var size: Int,
+        var values: List<Expression>,
+        var symbol: Symbol?
+    ) : Statement() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitArrayDeclarationStatement(this)
         }
     }
+
+    class MatrixDeclaration(
+        val type: Token,
+        val name: Token,
+        var declaredLines: Int?,
+        var declaredColumns: Int?,
+        var lines: Int,
+        var columns: Int,
+        var values: List<List<Expression>>,
+        var symbol: Symbol
+    )
+
 }

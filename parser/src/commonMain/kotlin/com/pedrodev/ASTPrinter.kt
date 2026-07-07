@@ -137,4 +137,8 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration): Void? {
         return null
     }
+
+    override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration): Void? {
+        return null
+    }
 }

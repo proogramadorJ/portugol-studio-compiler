@@ -127,7 +127,7 @@ Tudo nesse repositorio está sendo implementado sem o uso de ferramentas gerador
 
 ### Referências
 
-- Sintaxe da linguagem: https://portugol.dev/
+- Sintaxe da linguagem: https://github.com/UNIVALI-LITE/Portugol-Studio
 
 ### Bibliotecas de terceiros
 - Sora-editor https://github.com/Rosemoe/sora-editor

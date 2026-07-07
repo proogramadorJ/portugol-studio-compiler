@@ -104,6 +104,10 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         }
     }
 
+    override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
+        TODO("Not yet implemented")
+    }
+
     override fun visitLiteral(expression: Expression.Literal) {
 
     }

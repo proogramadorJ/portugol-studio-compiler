@@ -258,6 +258,10 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
     override fun visitArrayDeclarationStatement(stmt: Statement.ArrayDeclaration) {
     }
 
+    override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
+        TODO("Not yet implemented")
+    }
+
     private fun isNumericType(leftType: Type, rightType: Type): Boolean {
         return numericTypes.contains(leftType) && numericTypes.contains(rightType)
     }
