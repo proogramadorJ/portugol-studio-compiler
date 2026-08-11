@@ -9,7 +9,9 @@ class EditorViewModel : ViewModel() {
     var codeText by mutableStateOf(
         """
         funcao inicio(){
-            escreva("Olá, Mundo!")
+             real vetor3[2] = {1.4,2.5}
+              vetor3[0] = 10.0
+              escreva(vetor3[0])
         }
         """.trimIndent()
     )
