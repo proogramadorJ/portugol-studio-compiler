@@ -82,7 +82,7 @@ class Parser(private val tokens: List<Token>) {
             return declaration()
         }
 
-        if(match(TokenType.TK_CONST)) {
+        if (match(TokenType.TK_CONST)) {
             return varDeclaration()
         }
         if (match(TokenType.TK_FUNCAO)) {
@@ -367,16 +367,15 @@ class Parser(private val tokens: List<Token>) {
      * vetor5[0] = "Pergunta"
      */
     private fun arrayDeclaration(): Statement {
-        //current = O que vem depois de '['
+        //current = o que vem depois de '['
         //current - 2 = identificador
         //current -3 = tipo
 
         val type = tokens[current - 3]
         val name = tokens[current - 2]
-        var declaredSize : Int ? = null
+        var declaredSize: Int? = null
         val initializationValues = mutableListOf<Expression>()
         var size = 0
-
 
         if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) {
             size = previous().lexeme.toInt()
@@ -385,6 +384,9 @@ class Parser(private val tokens: List<Token>) {
 
         consume("Esperado ']' mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
 
+        if (match(TokenType.TK_ABRE_COLCHETE)) {
+            return matrixDeclaration(name, type, declaredSize)
+        }
         if (size == 0) { //Obrigatoria initializacao
             consume(
                 "Obrigatoria a initialização do Vetor quando o tamanho não é especificado na declaração.",
@@ -421,6 +423,84 @@ class Parser(private val tokens: List<Token>) {
             name,
             declaredSize,
             initializationValues.size,
+            initializationValues,
+            null
+        )
+    }
+
+    private fun matrixDeclaration(name: Token, type: Token, declaredLineSize: Int?): Statement {
+        //inteiro matrix[1][ -> Consumidos em arrayDeclaration()
+
+        val type = tokens[current - 3]
+        val name = tokens[current - 2]
+        var declaredColumnSize: Int? = null
+        val initializationValues = mutableListOf<MutableList<Expression>>()
+        var lineSize = 0
+        var columnSize = 0
+
+        if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) {
+            columnSize = previous().lexeme.toInt()
+            declaredColumnSize = columnSize
+        }
+
+        consume("Esperado ']' mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
+        if (declaredLineSize == null || declaredColumnSize == null) { //Obrigatoria initializacao
+            consume(
+                "Obrigatoria a initialização da Matrix quando o tamanho não é especificado na declaração.",
+                TokenType.TK_IGUAL
+            )
+            consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+
+            do {
+                consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+                val initializationLineValues = mutableListOf<Expression>()
+                do {
+                    initializationLineValues.add(expression())
+                } while (match(TokenType.TK_VIRGULA))
+
+                consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+                initializationValues.add(initializationLineValues)
+                lineSize++
+            } while (match(TokenType.TK_VIRGULA))
+
+            consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+
+            return Statement.MatrixDeclaration(
+                type,
+                name,
+                declaredLineSize,
+                declaredColumnSize,
+                lineSize,
+                columnSize,
+                initializationValues,
+                null
+            )
+        }
+
+        if (match(TokenType.TK_IGUAL)) {
+            consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+            do {
+                consume("Esperado '{' mas encontrou '${peek().lexeme}' ", TokenType.TK_ABRE_CHAVE)
+                val initializationLineValues = mutableListOf<Expression>()
+                do {
+                    initializationLineValues.add(expression())
+                } while (match(TokenType.TK_VIRGULA))
+
+                consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+                initializationValues.add(initializationLineValues)
+                lineSize++
+            } while (match(TokenType.TK_VIRGULA))
+
+            consume("Esperado '}' mas encontrou '${peek().lexeme}' ", TokenType.TK_FECHA_CHAVE)
+        }
+
+        return Statement.MatrixDeclaration(
+            type,
+            name,
+            declaredLineSize,
+            declaredColumnSize,
+            lineSize,
+            columnSize,
             initializationValues,
             null
         )
@@ -630,7 +710,7 @@ class Parser(private val tokens: List<Token>) {
 
         if (match(TokenType.TK_IDENTIFICADOR)) {
             val name = previous()
-            if(match(TokenType.TK_ABRE_COLCHETE)){
+            if (match(TokenType.TK_ABRE_COLCHETE)) {
                 return arrayAccessExpr(name)
             }
             return Expression.Variable(previous(), null)
@@ -639,8 +719,8 @@ class Parser(private val tokens: List<Token>) {
     }
 
     private fun arrayAccessExpr(name: Token): Expression {
-       val index = expression()
-       consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
+        val index = expression()
+        consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
 
         return Expression.ArrayAccess(
             name,

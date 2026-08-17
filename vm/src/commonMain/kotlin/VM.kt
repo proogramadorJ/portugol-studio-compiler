@@ -252,6 +252,18 @@ class VM(
                     push(value)
                 }
 
+                OpCode.ALLOC_NEW_MATRIX -> {
+
+                }
+
+                OpCode.STORE_MATRIX -> {
+
+                }
+
+                OpCode.LOAD_MATRIX -> {
+
+                }
+
                 OpCode.PUSH -> {
                     val value = currentInstruction.operating as Int
                     push(IntValue(value))

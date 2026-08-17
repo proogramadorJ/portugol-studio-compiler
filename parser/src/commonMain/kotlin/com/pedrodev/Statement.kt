@@ -127,7 +127,11 @@ abstract class Statement {
         var lines: Int,
         var columns: Int,
         var values: List<List<Expression>>,
-        var symbol: Symbol
-    )
+        var symbol: Symbol?
+    ) : Statement(){
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitMatrixDeclarationStatement(this)
+        }
+    }
 
 }

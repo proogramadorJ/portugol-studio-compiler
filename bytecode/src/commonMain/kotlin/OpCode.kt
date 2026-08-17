@@ -19,6 +19,11 @@ enum class OpCode {
     STORE_ARRAY,
     LOAD_ARRAY,
 
+    //matrix
+    ALLOC_NEW_MATRIX,
+    STORE_MATRIX,
+    LOAD_MATRIX,
+
     //const
     LOAD_CONST,
 

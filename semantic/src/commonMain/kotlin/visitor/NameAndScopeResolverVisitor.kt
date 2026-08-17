@@ -105,7 +105,13 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
     }
 
     override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
-        TODO("Not yet implemented")
+        if(symbolTable.isInFucntion()){
+            val symbol = symbolTable.defineMatrix(
+                stmt.name.lexeme,
+                TokenTypeConverter.internalTypeFromTokenType(stmt.type.type)
+            )
+            stmt.symbol = symbol
+        }
     }
 
     override fun visitLiteral(expression: Expression.Literal) {

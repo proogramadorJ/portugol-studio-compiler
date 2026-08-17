@@ -71,6 +71,10 @@ class SymbolTableBuilderVisitor(
     }
 
     override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
-        TODO("Not yet implemented")
+        val symbol = symbolTable.defineMatrix(
+            stmt.name.lexeme,
+            TokenTypeConverter.internalTypeFromTokenType(stmt.type.type)
+        )
+        stmt.symbol = symbol
     }
 }

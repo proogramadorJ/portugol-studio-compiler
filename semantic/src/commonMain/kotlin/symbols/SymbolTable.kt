@@ -85,6 +85,34 @@ class SymbolTable {
         return arraySymbol
     }
 
+    fun defineMatrix(name: String, type: Type): Symbol {
+        if (localIndex.empty()) { //Global
+            if (globals.containsKey(name)) {
+                throw SemanticException("Variável '$name' já declarada.")
+            }
+
+        } else { //Local
+            if (scopes.peek().containsKey(name)) {
+                throw SemanticException("Variável '$name' já declarada neste escopo.")
+            }
+        }
+
+        val storageKind = if (localIndex.empty()) StorageKind.GLOBAL else StorageKind.LOCAL
+        val matrixSymbol = MatrixSymbol(
+            name,
+            type,
+            arrayCount++,
+            storageKind
+        )
+
+        if (storageKind == StorageKind.GLOBAL) {
+            globals[name] = matrixSymbol
+        } else {
+            scopes.peek()[name] = matrixSymbol
+        }
+        return matrixSymbol
+    }
+
     fun defineLocal(name: String, type: Type, stmt: Statement.VarDeclaration?): Symbol {
         if (scopes.empty()) {
             throw SemanticException("Variáveis locais só podem ser declaradas dentro de funções.")

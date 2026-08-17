@@ -17,6 +17,8 @@ abstract class Expression {
         fun visitAssignArrayExpr(expression: AssignArray): R
         fun visitCallExpr(expression: Call): R
         fun visitArrayAccess(expression : ArrayAccess): R
+        fun visitMatrixAccess(expression : MatrixAccess): R
+        fun visitAssignMatrixExpr(expression: AssignMatrix): R
     }
 
     class Binary(val left: Expression, val operator: Token, val right: Expression) : Expression() {
@@ -70,6 +72,18 @@ abstract class Expression {
     class ArrayAccess(val name: Token, val index : Expression, var symbol: Symbol?) : Expression() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitArrayAccess(this)
+        }
+    }
+
+    class MatrixAccess(val name: Token,val indexLine: Expression,val indexColumn: Expression, var symbol: Symbol?) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitMatrixAccess(this)
+        }
+    }
+
+    class AssignMatrix(val name: Token, val value: Expression,val indexLine: Expression,val indexColumn: Expression,var symbol: Symbol?) : Expression() {
+        override fun <R> accept(visitor: Visitor<R>): R {
+            return visitor.visitAssignMatrixExpr(this)
         }
     }
 }

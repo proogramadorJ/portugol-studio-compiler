@@ -33,3 +33,10 @@ class ArraySymbol(
     val index: Int? = null,
     val storage: StorageKind
 ) : Symbol()
+
+class MatrixSymbol(
+    override val name: String,
+    val type: Type,
+    val index: Int? = null,
+    val storage: StorageKind
+) : Symbol()
