@@ -292,6 +292,25 @@ class VM(
                     val value = currentInstruction.operating as Int
                     push(IntValue(value))
                 }
+
+                OpCode.BIT_NOT -> {
+                    val value = pop() as IntValue
+                    push(IntValue(value.value.inv()))
+                }
+
+                OpCode.NOT -> {
+                    val value = pop() as BooleanValue
+                    push(BooleanValue(!value.value))
+                }
+
+                OpCode.NEG -> {
+                    val rawValue = pop()
+                    if(rawValue is IntValue) {
+                        push(IntValue(-rawValue.value))
+                    } else if(rawValue is RealValue) {
+                        push(RealValue(-rawValue.value))
+                    }
+                }
             }
             ip++
         }

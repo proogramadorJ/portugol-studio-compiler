@@ -9,23 +9,16 @@ class EditorViewModel : ViewModel() {
     var codeText by mutableStateOf(
         """
         funcao inicio(){
-        
-             real matriz[2][2] = {{1.0, 2.0},{3.0, 4.0}}
-             escreva("Matriz antes")
-             para(inteiro i = 0; i < 2; i = i + 1){
-                para(inteiro j = 0; j < 2; j = j + 1){
-                    escreva(matriz[i][j])
-                }
-             }
-              matriz[0][0] = 10.0
-              matriz[1][0] = 20.0
+           inteiro a = -7
+           escreva(a) // esperado -7
+           
+           logico b = verdadeiro
+           b = nao b
+           escreva(b) // esperado falso
+           
+           inteiro c = ~7
+           escreva(c) // esperado -8
               
-              escreva("Array depois")
-              para(inteiro a = 0; a < 2; a = a + 1){
-                para(inteiro b = 0; b < 2; b = b + 1){
-                    escreva(matriz[a][b])
-                }
-             }       
         }
         """.trimIndent()
     )

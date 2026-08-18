@@ -431,8 +431,6 @@ class Parser(private val tokens: List<Token>) {
     private fun matrixDeclaration(name: Token, type: Token, declaredLineSize: Int?): Statement {
         //inteiro matrix[1][ -> Consumidos em arrayDeclaration()
 
-//        val type = tokens[current - 3]
-//        val name = tokens[current - 2]
         var declaredColumnSize: Int? = null
         val initializationValues = mutableListOf<MutableList<Expression>>()
         var lineSize = 0

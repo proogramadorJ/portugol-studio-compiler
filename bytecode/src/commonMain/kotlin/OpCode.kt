@@ -10,6 +10,11 @@ enum class OpCode {
     GT, // GREATER
     GE, // GREATER EQUAL
 
+    //unary
+    BIT_NOT, // ~
+    NOT, // nao
+    NEG, // -
+
     //variable
     LOAD_LOCAL, LOAD_GLOBAL,
     STORE_LOCAL, STORE_GLOBAL,

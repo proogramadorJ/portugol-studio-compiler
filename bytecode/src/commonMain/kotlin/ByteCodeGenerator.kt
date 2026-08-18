@@ -1,5 +1,6 @@
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import exception.ByteCodeGenerationException
 import symbols.ArraySymbol
 import symbols.FunctionSymbol
 import symbols.MatrixSymbol
@@ -296,7 +297,15 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitUnary(expression: Expression.Unary) {
-        TODO("Not yet implemented")
+        expression.right.accept(this)
+        when(expression.operator.type){
+            TokenType.TK_NAO -> bytecode.add(Instruction(OpCode.NOT))
+            TokenType.TK_SUBTRACAO -> bytecode.add(Instruction(OpCode.NEG))
+            TokenType.TK_BIT_NOT -> bytecode.add(Instruction(OpCode.BIT_NOT))
+            else -> {
+                throw ByteCodeGenerationException("Tipo não suportado para operação unária '${expression.operator.lexeme}'")
+            }
+        }
     }
 
     override fun visitVariable(expression: Expression.Variable) {

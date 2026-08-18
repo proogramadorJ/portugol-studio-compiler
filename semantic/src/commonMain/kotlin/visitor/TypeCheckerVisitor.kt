@@ -2,6 +2,7 @@ package visitor
 
 import com.pedrodev.Expression
 import com.pedrodev.Statement
+import com.pedrodev.Token
 import exception.SemanticException
 import symbols.ArraySymbol
 import symbols.MatrixSymbol
@@ -120,6 +121,13 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
         val type = expression.right.accept(this)
 
         return when (expression.operator.type) {
+            TokenType.TK_BIT_NOT ->{
+                if (type != IntType ) {
+                    throw SemanticException("O tipo '${type.name}' não é suportado para operação unária '${expression.operator.lexeme}'.")
+                }
+                type
+            }
+
             TokenType.TK_SUBTRACAO -> {
                 if (type != IntType && type != RealType) {
                     throw SemanticException("O tipo '${type.name}' não é suportado para operação unária '${expression.operator.lexeme}'.")
