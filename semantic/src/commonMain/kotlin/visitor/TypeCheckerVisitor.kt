@@ -27,14 +27,20 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
         return getTypeFromTokenType(expression.type)
     }
 
-    /**
-     * TODO incluir as operações de bitwise
-     */
     override fun visitBinary(expression: Expression.Binary): Type {
         val leftType = expression.left.accept(this)
         val rightType = expression.right.accept(this)
 
         when (expression.operator.type) {
+
+            //Operadores bitwise
+            TokenType.TK_BIT_AND, TokenType.TK_BIT_OR, TokenType.TK_BIT_XOR, TokenType.TK_BIT_SHIFT_LEFT, TokenType.TK_BIT_SHIFT_RIGHT ->{
+                if (leftType != IntType || rightType != IntType) {
+                    val wrongType = if (leftType != IntType) leftType else rightType
+                    throw SemanticException("O tipo '${wrongType.name}' não é suportado para operações bitwise.")
+                }
+                return IntType
+            }
 
             //Operadores aritmeticos
             TokenType.TK_SUBTRACAO, TokenType.TK_MULTPLICACAO, TokenType.TK_DIVISAO -> {
@@ -86,9 +92,6 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
                 }
                 return BoolType
             }
-
-            //TODO incluir operadores bitwise
-
             else -> {
                 throw RuntimeException("Operador '${expression.operator.lexeme}' não suportado.")
             }

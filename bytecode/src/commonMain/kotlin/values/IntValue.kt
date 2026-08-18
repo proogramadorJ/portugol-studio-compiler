@@ -100,6 +100,26 @@ class IntValue(var value: Int) : Value() {
         }
     }
 
+    fun bitAnd(other: IntValue): IntValue {
+        return IntValue(value and other.value)
+    }
+
+    fun bitOr(other: IntValue): IntValue {
+        return IntValue(value or other.value)
+    }
+
+    fun bitXor(other: IntValue): IntValue {
+        return IntValue(value xor other.value)
+    }
+
+    fun bitShiftLeft(other: IntValue): IntValue {
+        return IntValue(value shl other.value)
+    }
+
+    fun bitShiftRight(other: IntValue): IntValue {
+        return IntValue(value shr other.value)
+    }
+
     override fun toString(): String {
         return str()
     }

@@ -311,6 +311,33 @@ class VM(
                         push(RealValue(-rawValue.value))
                     }
                 }
+
+                OpCode.BIT_AND -> {
+                    val b = pop()!! as IntValue
+                    val a = pop()!!  as IntValue
+                    push(a.bitAnd(b))
+
+                }
+                OpCode.BIT_OR -> {
+                    val b = pop()!! as IntValue
+                    val a = pop()!!  as IntValue
+                    push(a.bitOr(b))
+                }
+                OpCode.BIT_XOR -> {
+                    val b = pop()!! as IntValue
+                    val a = pop()!!  as IntValue
+                    push(a.bitXor(b))
+                }
+                OpCode.BIT_SHIFT_LEFT -> {
+                    val b = pop()!! as IntValue
+                    val a = pop()!!  as IntValue
+                    push(a.bitShiftLeft(b))
+                }
+                OpCode.BIT_SHIFT_RIGHT -> {
+                    val b = pop()!! as IntValue
+                    val a = pop()!!  as IntValue
+                    push(a.bitShiftRight(b))
+                }
             }
             ip++
         }

@@ -15,6 +15,13 @@ enum class OpCode {
     NOT, // nao
     NEG, // -
 
+    //bitwise
+    BIT_AND, // &
+    BIT_OR, // |
+    BIT_XOR, // ^
+    BIT_SHIFT_LEFT, // <<
+    BIT_SHIFT_RIGHT, // >>
+
     //variable
     LOAD_LOCAL, LOAD_GLOBAL,
     STORE_LOCAL, STORE_GLOBAL,

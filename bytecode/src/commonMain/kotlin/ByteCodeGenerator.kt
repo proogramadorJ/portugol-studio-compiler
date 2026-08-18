@@ -246,7 +246,7 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
             TokenType.TK_VERDADEIRO_LITERAL -> BooleanValue(true)
             TokenType.TK_FALSO_LITERAL -> BooleanValue(false)
             TokenType.TK_CHAR_LITERAL -> CharacterValue(expression.value as Char)
-            else -> throw RuntimeException("Valor literal do tipo ${expression.type} ainda não mapeado") // TODO criar Exception personalizada
+            else -> throw ByteCodeGenerationException("Valor literal do tipo ${expression.type} ainda não mapeado")
         }
 
         val constIndex = constantPool.add(portugolValue)
@@ -268,7 +268,12 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
             TokenType.TK_MAIOR_OU_IGUAL -> OpCode.GE
             TokenType.TK_MENOR -> OpCode.LT
             TokenType.TK_MENOR_OU_IGUAL -> OpCode.LE
-            else -> throw RuntimeException("Operador ${expression.operator.lexeme} não mapeado") // TODO criar exceção personalizada
+            TokenType.TK_BIT_AND -> OpCode.BIT_AND
+            TokenType.TK_BIT_OR -> OpCode.BIT_OR
+            TokenType.TK_BIT_XOR -> OpCode.BIT_XOR
+            TokenType.TK_BIT_SHIFT_LEFT -> OpCode.BIT_SHIFT_LEFT
+            TokenType.TK_BIT_SHIFT_RIGHT-> OpCode.BIT_SHIFT_RIGHT
+            else -> throw ByteCodeGenerationException("Operador ${expression.operator.lexeme} não mapeado")
         }
 
         bytecode.add(Instruction(opOperator))

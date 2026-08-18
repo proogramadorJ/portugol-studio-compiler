@@ -86,7 +86,7 @@ class Scanner(source: String) {
 
                 '<' -> {
                     if (next() == '<') {
-                        tokens.add(Token(TokenType.TK_BIT_SHIFT, currentLine, currentColumn, "<<", null))
+                        tokens.add(Token(TokenType.TK_BIT_SHIFT_LEFT, currentLine, currentColumn, "<<", null))
                         pos += 2
                         currentColumn += 2
                     } else {
@@ -95,7 +95,13 @@ class Scanner(source: String) {
                 }
 
                 '>' -> {
-                    match('=', TokenType.TK_MAIOR_OU_IGUAL, TokenType.TK_MAIOR, '>')
+                    if (next() == '>') {
+                        tokens.add(Token(TokenType.TK_BIT_SHIFT_RIGHT, currentLine, currentColumn, ">>", null))
+                        pos += 2
+                        currentColumn += 2
+                    } else {
+                        match('=', TokenType.TK_MAIOR_OU_IGUAL, TokenType.TK_MAIOR, '>')
+                    }
                 }
 
                 '!' -> {

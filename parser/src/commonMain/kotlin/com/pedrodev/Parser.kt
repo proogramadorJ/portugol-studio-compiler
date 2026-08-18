@@ -622,7 +622,7 @@ class Parser(private val tokens: List<Token>) {
 
     private fun shift(): Expression {
         var expr = term()
-        while (match(TokenType.TK_BIT_SHIFT)) {
+        while (match(TokenType.TK_BIT_SHIFT_LEFT)) {
             val operator = previous()
             val right = term()
             expr = Expression.Binary(expr, operator, right)

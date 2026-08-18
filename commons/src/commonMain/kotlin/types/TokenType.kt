@@ -57,7 +57,8 @@ enum class TokenType {
     TK_BIT_OR, // |
     TK_BIT_NOT, // ~
     TK_BIT_XOR, // ^
-    TK_BIT_SHIFT, // <<
+    TK_BIT_SHIFT_LEFT, // <<
+    TK_BIT_SHIFT_RIGHT, // >>
 
     TK_VIRGULA, // ,
     TK_PONTO_E_VIRGULA, // ,
