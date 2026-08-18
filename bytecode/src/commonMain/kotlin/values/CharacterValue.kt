@@ -49,4 +49,8 @@ class CharacterValue(var value: Char) : Value() {
     override fun ge(other: Value): Boolean {
         throw RuntimeException("Operador '>=' incompativel com tipo 'character'.")
     }
+
+    override fun toString(): String {
+        return value.toString()
+    }
 }

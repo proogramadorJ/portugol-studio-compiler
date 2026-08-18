@@ -45,4 +45,8 @@ class FunctionValue( var name : String, var arity : Int, var localCount : Int, v
     override fun ge(other: Value): Boolean {
        throw RuntimeException("Method not allowed")
     }
+
+    override fun toString(): String {
+        return "$name(${arity})"
+    }
 }

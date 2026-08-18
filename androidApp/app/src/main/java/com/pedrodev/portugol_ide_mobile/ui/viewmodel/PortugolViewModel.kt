@@ -41,6 +41,13 @@ class PortugolViewModel : ViewModel() {
                 val bytecodeGen = ByteCodeGenerator(symbolTable)
                 val code = bytecodeGen.genCode(statements)
 
+                println("Constant Pool:")
+                print("[")
+                for(i in 0 until bytecodeGen.constantPool.size()){
+                    print("${bytecodeGen.constantPool.get(i)}, ")
+                }
+                print("]\n")
+
                 val disassembler = Disassembler()
                 disassembler.run(code)
 

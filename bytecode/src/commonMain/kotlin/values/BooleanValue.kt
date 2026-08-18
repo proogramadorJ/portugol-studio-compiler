@@ -49,4 +49,8 @@ class BooleanValue(var value: Boolean) : Value() {
     override fun ge(other: Value): Boolean {
         throw RuntimeException("Operador '>=' incompativel com tipo 'logico'.")
     }
+
+    override fun toString(): String {
+        return value.toString()
+    }
 }

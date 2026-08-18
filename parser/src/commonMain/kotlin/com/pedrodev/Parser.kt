@@ -431,15 +431,15 @@ class Parser(private val tokens: List<Token>) {
     private fun matrixDeclaration(name: Token, type: Token, declaredLineSize: Int?): Statement {
         //inteiro matrix[1][ -> Consumidos em arrayDeclaration()
 
-        val type = tokens[current - 3]
-        val name = tokens[current - 2]
+//        val type = tokens[current - 3]
+//        val name = tokens[current - 2]
         var declaredColumnSize: Int? = null
         val initializationValues = mutableListOf<MutableList<Expression>>()
         var lineSize = 0
         var columnSize = 0
 
         if (match(TokenType.TK_NUMERO_INTEIRO_LITERAL)) {
-            columnSize = previous().lexeme.toInt()
+            columnSize = previous().lexeme.toInt() //TODO isso aqui deve ser a quantidade na inicialização ex : [{1,2,3}] -> valor 3
             declaredColumnSize = columnSize
         }
 
@@ -530,6 +530,11 @@ class Parser(private val tokens: List<Token>) {
                 is Expression.ArrayAccess -> {
                     val name = expr.name
                     return Expression.AssignArray(name, value, expr.index, null)
+                }
+
+                is Expression.MatrixAccess -> {
+                    val name = expr.name
+                    return Expression.AssignMatrix(name, value, expr.indexLine, expr.indexColumn, null)
                 }
 
                 else -> {
@@ -722,6 +727,12 @@ class Parser(private val tokens: List<Token>) {
         val index = expression()
         consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
 
+        if(match(TokenType.TK_ABRE_COLCHETE)){
+            val indexColumn = expression()
+            consume("Esperado ']' , mas encontrou '${peek().lexeme}'", TokenType.TK_FECHA_COLCHETE)
+            return Expression.MatrixAccess(name, index, indexColumn, null)
+        }
+
         return Expression.ArrayAccess(
             name,
             index,
@@ -754,6 +765,8 @@ class Parser(private val tokens: List<Token>) {
 
     private fun consume(type: TokenType, msgError: String): Token {
         if (check(type)) return advance()
+
+        println("Erro  Current = $current")
         throw RuntimeException(msgError)
     }
 

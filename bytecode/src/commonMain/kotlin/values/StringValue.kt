@@ -50,4 +50,8 @@ class StringValue(var value: String) : Value() {
     override fun ge(other: Value): Boolean {
         throw RuntimeException("Operador '>=' incompativel com tipo 'cadeia'.")
     }
+
+    override fun toString(): String {
+        return value
+    }
 }

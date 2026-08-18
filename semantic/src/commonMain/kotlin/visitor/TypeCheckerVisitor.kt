@@ -4,6 +4,7 @@ import com.pedrodev.Expression
 import com.pedrodev.Statement
 import exception.SemanticException
 import symbols.ArraySymbol
+import symbols.MatrixSymbol
 import symbols.VarSymbol
 import types.BoolType
 import types.CaracterType
@@ -176,6 +177,20 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
         return arraySymbol.type
     }
 
+    override fun visitMatrixAccess(expression: Expression.MatrixAccess): Type {
+        val matrixSymbol = expression.symbol as MatrixSymbol
+        return matrixSymbol.type
+    }
+
+    override fun visitAssignMatrixExpr(expression: Expression.AssignMatrix): Type {
+        val expressionType = expression.value.accept(this)
+        val targetType = (expression.symbol as MatrixSymbol).type
+        if (expressionType != targetType) {
+            throw SemanticException("Não é possível atribuir um valor do tipo '${expressionType.name}' para uma matriz do tipo '${targetType.name}'")
+        }
+        return targetType //TODO testar, antes estava return VoidType fixo
+    }
+
     fun getTypeFromTokenType(tkType: TokenType): Type {
         return when (tkType) {
             TokenType.TK_INTEIRO -> IntType
@@ -259,7 +274,7 @@ class TypeCheckerVisitor : Statement.Visitor<Unit>, Expression.Visitor<Type> {
     }
 
     override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
-        TODO("Not yet implemented")
+
     }
 
     private fun isNumericType(leftType: Type, rightType: Type): Boolean {

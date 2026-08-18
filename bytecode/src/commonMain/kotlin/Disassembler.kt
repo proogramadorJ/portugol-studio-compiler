@@ -3,7 +3,7 @@ class Disassembler {
         var i = 0
         code.forEach {
             val operating = if (it.operating != null) it.operating else ""
-            println("$i -  ${it.opCode} $operating")
+            println("$i -  ${it.opCode} $operating") //TODO trocar por log em debug
             i++
         }
     }

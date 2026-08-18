@@ -159,4 +159,17 @@ class NameAndScopeResolverVisitor(val symbolTable: SymbolTable) : Statement.Visi
         val arraySymbol = symbolTable.resolve(expression.name.lexeme)
         expression.symbol = arraySymbol
     }
+
+    override fun visitMatrixAccess(expression: Expression.MatrixAccess) {
+        expression.indexLine.accept(this)
+        expression.indexColumn.accept(this)
+        val matrixSymbol = symbolTable.resolve(expression.name.lexeme)
+        expression.symbol =  matrixSymbol
+    }
+
+    override fun visitAssignMatrixExpr(expression: Expression.AssignMatrix) {
+        val targetVar = symbolTable.resolve(expression.name.lexeme)
+        expression.symbol = targetVar
+        expression.value.accept(this)
+    }
 }

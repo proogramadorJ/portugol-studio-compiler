@@ -4,6 +4,9 @@ import functions.NativeFunction
 import functions.io.Escreva
 import functions.io.Leia
 import functions.string.NumeroCaracteres
+import heap.ArrayObject
+import heap.HeapObject
+import heap.MatrixObject
 import internal.CallFrame
 import io.PortugolConsole
 import kotlinx.coroutines.CompletableDeferred
@@ -29,7 +32,7 @@ class VM(
     private var nativeFunctions: MutableList<NativeFunction> = mutableListOf()
     private var callFrames: MutableList<CallFrame> = mutableListOf()
     var pendingInput: CompletableDeferred<String>? = null
-    var heap = mutableMapOf<Int, Array<Value?>>()
+    var heap = mutableMapOf<Int, HeapObject?>()
 
     // TODO Trocar para array de tamanho fixo baseado na quantidade de variaveis globais
     private var globalVars: Array<Value?> = arrayOfNulls(255)
@@ -240,28 +243,49 @@ class VM(
                     val arrayHeapAddr = currentInstruction.operating as Int
                     val arrayIndex = (pop() as IntValue).value
                     val value = pop()
-
-                    heap[arrayHeapAddr]?.set(arrayIndex, value)
+                    val arrayReference = heap[arrayHeapAddr] as ArrayObject
+                    arrayReference.values[arrayIndex] = value
                 }
 
                 //TODO incluir verificação de index out of bounds heap[arrayHeapAddr]?.lenght
                 OpCode.LOAD_ARRAY -> {
                     val arrayHeapAddr = currentInstruction.operating as Int
                     val arrayIndex = (pop() as IntValue).value
-                    val value = heap[arrayHeapAddr]?.get(arrayIndex)
+                    val arrayReference = heap[arrayHeapAddr] as ArrayObject
+                    val value = arrayReference.values[arrayIndex]
                     push(value)
                 }
 
                 OpCode.ALLOC_NEW_MATRIX -> {
-
+                    val matrixHeapAddr = currentInstruction.operating as Int
+                    val columns = (pop() as IntValue).value
+                    val lines = (pop() as IntValue).value
+                    val matrixType = (pop() as IntValue).value
+                    allocNewMatrix(matrixHeapAddr, matrixType, lines, columns)
                 }
 
                 OpCode.STORE_MATRIX -> {
+                    val arrayHeapAddr = currentInstruction.operating as Int
+                    val column = (pop() as IntValue).value
+                    val line = (pop() as IntValue).value
+                    val value = pop()
+                    val matrizReference = heap[arrayHeapAddr] as MatrixObject
 
+                    //indice = linha * num_colunas + coluna
+                    val matrixIndex = line * matrizReference.columns + column
+                    matrizReference.values[matrixIndex] = value
                 }
 
                 OpCode.LOAD_MATRIX -> {
+                    val matrixHeapAddr = currentInstruction.operating as Int
+                    val column = (pop() as IntValue).value
+                    val line = (pop() as IntValue).value
+                    val matrizReference = heap[matrixHeapAddr] as MatrixObject
 
+                    //indice = linha * num_colunas + coluna
+                    val arrayIndex = line * matrizReference.columns + column
+                    val value = matrizReference.values[arrayIndex]
+                    push(value)
                 }
 
                 OpCode.PUSH -> {
@@ -273,17 +297,34 @@ class VM(
         }
     }
 
-    private fun allocNewArray(arrayIndex: Int, arrayType: Int, size: Int) {
-        heap[arrayIndex] = Array(size) {
-            when (arrayType) {
-                1 -> CharacterValue('\u0000')
-                2 -> BooleanValue(false)
-                3 -> IntValue(0)
-                4 -> RealValue(0.0)
-                5 -> StringValue("")
-                else -> throw RuntimeException("Tipo de dado inesperado na Máquina Virtual: $arrayType")
-            }
+    private fun allocNewMatrix( matrixHeapAddr: Int,matrixType: Int,lines: Int,columns: Int) {
+        val defaultValue = when (matrixType) {
+            1 -> CharacterValue('\u0000')
+            2 -> BooleanValue(false)
+            3 -> IntValue(0)
+            4 -> RealValue(0.0)
+            5 -> StringValue("")
+            else -> throw RuntimeException("Tipo de dado inesperado na Máquina Virtual: $matrixType")
         }
+        val kotlinArray : Array<Value?> = Array(lines * columns) { defaultValue }
+        val pArray = MatrixObject(lines, columns, matrixType, kotlinArray)
+        heap[matrixHeapAddr] = pArray
+        println("Criando nova matriz do tipo ${defaultValue.javaClass.simpleName} no indice $matrixHeapAddr de tamanho  [$lines][$columns]")
+    }
+
+    private fun allocNewArray(arrayIndex: Int, arrayType: Int, size: Int) {
+        val defaultValue = when (arrayType) {
+            1 -> CharacterValue('\u0000')
+            2 -> BooleanValue(false)
+            3 -> IntValue(0)
+            4 -> RealValue(0.0)
+            5 -> StringValue("")
+            else -> throw RuntimeException("Tipo de dado inesperado na Máquina Virtual: $arrayType")
+        }
+        val kotlinArray : Array<Value?> = Array(size) { defaultValue }
+        val pArray = ArrayObject(size, arrayType, kotlinArray)
+        heap[arrayIndex] = pArray
+        println("Criando novo array do tipo ${defaultValue.javaClass.simpleName} no indice $arrayIndex de tamanho  $size")
     }
 
     fun peek(): Value? {

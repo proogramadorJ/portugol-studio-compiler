@@ -53,6 +53,14 @@ class ASTPrinter : Expression.Visitor<String>, Statement.Visitor<Void?> {
         return ""
     }
 
+    override fun visitMatrixAccess(expression: Expression.MatrixAccess): String {
+        return ""
+    }
+
+    override fun visitAssignMatrixExpr(expression: Expression.AssignMatrix): String {
+        TODO("Not yet implemented")
+    }
+
     fun print(statements: List<Statement>) {
         println("Programa")
         statements.forEach {

@@ -97,4 +97,11 @@ class SemanticRulesVisitor(val symbolTable: SymbolTable) : Statement.Visitor<Uni
 
     override fun visitArrayAccess(expression: Expression.ArrayAccess) {
     }
+
+    override fun visitMatrixAccess(expression: Expression.MatrixAccess) {
+
+    }
+
+    override fun visitAssignMatrixExpr(expression: Expression.AssignMatrix) {
+    }
 }

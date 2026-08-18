@@ -1,0 +1,12 @@
+ funcao inicio(){
+             real vetor3[2] = {1.4,2.5}
+             escreva("Array antes")
+             para(inteiro i = 0; i < 2; i = i + 1){
+                 escreva(vetor3[i])
+             }
+              vetor3[0] = 10.0
+              escreva("Array depois")
+               para(inteiro k = 0; k < 2; k = k + 1){
+                 escreva(vetor3[k])
+             }
+        }

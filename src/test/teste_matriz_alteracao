@@ -1,15 +1,5 @@
-package com.pedrodev.portugol_ide_mobile.ui.screens.editor
+funcao inicio(){
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
-
-class EditorViewModel : ViewModel() {
-    var codeText by mutableStateOf(
-        """
-        funcao inicio(){
-        
              real matriz[2][2] = {{1.0, 2.0},{3.0, 4.0}}
              escreva("Matriz antes")
              para(inteiro i = 0; i < 2; i = i + 1){
@@ -19,19 +9,11 @@ class EditorViewModel : ViewModel() {
              }
               matriz[0][0] = 10.0
               matriz[1][0] = 20.0
-              
+
               escreva("Array depois")
               para(inteiro a = 0; a < 2; a = a + 1){
                 para(inteiro b = 0; b < 2; b = b + 1){
                     escreva(matriz[a][b])
                 }
-             }       
+             }
         }
-        """.trimIndent()
-    )
-        private set
-
-    fun updateCode(newCode: String) {
-        codeText = newCode
-    }
-}

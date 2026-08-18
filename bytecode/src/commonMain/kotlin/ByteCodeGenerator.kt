@@ -2,6 +2,7 @@ import com.pedrodev.Expression
 import com.pedrodev.Statement
 import symbols.ArraySymbol
 import symbols.FunctionSymbol
+import symbols.MatrixSymbol
 import symbols.SymbolTable
 import symbols.VarSymbol
 import types.CaracterType
@@ -17,7 +18,6 @@ import values.FunctionValue
 import values.IntValue
 import values.RealValue
 import values.StringValue
-import kotlin.math.exp
 
 class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     Expression.Visitor<Unit> {
@@ -209,7 +209,32 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
     }
 
     override fun visitMatrixDeclarationStatement(stmt: Statement.MatrixDeclaration) {
-        TODO("Not yet implemented")
+        val matrixSymbol = stmt.symbol as MatrixSymbol
+        val lines = if (stmt.declaredLines != null) stmt.declaredLines else stmt.lines
+        val column = if (stmt.declaredColumns != null) stmt.declaredColumns else stmt.columns
+
+        val type = when(stmt.type.type){
+            TokenType.TK_CARACTER -> 1
+            TokenType.TK_LOGICO -> 2
+            TokenType.TK_INTEIRO -> 3
+            TokenType.TK_REAL -> 4
+            TokenType.TK_CADEIA -> 5
+            else -> throw RuntimeException("Erro ao gerar bytecode, tipo ${stmt.type.type} incompatível com matriz.")
+
+        }
+        bytecode.add(Instruction(OpCode.PUSH, type ))
+        bytecode.add(Instruction(OpCode.PUSH, lines))
+        bytecode.add(Instruction(OpCode.PUSH, column))
+        bytecode.add(Instruction(OpCode.ALLOC_NEW_MATRIX, matrixSymbol.index))
+
+        stmt.values.forEachIndexed  { lineIndex, lineValues ->
+            lineValues.forEachIndexed { columnIndex, item ->
+                item.accept(this) //valor
+                bytecode.add(Instruction(OpCode.PUSH, lineIndex))
+                bytecode.add(Instruction(OpCode.PUSH, columnIndex))
+                bytecode.add(Instruction(OpCode.STORE_MATRIX, matrixSymbol.index))
+             }
+        }
     }
 
     override fun visitLiteral(expression: Expression.Literal) {
@@ -334,5 +359,20 @@ class ByteCodeGenerator(val symbolTable: SymbolTable) : Statement.Visitor<Unit>,
         expression.index.accept(this)
         val arraySymbol = expression.symbol as ArraySymbol
         bytecode.add(Instruction(OpCode.LOAD_ARRAY, arraySymbol.index ))
+    }
+
+    override fun visitMatrixAccess(expression: Expression.MatrixAccess) {
+       expression.indexLine.accept(this)
+       expression.indexColumn.accept(this)
+       val matrixSymbol = expression.symbol as MatrixSymbol
+       bytecode.add(Instruction(OpCode.LOAD_MATRIX, matrixSymbol.index ))
+    }
+
+    override fun visitAssignMatrixExpr(expression: Expression.AssignMatrix) {
+        val matrixSymbol = expression.symbol as MatrixSymbol
+        expression.value.accept(this)
+        expression.indexLine.accept(this)
+        expression.indexColumn.accept(this)
+        bytecode.add(Instruction(OpCode.STORE_MATRIX, matrixSymbol.index )) //endereço da matriz na heap
     }
 }
