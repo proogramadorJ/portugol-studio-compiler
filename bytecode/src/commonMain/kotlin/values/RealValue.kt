@@ -10,7 +10,7 @@ class RealValue(var value: Double) : Value() {
             is IntValue -> RealValue(value + other.value)
             is RealValue -> RealValue(value + other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -20,7 +20,7 @@ class RealValue(var value: Double) : Value() {
             is IntValue -> RealValue(value - other.value)
             is RealValue -> RealValue(value - other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -30,7 +30,7 @@ class RealValue(var value: Double) : Value() {
             is IntValue -> RealValue(value * other.value)
             is RealValue -> RealValue(value * other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -57,7 +57,7 @@ class RealValue(var value: Double) : Value() {
         return when (other) {
             is RealValue -> value == other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -70,7 +70,7 @@ class RealValue(var value: Double) : Value() {
         return when (other) {
             is RealValue -> value < other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -79,7 +79,7 @@ class RealValue(var value: Double) : Value() {
         return when (other) {
             is RealValue -> value <= other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -88,7 +88,7 @@ class RealValue(var value: Double) : Value() {
         return when (other) {
             is RealValue -> value > other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }
@@ -97,7 +97,7 @@ class RealValue(var value: Double) : Value() {
         return when (other) {
             is RealValue -> value >= other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'real'")
+                throw RuntimeException("Tipo incompatível com tipo 'real'")
             }
         }
     }

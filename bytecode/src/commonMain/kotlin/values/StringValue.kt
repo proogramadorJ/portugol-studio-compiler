@@ -36,19 +36,19 @@ class StringValue(var value: String) : Value() {
     }
 
     override fun lt(other: Value): Boolean {
-        throw RuntimeException("Operador '<' incompativel com tipo 'cadeia'.")
+        throw RuntimeException("Operador '<' incompatível com tipo 'cadeia'.")
     }
 
     override fun le(other: Value): Boolean {
-        throw RuntimeException("Operador '<=' incompativel com tipo 'cadeia'.")
+        throw RuntimeException("Operador '<=' incompatível com tipo 'cadeia'.")
     }
 
     override fun gt(other: Value): Boolean {
-        throw RuntimeException("Operador '>' incompativel com tipo 'cadeia'.")
+        throw RuntimeException("Operador '>' incompatível com tipo 'cadeia'.")
     }
 
     override fun ge(other: Value): Boolean {
-        throw RuntimeException("Operador '>=' incompativel com tipo 'cadeia'.")
+        throw RuntimeException("Operador '>=' incompatível com tipo 'cadeia'.")
     }
 
     override fun toString(): String {

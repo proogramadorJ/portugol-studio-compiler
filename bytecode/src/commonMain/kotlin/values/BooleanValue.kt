@@ -6,26 +6,26 @@ class BooleanValue(var value: Boolean) : Value() {
     }
 
     override fun add(other: Value): Value {
-        throw RuntimeException("Operador '+' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '+' incompatível com tipo 'logico'.")
     }
 
     override fun sub(other: Value): Value {
-        throw RuntimeException("Operador '-' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '-' incompatível com tipo 'logico'.")
     }
 
     override fun mul(other: Value): Value {
-        throw RuntimeException("Operador '*' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '*' incompatível com tipo 'logico'.")
     }
 
     override fun div(other: Value): Value {
-        throw RuntimeException("Operador '/' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '/' incompatível com tipo 'logico'.")
     }
 
     override fun eq(other: Value): Boolean {
         return when (other) {
             is BooleanValue -> value == other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'logico'.")
+                throw RuntimeException("Tipo incompatível com tipo 'logico'.")
             }
         }
     }
@@ -35,19 +35,19 @@ class BooleanValue(var value: Boolean) : Value() {
     }
 
     override fun lt(other: Value): Boolean {
-        throw RuntimeException("Operador '<' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '<' incompatível com tipo 'logico'.")
     }
 
     override fun le(other: Value): Boolean {
-        throw RuntimeException("Operador '<=' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '<=' incompatível com tipo 'logico'.")
     }
 
     override fun gt(other: Value): Boolean {
-        throw RuntimeException("Operador '>' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '>' incompatível com tipo 'logico'.")
     }
 
     override fun ge(other: Value): Boolean {
-        throw RuntimeException("Operador '>=' incompativel com tipo 'logico'.")
+        throw RuntimeException("Operador '>=' incompatível com tipo 'logico'.")
     }
 
     override fun toString(): String {

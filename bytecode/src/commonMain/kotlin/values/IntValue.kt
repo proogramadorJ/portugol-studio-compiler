@@ -10,7 +10,7 @@ class IntValue(var value: Int) : Value() {
             is IntValue -> IntValue(value + other.value)
             is RealValue -> RealValue(value + other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -20,7 +20,7 @@ class IntValue(var value: Int) : Value() {
             is IntValue -> IntValue(value - other.value)
             is RealValue -> RealValue(value - other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -30,7 +30,7 @@ class IntValue(var value: Int) : Value() {
             is IntValue -> IntValue(value * other.value)
             is RealValue -> RealValue(value * other.value)
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -46,7 +46,7 @@ class IntValue(var value: Int) : Value() {
                 RealValue(value / other.value)
             }
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -55,7 +55,7 @@ class IntValue(var value: Int) : Value() {
         return when (other) {
             is IntValue -> value == other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -68,7 +68,7 @@ class IntValue(var value: Int) : Value() {
         return when (other) {
             is IntValue -> value < other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -77,7 +77,7 @@ class IntValue(var value: Int) : Value() {
         return when (other) {
             is IntValue -> value <= other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -86,7 +86,7 @@ class IntValue(var value: Int) : Value() {
         return when (other) {
             is IntValue -> value > other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
@@ -95,7 +95,7 @@ class IntValue(var value: Int) : Value() {
         return when (other) {
             is IntValue -> value >= other.value
             else -> {
-                throw RuntimeException("Tipo incompativel com tipo 'inteiro'")
+                throw RuntimeException("Tipo incompatível com tipo 'inteiro'")
             }
         }
     }
