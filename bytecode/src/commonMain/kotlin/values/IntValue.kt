@@ -101,6 +101,6 @@ class IntValue(var value: Int) : Value() {
     }
 
     override fun toString(): String {
-        return value.toString()
+        return str()
     }
 }

@@ -2,7 +2,7 @@ package values
 
 class BooleanValue(var value: Boolean) : Value() {
     override fun str(): String {
-        return value.toString()
+        return if(value) "verdadeiro" else "falso"
     }
 
     override fun add(other: Value): Value {
@@ -51,6 +51,6 @@ class BooleanValue(var value: Boolean) : Value() {
     }
 
     override fun toString(): String {
-        return value.toString()
+        return str()
     }
 }

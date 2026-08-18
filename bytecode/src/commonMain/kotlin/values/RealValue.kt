@@ -103,6 +103,6 @@ class RealValue(var value: Double) : Value() {
     }
 
     override fun toString(): String {
-        return value.toString()
+        return str()
     }
 }
