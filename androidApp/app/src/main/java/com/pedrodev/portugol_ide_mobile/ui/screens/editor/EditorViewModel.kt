@@ -9,15 +9,23 @@ class EditorViewModel : ViewModel() {
     var codeText by mutableStateOf(
         """
         funcao inicio(){
-           inteiro a = -7
-           escreva(a) // esperado -7
-           
-           logico b = verdadeiro
-           b = nao b
-           escreva(b) // esperado falso
-           
-           inteiro c = ~7
-           escreva(c) // esperado -8
+           inteiro a = 10
+           inteiro b = 20
+           inteiro c = a & b
+           escreva(a & b)
+           escreva(c)
+           c = a | b
+           escreva(c)
+           escreva(a | b)
+           c = a ^ b
+           escreva(c)
+           escreva(a ^ b)
+           c = a << b
+           escreva(c)
+           escreva(a << b)
+           c = a >> b
+           escreva(c)
+           escreva(a >> b)
               
         }
         """.trimIndent()

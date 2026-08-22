@@ -622,7 +622,7 @@ class Parser(private val tokens: List<Token>) {
 
     private fun shift(): Expression {
         var expr = term()
-        while (match(TokenType.TK_BIT_SHIFT_LEFT)) {
+        while (match(TokenType.TK_BIT_SHIFT_LEFT) || match(TokenType.TK_BIT_SHIFT_RIGHT)) {
             val operator = previous()
             val right = term()
             expr = Expression.Binary(expr, operator, right)
@@ -765,7 +765,7 @@ class Parser(private val tokens: List<Token>) {
         if (check(type)) return advance()
 
         println("Erro  Current = $current")
-        throw RuntimeException(msgError)
+        throw ParseException(msgError)
     }
 
     private fun consume(msgError: String, vararg types: TokenType): Token {
